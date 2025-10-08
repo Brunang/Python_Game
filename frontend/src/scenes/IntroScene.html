@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scene 1: The Discovery - SHE<Codes/></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Game Canvas */
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url('/frontend/src/assets/images/basement.png') center center no-repeat;
+            background-size: 100% 100%;
+        }
+
+        /* Basement Scene */
+        .basement-scene {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Background elements */
+        .background-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        /* Covered Computer Console */
+        .console-wrapper {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .console-wrapper:hover {
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+
+        .covered-console {
+            width: 250px;
+            height: 200px;
+            background: #888;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .sheet {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #bbb 0%, #999 100%);
+            border-radius: 10px;
+            border: 3px solid #777;
+            transition: all 0.5s ease;
+        }
+
+        .sheet::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px dashed #666;
+            border-radius: 5px;
+        }
+
+        .sheet.removed {
+            opacity: 0;
+            transform: translateY(-100px) rotate(15deg);
+        }
+
+        /* Revealed Console */
+        .revealed-console {
+            width: 250px;
+            height: 200px;
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 10px;
+            border: 4px solid #4a4a6a;
+            display: none;
+            position: relative;
+            box-shadow: 0 0 40px rgba(102, 126, 234, 0.8);
+            animation: powerUp 1s ease-out;
+        }
+
+        @keyframes powerUp {
+            0% { box-shadow: 0 0 0 rgba(102, 126, 234, 0); }
+            50% { box-shadow: 0 0 60px rgba(102, 126, 234, 1); }
+            100% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.8); }
+        }
+
+        .revealed-console.active {
+            display: block;
+        }
+
+        .console-screen {
+            margin: 20px;
+            width: calc(100% - 40px);
+            height: 120px;
+            background: #0a0a1a;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #00ff00;
+            padding: 10px;
+            text-align: center;
+            animation: screenFlicker 0.5s ease-in-out;
+        }
+
+        @keyframes screenFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .console-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .console-button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #667eea;
+            border: 2px solid #4a5a9a;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Player Character */
+        .player {
+            position: absolute;
+            bottom: 20%;
+            left: 20%;
+            width: 50px;
+            height: 80px;
+            background: linear-gradient(to bottom, #ff6b9d 0%, #c44569 100%);
+            border-radius: 25px 25px 10px 10px;
+            transition: all 0.5s ease;
+            z-index: 100;
+        }
+
+        .player::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: #ffd1dc;
+            border-radius: 50%;
+            border: 2px solid #c44569;
+        }
+
+        .player.moving-to-console {
+            left: 40%;
+            bottom: 60%;
+        }
+
+        /* Dialogue Box */
+        .dialogue-box {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 20px;
+            color: #ffffff;
+            display: none;
+            z-index: 1000;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        .dialogue-box.active {
+            display: block;
+        }
+
+        .dialogue-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .dialogue-prompt {
+            color: #ffd700;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .dialogue-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .dialogue-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .dialogue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .continue-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        /* Light particles effect */
+        .light-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #667eea;
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat 2s ease-out;
+        }
+
+        @keyframes particleFloat {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-100px); }
+        }
+
+        /* Visual effects - binary, equations, stars */
+        .visual-effect {
+            position: absolute;
+            color: #667eea;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            opacity: 0;
+            pointer-events: none;
+            animation: effectFloat 3s ease-out forwards;
+            text-shadow: 0 0 10px rgba(102, 126, 234, 0.8);
+        }
+
+        @keyframes effectFloat {
+            0% { 
+                opacity: 0; 
+                transform: translateY(0) rotate(0deg) scale(0.5);
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% { 
+                opacity: 0; 
+                transform: translateY(-150px) rotate(360deg) scale(1.2);
+            }
+        }
+
+        .visual-effect.binary {
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        .visual-effect.equation {
+            color: #ffd700;
+            font-style: italic;
+        }
+
+        .visual-effect.star {
+            color: #ffffff;
+            font-size: 1.5rem;
+        }
+
+        .visual-effect.code {
+            color: #ff6b9d;
+            font-size: 0.9rem;
+        }
+
+        /* Screen shake effect */
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-5px, 0); }
+            20%, 40%, 60%, 80% { transform: translate(5px, 0); }
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        /* Transportation effect overlay */
+        .transport-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 0%, #667eea 100%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2000;
+            transition: opacity 1s ease;
+        }
+
+        .transport-overlay.active {
+            opacity: 1;
+        }
+
+        /* Instructions */
+        .instructions {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: #ffffff;
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 2px solid #667eea;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .instructions.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Background Layer -->
+        <div class="background-layer">
+        </div>
+
+        <!-- Player Character -->
+        <div class="player" id="player"></div>
+
+        <!-- Instructions -->
+        <div class="instructions" id="instructions">
+            Click on the covered object to investigate...
+        </div>
+
+        <!-- Console with Sheet -->
+        <div class="console-wrapper" id="consoleWrapper">
+            <div class="covered-console">
+                <div class="sheet" id="sheet"></div>
+            </div>
+            <div class="revealed-console" id="revealedConsole">
+                <div class="console-screen" id="consoleScreen">
+                    SYSTEM INITIALIZING...
+                </div>
+                <div class="console-buttons">
+                    <div class="console-button"></div>
+                    <div class="console-button"></div>
+                    <div class="console-button"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dialogue Box -->
+        <div class="dialogue-box" id="dialogueBox">
+            <div class="dialogue-text" id="dialogueText"></div>
+            <div class="dialogue-buttons" id="dialogueButtons"></div>
+        </div>
+
+        <!-- Transport Overlay -->
+        <div class="transport-overlay" id="transportOverlay"></div>
+    </div>
+
+    <script>
+        // Game state
+        let gameState = {
+            scene: 'initial',
+            sheetRemoved: false,
+            consoleActivated: false
+        };
+
+        // DOM elements
+        const consoleWrapper = document.getElementById('consoleWrapper');
+        const sheet = document.getElementById('sheet');
+        const revealedConsole = document.getElementById('revealedConsole');
+        const consoleScreen = document.getElementById('consoleScreen');
+        const dialogueBox = document.getElementById('dialogueBox');
+        const dialogueText = document.getElementById('dialogueText');
+        const dialogueButtons = document.getElementById('dialogueButtons');
+        const player = document.getElementById('player');
+        const instructions = document.getElementById('instructions');
+        const gameContainer = document.getElementById('game-container');
+        const transportOverlay = document.getElementById('transportOverlay');
+
+        // Scene 1: Initial interaction - remove sheet
+        consoleWrapper.addEventListener('click', function() {
+            if (!gameState.sheetRemoved) {
+                removeSheet();
+            }
+        });
+
+        function removeSheet() {
+            gameState.sheetRemoved = true;
+            instructions.classList.add('hidden');
+            
+            // Move player toward console
+            player.classList.add('moving-to-console');
+
+            // Show dialogue prompt
+            setTimeout(() => {
+                showDialogue(
+                    "There something strange beneath the dusty sheet. What could it be...?",
+                    [
+                        { text: "Pull off the sheet", action: revealConsole }
+                    ]
+                );
+            }, 600);
+        }
+
+        function revealConsole() {
+            hideDialogue();
+            
+            // Animate sheet removal
+            sheet.classList.add('removed');
+            
+            setTimeout(() => {
+                // Show revealed console
+                revealedConsole.classList.add('active');
+                
+                // Play power-up sequence
+                setTimeout(() => {
+                    activateConsole();
+                }, 500);
+            }, 500);
+        }
+
+        function activateConsole() {
+            gameState.consoleActivated = true;
+            
+            // Update console screen
+            let messages = [
+                "SYSTEM INITIALIZING...",
+                "SCANNING BIOMETRIC DATA...",
+                "MATCH FOUND: CURIOUS MIND DETECTED",
+                "TIME MACHINE ACTIVATED",
+                "PREPARE FOR TRAVEL..."
+            ];
+            
+            let messageIndex = 0;
+            const messageInterval = setInterval(() => {
+                consoleScreen.textContent = messages[messageIndex];
+                messageIndex++;
+                
+                if (messageIndex >= messages.length) {
+                    clearInterval(messageInterval);
+                    setTimeout(() => {
+                        startShakeSequence();
+                    }, 1000);
+                }
+            }, 1200);
+        }
+
+        function startShakeSequence() {
+            hideDialogue();
+            
+            // Shake the screen
+            gameContainer.classList.add('shake');
+            
+            // Create light particles
+            createLightParticles();
+
+            beginTransportation();
+        }
+
+        function createLightParticles() {
+            const consoleRect = revealedConsole.getBoundingClientRect();
+            const centerX = consoleRect.left + consoleRect.width / 2;
+            const centerY = consoleRect.top + consoleRect.height / 2;
+            
+            // Light particles
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'light-particle';
+                    particle.style.left = centerX + 'px';
+                    particle.style.top = centerY + 'px';
+                    gameContainer.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 2000);
+                }, i * 100);
+            }
+
+            // Binary code effects
+            const binaryStrings = ['01001000', '11010101', '10101010', '01110011', '11001100', '00110011', '10011001', '01100110'];
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    createVisualEffect(centerX, centerY, binaryStrings[Math.floor(Math.random() * binaryStrings.length)], 'binary');
+                }, i * 150);
+            }
+
+            // Equation effects
+            const equations = ['E=mc²', 'f(x)=x²', 'π≈3.14', 'a²+b²=c²', '∑n=1', 'dx/dt', '∫f(x)dx', 'log₂(n)'];
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    createVisualEffect(centerX, centerY, equations[Math.floor(Math.random() * equations.length)], 'equation');
+                }, i * 200 + 100);
+            }
+
+            // Star effects
+            for (let i = 0; i < 12; i++) {
+                setTimeout(() => {
+                    createVisualEffect(centerX, centerY, '★', 'star');
+                }, i * 180 + 50);
+            }
+
+            // Code snippet effects
+            const codeSnippets = ['def()', 'while', 'if...', 'print()', 'for i', 'return', 'class', 'import'];
+            for (let i = 0; i < 12; i++) {
+                setTimeout(() => {
+                    createVisualEffect(centerX, centerY, codeSnippets[Math.floor(Math.random() * codeSnippets.length)], 'code');
+                }, i * 170 + 75);
+            }
+        }
+
+        function createVisualEffect(centerX, centerY, text, type) {
+            const effect = document.createElement('div');
+            effect.className = 'visual-effect ' + type;
+            effect.textContent = text;
+            
+            // Random position around the console
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 50 + Math.random() * 100;
+            const startX = centerX + Math.cos(angle) * distance;
+            const startY = centerY + Math.sin(angle) * distance;
+            
+            effect.style.left = startX + 'px';
+            effect.style.top = startY + 'px';
+            
+            gameContainer.appendChild(effect);
+            
+            setTimeout(() => {
+                effect.remove();
+            }, 3000);
+        }
+
+        function beginTransportation() {
+            hideDialogue();
+            
+            // Activate transport overlay
+            transportOverlay.classList.add('active');
+            
+            // Update console to show vortex
+            consoleScreen.textContent = ">>> TEMPORAL DISPLACEMENT INITIATED <<<";
+            consoleScreen.style.color = "#ff00ff";
+            consoleScreen.style.animation = "screenFlicker 0.2s infinite";
+            
+            // Show final message before transition
+            setTimeout(() => {
+                showDialogue(
+                    "What is happening...",
+                    [
+                        { text: "Continue →", action: goToAdaScene, className: "continue-btn" }
+                    ]
+                );
+            }, 2000);
+        }
+
+        function goToAdaScene() {
+            // TODO: Navigate to Scene 4 (Ada Lovelace)
+            alert("Traveling through time...\n\nNext: Scene 4 - Ada Lovelace's Study (1840s)\n\nYou will help Ada complete the first computer algorithm!");
+            // In actual implementation:
+            window.location.href = '/frontend/src/scenes/levels/AdaLovelaceScene.html';
+        }
+
+        // Dialogue system
+        function showDialogue(text, buttons) {
+            dialogueText.textContent = text;
+            dialogueButtons.innerHTML = '';
+            
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = 'dialogue-btn ' + (btn.className || '');
+                button.textContent = btn.text;
+                button.onclick = btn.action;
+                dialogueButtons.appendChild(button);
+            });
+            
+            dialogueBox.classList.add('active');
+        }
+
+        function hideDialogue() {
+            dialogueBox.classList.remove('active');
+        }
+
+        // Add ambient sound effect (optional)
+        // You can add background music or sound effects here
+    </script>
+</body>
+</html>
