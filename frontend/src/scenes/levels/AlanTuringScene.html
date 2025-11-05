@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scene 6: Alan Turing - SHE<Codes/></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Game Container */
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url('images/bletchley-park.jpg') center center no-repeat;
+            background-size: cover;
+            background-color: #2a2a2a;
+        }
+
+        /* Time transition effect */
+        .time-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #1a1a1a 0%, #4a4a6a 50%, #1a1a1a 100%);
+            z-index: 3000;
+            animation: warTime 3s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes warTime {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Military Room Elements */
+        .military-desk {
+            position: absolute;
+            bottom: 15%;
+            left: 10%;
+            width: 120px;
+            height: 80px;
+            background: #3a3a2a;
+            border: 3px solid #4a4a3a;
+        }
+
+        .papers-stack {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            width: 60px;
+            height: 50px;
+            background: #f5f5dc;
+            border: 2px solid #d4af37;
+            transform: rotate(-8deg);
+        }
+
+        .filing-cabinet {
+            position: absolute;
+            top: 25%;
+            right: 8%;
+            width: 100px;
+            height: 200px;
+            background: #4a4a4a;
+            border: 3px solid #5a5a5a;
+        }
+
+        .drawer {
+            width: 90%;
+            height: 45px;
+            margin: 5px auto;
+            background: #3a3a3a;
+            border: 2px solid #2a2a2a;
+        }
+
+        .map-board {
+            position: absolute;
+            top: 15%;
+            left: 10%;
+            width: 150px;
+            height: 120px;
+            background: #8b7355;
+            border: 4px solid #5a4a3a;
+            transform: rotate(-2deg);
+        }
+
+        /* Bombe Machine */
+        .bombe-machine {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 450px;
+            height: 400px;
+            z-index: 10;
+        }
+
+        .machine-frame {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #3a3a3a 0%, #1a1a1a 100%);
+            border: 6px solid #5a5a5a;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9);
+        }
+
+        .machine-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: 100px;
+            background: #0a0a0a;
+            border: 3px solid #4a4a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #ff0000;
+            padding: 10px;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        .rotors-section {
+            position: absolute;
+            top: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+        }
+
+        .rotor {
+            width: 80px;
+            height: 120px;
+            background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 100%);
+            border: 4px solid #6a6a6a;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .rotor-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: #1a1a1a;
+            border: 3px solid #ffd700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .rotor.spinning .rotor-display {
+            animation: rotorSpin 2s linear;
+        }
+
+        @keyframes rotorSpin {
+            from { transform: translate(-50%, -50%) rotateY(0deg); }
+            to { transform: translate(-50%, -50%) rotateY(1080deg); }
+        }
+
+        .rotor-label {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #aaa;
+            font-size: 0.7rem;
+        }
+
+        .wiring {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            height: 40px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .wire {
+            width: 3px;
+            height: 100%;
+            background: #ff0000;
+            opacity: 0.3;
+        }
+
+        .wire.active {
+            opacity: 1;
+            animation: wirePulse 1s ease-in-out infinite;
+        }
+
+        @keyframes wirePulse {
+            0%, 100% { box-shadow: 0 0 5px #ff0000; }
+            50% { box-shadow: 0 0 15px #ff0000; }
+        }
+
+        /* Alan Turing Character */
+        .alan-character {
+            position: absolute;
+            top: 48%;
+            left: 18%;
+            transform: translateY(-50%);
+            width: 85px;
+            height: 160px;
+            z-index: 5;
+        }
+
+        .alan-suit {
+            width: 100%;
+            height: 110px;
+            background: linear-gradient(to bottom, #2a2a2a 0%, #1a1a1a 100%);
+            position: relative;
+            border: 3px solid #3a3a3a;
+            border-radius: 5px 5px 40% 40% / 5px 5px 30% 30%;
+        }
+
+        .alan-tie {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 40px;
+            background: #4a4a6a;
+            clip-path: polygon(50% 0%, 0% 20%, 40% 100%, 60% 100%, 100% 20%);
+        }
+
+        .alan-head {
+            width: 42px;
+            height: 52px;
+            background: #ffd1a3;
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            top: -48px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 2px solid #d4a574;
+        }
+
+        .alan-hair {
+            width: 44px;
+            height: 28px;
+            background: #3d2817;
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            top: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .alan-face-detail {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            text-align: center;
+        }
+
+        .alan-eyes {
+            font-size: 8px;
+            color: #2a1810;
+        }
+
+        .alan-mouth {
+            margin-top: 8px;
+            font-size: 8px;
+            color: #8b4513;
+        }
+
+        /* Player Character */
+        .player {
+            position: absolute;
+            bottom: 32%;
+            right: 22%;
+            width: 50px;
+            height: 80px;
+            background: linear-gradient(to bottom, #667eea 0%, #4a5aa8 100%);
+            border-radius: 25px 25px 10px 10px;
+            z-index: 100;
+            opacity: 0;
+            animation: playerAppear 1s ease-out 3s forwards;
+        }
+
+        @keyframes playerAppear {
+            0% { opacity: 0; transform: scale(0.5) translateY(-50px); }
+            50% { opacity: 1; transform: scale(1.2) translateY(-10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .player::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: #c4d7ff;
+            border-radius: 50%;
+            border: 2px solid #4a5aa8;
+        }
+
+        /* Dialogue Box */
+        .dialogue-box {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            max-width: 700px;
+            background: rgba(26, 26, 26, 0.95);
+            border: 4px solid #4a4a6a;
+            border-radius: 15px;
+            padding: 25px;
+            color: #ffffff;
+            display: none;
+            z-index: 1000;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .dialogue-box.active {
+            display: block;
+        }
+
+        .dialogue-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4a4a6a;
+        }
+
+        .dialogue-portrait {
+            width: 50px;
+            height: 50px;
+            background: #2a2a2a;
+            border-radius: 50%;
+            border: 3px solid #4a4a6a;
+            margin-right: 15px;
+        }
+
+        .dialogue-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #8a8aaa;
+        }
+
+        .dialogue-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .dialogue-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .dialogue-btn {
+            background: linear-gradient(135deg, #4a4a6a 0%, #2a2a4a 100%);
+            border: 2px solid #6a6a8a;
+            color: #ffffff;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .dialogue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(106, 106, 138, 0.4);
+            background: linear-gradient(135deg, #5a5a7a 0%, #3a3a5a 100%);
+        }
+
+        /* Logic Puzzle Interface */
+        .logic-puzzle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .logic-puzzle.active {
+            display: flex;
+        }
+
+        .puzzle-panel {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 5px solid #4a4a6a;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+        }
+
+        .puzzle-title {
+            font-size: 1.8rem;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .encrypted-message {
+            background: #0a0a0a;
+            border: 3px solid #4a4a4a;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .encrypted-text {
+            font-size: 1.3rem;
+            color: #ff0000;
+            letter-spacing: 3px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .decrypted-text {
+            font-size: 1.2rem;
+            color: #00ff00;
+            letter-spacing: 2px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .decrypted-text.visible {
+            display: block;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .puzzle-instruction {
+            color: #ffffff;
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .logic-builder {
+            background: rgba(42, 42, 42, 0.8);
+            border: 3px solid #4a4a6a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .builder-title {
+            color: #ffd700;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .logic-chains {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .logic-chain {
+            background: #1a1a1a;
+            border: 2px solid #3a3a3a;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .chain-label {
+            color: #aaa;
+            font-size: 0.9rem;
+            min-width: 80px;
+        }
+
+        .drop-slot {
+            min-width: 120px;
+            min-height: 50px;
+            background: #2a2a2a;
+            border: 2px dashed #4a4a6a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .drop-slot.filled {
+            border-style: solid;
+            border-color: #6a6a8a;
+        }
+
+        .drop-slot.valid-drop {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        .arrow {
+            color: #ffd700;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .available-commands {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logic-block {
+            background: linear-gradient(135deg, #4a4a6a 0%, #2a2a4a 100%);
+            border: 3px solid #6a6a8a;
+            border-radius: 10px;
+            padding: 12px 15px;
+            cursor: move;
+            user-select: none;
+            transition: all 0.3s ease;
+            text-align: center;
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: bold;
+        }
+
+        .logic-block:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(106, 106, 138, 0.5);
+        }
+
+        .logic-block.dragging {
+            opacity: 0.5;
+        }
+
+        .logic-block.used {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .logic-block.if {
+            border-color: #ff6b9d;
+        }
+
+        .logic-block.then {
+            border-color: #4ecdc4;
+        }
+
+        .logic-block.letter {
+            border-color: #ffd700;
+        }
+
+        .logic-block.rotor {
+            border-color: #95e1d3;
+        }
+
+        .execute-btn {
+            display: block;
+            margin: 20px auto 0;
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            border: 3px solid #8b7355;
+            color: #1a1a1a;
+            padding: 15px 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+        }
+
+        .execute-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+        }
+
+        .execute-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.5;
+            border-color: #333;
+        }
+
+        /* Success Flash */
+        .success-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, transparent 70%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2500;
+        }
+
+        .success-flash.active {
+            animation: flashSuccess 1.5s ease-out;
+        }
+
+        @keyframes flashSuccess {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* HUD */
+        .hud {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(26, 26, 26, 0.9);
+            border: 3px solid #4a4a6a;
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 1500;
+        }
+
+        .hud-title {
+            color: #8a8aaa;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .repair-progress {
+            display: flex;
+            gap: 5px;
+        }
+
+        .repair-piece {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #3a3a3a;
+            border-radius: 5px;
+            background: #1a1a1a;
+            transition: all 0.5s ease;
+        }
+
+        .repair-piece.active {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            animation: piecePulse 1s ease-out;
+        }
+
+        @keyframes piecePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Time transition -->
+        <div class="time-transition" id="timeTransition"></div>
+
+        <!-- Military room elements -->
+        <div class="military-desk">
+            <div class="papers-stack"></div>
+        </div>
+        <div class="filing-cabinet">
+            <div class="drawer"></div>
+            <div class="drawer"></div>
+            <div class="drawer"></div>
+            <div class="drawer"></div>
+        </div>
+        <div class="map-board"></div>
+
+        <!-- Bombe Machine -->
+        <div class="bombe-machine">
+            <div class="machine-frame" id="machineFrame">
+                <div class="machine-panel" id="machinePanel">
+                    ENCRYPTED MESSAGE DETECTED<br>
+                    ROTOR CONFIGURATION REQUIRED
+                </div>
+                <div class="rotors-section">
+                    <div class="rotor" id="rotor1">
+                        <div class="rotor-display">?</div>
+                        <div class="rotor-label">ROTOR I</div>
+                    </div>
+                    <div class="rotor" id="rotor2">
+                        <div class="rotor-display">?</div>
+                        <div class="rotor-label">ROTOR II</div>
+                    </div>
+                    <div class="rotor" id="rotor3">
+                        <div class="rotor-display">?</div>
+                        <div class="rotor-label">ROTOR III</div>
+                    </div>
+                </div>
+                <div class="wiring">
+                    <div class="wire" id="wire1"></div>
+                    <div class="wire" id="wire2"></div>
+                    <div class="wire" id="wire3"></div>
+                    <div class="wire" id="wire4"></div>
+                    <div class="wire" id="wire5"></div>
+                    <div class="wire" id="wire6"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alan Turing Character -->
+        <div class="alan-character">
+            <div class="alan-suit">
+                <div class="alan-tie"></div>
+                <div class="alan-head">
+                    <div class="alan-hair"></div>
+                    <div class="alan-face-detail">
+                        <div class="alan-eyes">• •</div>
+                        <div class="alan-mouth">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Player Character -->
+        <div class="player"></div>
+
+        <!-- Dialogue Box -->
+        <div class="dialogue-box" id="dialogueBox">
+            <div class="dialogue-header">
+                <div class="dialogue-portrait"></div>
+                <div class="dialogue-name">Alan Turing</div>
+            </div>
+            <div class="dialogue-text" id="dialogueText"></div>
+            <div class="dialogue-buttons" id="dialogueButtons"></div>
+        </div>
+
+        <!-- HUD -->
+        <div class="hud">
+            <div class="hud-title">Time Machine Repair</div>
+            <div class="repair-progress">
+                <div class="repair-piece active"></div>
+                <div class="repair-piece active"></div>
+                <div class="repair-piece" id="piece3"></div>
+                <div class="repair-piece"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logic Puzzle Interface -->
+    <div class="logic-puzzle" id="logicPuzzle">
+        <div class="puzzle-panel">
+            <h2 class="puzzle-title">ENIGMA CODE BREAKER</h2>
+            
+            <div class="encrypted-message">
+                <div class="encrypted-text" id="encryptedText">KHOOR ZRUOG</div>
+                <div class="decrypted-text" id="decryptedText">→ HELLO WORLD</div>
+            </div>
+
+            <p class="puzzle-instruction">
+                Build logical conditions to configure the Bombe machine's rotors.<br>
+                Create IF/THEN statements to map letters to the correct rotor positions.
+            </p>
+
+            <div class="logic-builder">
+                <div class="builder-title">Logic Chain Builder</div>
+                <div class="logic-chains" id="logicChains">
+                    <div class="logic-chain" data-chain="1">
+                        <span class="chain-label">Rule 1:</span>
+                        <div class="drop-slot" data-type="if" data-chain="1"></div>
+                        <span class="arrow">→</span>
+                        <div class="drop-slot" data-type="then" data-chain="1"></div>
+                    </div>
+                    <div class="logic-chain" data-chain="2">
+                        <span class="chain-label">Rule 2:</span>
+                        <div class="drop-slot" data-type="if" data-chain="2"></div>
+                        <span class="arrow">→</span>
+                        <div class="drop-slot" data-type="then" data-chain="2"></div>
+                    </div>
+                    <div class="logic-chain" data-chain="3">
+                        <span class="chain-label">Rule 3:</span>
+                        <div class="drop-slot" data-type="if" data-chain="3"></div>
+                        <span class="arrow">→</span>
+                        <div class="drop-slot" data-type="then" data-chain="3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="builder-title">Available Commands</div>
+            <div class="available-commands" id="availableCommands">
+                <div class="logic-block if" draggable="true" data-command="if-K">IF letter = K</div>
+                <div class="logic-block then rotor" draggable="true" data-command="then-R1-H">THEN Rotor I → H</div>
+                <div class="logic-block if" draggable="true" data-command="if-H">IF letter = H</div>
+                <div class="logic-block then rotor" draggable="true" data-command="then-R2-E">THEN Rotor II → E</div>
+                <div class="logic-block if" draggable="true" data-command="if-O">IF letter = O</div>
+                <div class="logic-block then rotor" draggable="true" data-command="then-R3-L">THEN Rotor III → L</div>
+            </div>
+
+            <button class="execute-btn" id="executeBtn" disabled>DECRYPT MESSAGE</button>
+        </div>
+    </div>
+
+    <!-- Success Flash -->
+    <div class="success-flash" id="successFlash"></div>
+
+    <script>
+        // Game state
+        let gameState = {
+            arrivedAtBletchley: false,
+            metAlan: false,
+            puzzleActive: false,
+            puzzleSolved: false,
+            correctSolution: {
+                1: { if: 'if-K', then: 'then-R1-H' },
+                2: { if: 'if-H', then: 'then-R2-E' },
+                3: { if: 'if-O', then: 'then-R3-L' }
+            },
+            currentSolution: {
+                1: { if: null, then: null },
+                2: { if: null, then: null },
+                3: { if: null, then: null }
+            }
+        };
+
+        // DOM elements
+        const dialogueBox = document.getElementById('dialogueBox');
+        const dialogueText = document.getElementById('dialogueText');
+        const dialogueButtons = document.getElementById('dialogueButtons');
+        const logicPuzzle = document.getElementById('logicPuzzle');
+        const executeBtn = document.getElementById('executeBtn');
+        const machinePanel = document.getElementById('machinePanel');
+        const successFlash = document.getElementById('successFlash');
+        const timeTransition = document.getElementById('timeTransition');
+        const decryptedText = document.getElementById('decryptedText');
+
+        // Initialize
+        setTimeout(() => {
+            timeTransition.style.display = 'none';
+            introduceAlan();
+        }, 3500);
+
+        function introduceAlan() {
+            gameState.arrivedAtBletchley = true;
+            setTimeout(() => {
+                showDialogue(
+                    "Welcome to Bletchley Park. We've intercepted an Enigma-encrypted message, but the Bombe machine needs to be configured with the proper logic rules. The fate of the war effort depends on breaking this code quickly.",
+                    [{ text: "How does it work?", action: explainChallenge }]
+                );
+            }, 500);
+        }
+
+        function explainChallenge() {
+            showDialogue(
+                "The Bombe uses logical conditions - IF a certain letter is found, THEN configure the rotor to a specific position. You'll need to build three logic chains to decrypt the message. Think carefully about the pattern!",
+                [{ text: "I'll help break the code!", action: startPuzzle }]
+            );
+        }
+
+        function startPuzzle() {
+            hideDialogue();
+            gameState.puzzleActive = true;
+            logicPuzzle.classList.add('active');
+            initializeDragAndDrop();
+        }
+
+        // Drag and Drop System
+        let draggedElement = null;
+
+        function initializeDragAndDrop() {
+            const blocks = document.querySelectorAll('.logic-block');
+            const dropSlots = document.querySelectorAll('.drop-slot');
+            
+            blocks.forEach(block => {
+                block.addEventListener('dragstart', handleDragStart);
+                block.addEventListener('dragend', handleDragEnd);
+            });
+
+            dropSlots.forEach(slot => {
+                slot.addEventListener('dragover', handleDragOver);
+                slot.addEventListener('drop', handleDrop);
+                slot.addEventListener('dragleave', handleDragLeave);
+            });
+
+            executeBtn.addEventListener('click', executeDecryption);
+        }
+
+        function handleDragStart(e) {
+            if (this.classList.contains('used')) return;
+            draggedElement = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            
+            // Check if the slot accepts this type
+            const slotType = this.getAttribute('data-type');
+            const draggedCommand = draggedElement?.getAttribute('data-command');
+            
+            if (draggedCommand) {
+                const commandType = draggedCommand.split('-')[0];
+                if (commandType === slotType) {
+                    this.classList.add('valid-drop');
+                }
+            }
+            
+            return false;
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('valid-drop');
+        }
+
+        function handleDrop(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            this.classList.remove('valid-drop');
+            
+            if (!draggedElement) return;
+            
+            const slotType = this.getAttribute('data-type');
+            const chainNum = this.getAttribute('data-chain');
+            const draggedCommand = draggedElement.getAttribute('data-command');
+            const commandType = draggedCommand.split('-')[0];
+            
+            // Validate drop
+            if (commandType !== slotType) {
+                return false;
+            }
+            
+            // Check if slot is already filled
+            if (this.classList.contains('filled')) {
+                // Remove old block
+                this.innerHTML = '';
+            }
+            
+            // Clone and place the block
+            const clonedBlock = draggedElement.cloneNode(true);
+            clonedBlock.draggable = false;
+            clonedBlock.style.cursor = 'default';
+            clonedBlock.style.margin = '0';
+            clonedBlock.style.width = '100%';
+            
+            // Add click to remove
+            clonedBlock.addEventListener('click', function() {
+                this.parentElement.innerHTML = '';
+                this.parentElement.classList.remove('filled');
+                draggedElement.classList.remove('used');
+                updateSolution(chainNum, slotType, null);
+                updateExecuteButton();
+            });
+            
+            this.innerHTML = '';
+            this.appendChild(clonedBlock);
+            this.classList.add('filled');
+            
+            // Mark original as used
+            draggedElement.classList.add('used');
+            
+            // Update solution tracking
+            updateSolution(chainNum, slotType, draggedCommand);
+            updateExecuteButton();
+            
+            return false;
+        }
+
+        function updateSolution(chainNum, type, command) {
+            gameState.currentSolution[chainNum][type] = command;
+        }
+
+        function updateExecuteButton() {
+            // Check if all slots are filled
+            let allFilled = true;
+            for (let i = 1; i <= 3; i++) {
+                if (!gameState.currentSolution[i].if || !gameState.currentSolution[i].then) {
+                    allFilled = false;
+                    break;
+                }
+            }
+            executeBtn.disabled = !allFilled;
+        }
+
+        function executeDecryption() {
+            // Check if solution is correct
+            let isCorrect = true;
+            
+            for (let i = 1; i <= 3; i++) {
+                if (gameState.currentSolution[i].if !== gameState.correctSolution[i].if ||
+                    gameState.currentSolution[i].then !== gameState.correctSolution[i].then) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+            
+            if (isCorrect) {
+                puzzleSolved();
+            } else {
+                puzzleFailed();
+            }
+        }
+
+        function puzzleFailed() {
+            machinePanel.innerHTML = `
+                ✗ DECRYPTION FAILED ✗<br>
+                LOGIC CHAIN INCORRECT<br>
+                TRY AGAIN
+            `;
+            machinePanel.style.color = '#ff0000';
+            
+            // Shake animation
+            logicPuzzle.querySelector('.puzzle-panel').style.animation = 'shake 0.5s';
+            
+            setTimeout(() => {
+                machinePanel.innerHTML = `
+                    ENCRYPTED MESSAGE DETECTED<br>
+                    ROTOR CONFIGURATION REQUIRED
+                `;
+                logicPuzzle.querySelector('.puzzle-panel').style.animation = '';
+            }, 2000);
+        }
+
+        function puzzleSolved() {
+            gameState.puzzleSolved = true;
+            
+            // Animate rotors spinning
+            const rotors = [
+                document.getElementById('rotor1'),
+                document.getElementById('rotor2'),
+                document.getElementById('rotor3')
+            ];
+            
+            rotors.forEach((rotor, index) => {
+                setTimeout(() => {
+                    rotor.classList.add('spinning');
+                    rotor.querySelector('.rotor-display').textContent = ['H', 'E', 'L'][index];
+                }, index * 500);
+            });
+            
+            // Activate wires
+            setTimeout(() => {
+                for (let i = 1; i <= 6; i++) {
+                    document.getElementById('wire' + i).classList.add('active');
+                }
+            }, 1500);
+            
+            // Update machine panel
+            setTimeout(() => {
+                machinePanel.innerHTML = `
+                    ✓ DECRYPTION SUCCESSFUL ✓<br>
+                    MESSAGE DECODED
+                `;
+                machinePanel.style.color = '#00ff00';
+                
+                // Show decrypted message
+                decryptedText.classList.add('visible');
+                
+                // Flash effect
+                successFlash.classList.add('active');
+                setTimeout(() => {
+                    successFlash.classList.remove('active');
+                }, 1500);
+                
+                // Repair time machine piece
+                setTimeout(() => {
+                    document.getElementById('piece3').classList.add('active');
+                    
+                    setTimeout(() => {
+                        logicPuzzle.classList.remove('active');
+                        completeScene();
+                    }, 2000);
+                }, 1000);
+            }, 2000);
+        }
+
+        function completeScene() {
+            showDialogue(
+                "Extraordinary work! You've successfully configured the Bombe machine and decrypted the Enigma message. Your logical thinking has saved countless lives today. I can see your time machine's logic circuits have been repaired - it's becoming more stable.",
+                [{ text: "What's next?", action: alanFarewell }]
+            );
+        }
+
+        function alanFarewell() {
+            showDialogue(
+                "You must continue your journey. Remember - computation is not just about calculations, it's about logic, patterns, and solving problems systematically. The future of computing will be built on these foundations. Go forth and continue learning from the pioneers!",
+                [{ text: "Continue Journey →", action: goToNextScene }]
+            );
+        }
+
+        function goToNextScene() {
+            alert("Brilliant code-breaking!\n\nYou've completed the Beginner Level challenges!\n\nNext: Intermediate Level - New pioneers and more complex coding challenges await!\n\n[In the full game, this would transition to Hedy Lamarr's scene]");
+            // In actual implementation:
+            window.location.href = 'HedyLamarScene.html';
+        }
+
+        // Dialogue system
+        function showDialogue(text, buttons) {
+            dialogueText.textContent = text;
+            dialogueButtons.innerHTML = '';
+            
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = 'dialogue-btn';
+                button.textContent = btn.text;
+                button.onclick = btn.action;
+                dialogueButtons.appendChild(button);
+            });
+            
+            dialogueBox.classList.add('active');
+        }
+
+        function hideDialogue() {
+            dialogueBox.classList.remove('active');
+        }
+
+        // Add shake animation for errors
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+                20%, 40%, 60%, 80% { transform: translateX(10px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

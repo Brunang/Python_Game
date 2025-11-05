@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scene 7: Hedy Lamarr - SHE<Codes/></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Game Container */
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url('images/hollywood-studio.jpg') center center no-repeat;
+            background-size: cover;
+            background-color: #1a1a1a;
+        }
+
+        /* Level Transition Screen */
+        .level-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a1a3a 50%, #1a1a1a 100%);
+            z-index: 4000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: transitionFade 5s ease-out forwards;
+        }
+
+        @keyframes transitionFade {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; pointer-events: none; }
+        }
+
+        .transition-title {
+            font-size: 3rem;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            margin-bottom: 30px;
+            animation: titlePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .transition-message {
+            font-size: 1.5rem;
+            color: #ffffff;
+            text-align: center;
+            max-width: 700px;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .achievements-earned {
+            background: rgba(0, 0, 0, 0.7);
+            border: 3px solid #ffd700;
+            border-radius: 15px;
+            padding: 30px 50px;
+            margin-top: 20px;
+        }
+
+        .achievement {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            font-size: 1.2rem;
+            color: #00ff00;
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+        }
+
+        /* Studio Setting - Hollywood Aesthetic */
+        .studio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 40%, transparent 20%, rgba(0, 0, 0, 0.7) 80%);
+            pointer-events: none;
+        }
+
+        .spotlight {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 200, 0.3) 0%, transparent 70%);
+            pointer-events: none;
+            animation: spotlightFlicker 3s ease-in-out infinite;
+        }
+
+        .spotlight-1 {
+            top: 10%;
+            left: 45%;
+        }
+
+        @keyframes spotlightFlicker {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .film-reel {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 5px solid #8b7355;
+            border-radius: 50%;
+            background: #2a2a2a;
+            top: 20%;
+            right: 10%;
+        }
+
+        .reel-hole {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #1a1a1a;
+            border-radius: 50%;
+        }
+
+        .camera {
+            position: absolute;
+            bottom: 20%;
+            right: 15%;
+            width: 100px;
+            height: 80px;
+            background: #2a2a2a;
+            border: 3px solid #4a4a4a;
+            border-radius: 5px;
+        }
+
+        /* Workbench */
+        .workbench {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 400px;
+            z-index: 10;
+        }
+
+        .bench-surface {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #6b5742 0%, #4a3829 100%);
+            border: 5px solid #8b7355;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+        }
+
+        .radio-receiver {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            height: 180px;
+            background: linear-gradient(135deg, #3a3a3a 0%, #1a1a1a 100%);
+            border: 4px solid #5a5a5a;
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .radio-dial {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            background: #2a2a2a;
+            border: 3px solid #4a4a4a;
+            border-radius: 50%;
+        }
+
+        .radio-screen {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 130px;
+            height: 60px;
+            background: #0a0a0a;
+            border: 2px solid #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ff00;
+            font-size: 0.8rem;
+        }
+
+        .frequency-display {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            height: 70px;
+            background: #0a0a0a;
+            border: 3px solid #ffd700;
+            border-radius: 5px;
+        }
+
+        .signal-wave {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 5px;
+        }
+
+        .signal-bar {
+            width: 8%;
+            background: linear-gradient(to top, #00ff00 0%, #00aa00 100%);
+            border-radius: 3px 3px 0 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .signal-bar.active {
+            opacity: 1;
+            animation: barPulse 0.5s ease-in-out;
+        }
+
+        @keyframes barPulse {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.2); }
+        }
+
+        .hopping-indicator {
+            position: absolute;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffd700;
+            opacity: 0;
+        }
+
+        .hopping-indicator.active {
+            animation: hop 2s linear infinite;
+        }
+
+        @keyframes hop {
+            0% { left: 5%; opacity: 1; }
+            100% { left: 95%; opacity: 1; }
+        }
+
+        .blueprint {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 150px;
+            height: 120px;
+            background: rgba(173, 216, 230, 0.1);
+            border: 2px solid #4682b4;
+            transform: rotate(5deg);
+        }
+
+        /* Hedy Lamarr Character */
+        .hedy-character {
+            position: absolute;
+            top: 45%;
+            left: 20%;
+            transform: translateY(-50%);
+            width: 100px;
+            height: 180px;
+            z-index: 5;
+        }
+
+        .hedy-dress {
+            width: 100%;
+            height: 130px;
+            background: linear-gradient(to bottom, #8b0000 0%, #5a0000 100%);
+            position: relative;
+            border: 3px solid #660000;
+            border-radius: 10px 10px 70% 70% / 10px 10px 50% 50%;
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.5);
+        }
+
+        .hedy-neckline {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 20px;
+            background: #ffd1a3;
+            border-radius: 50% 50% 0 0;
+        }
+
+        .hedy-head {
+            width: 50px;
+            height: 60px;
+            background: #ffd1a3;
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            top: -55px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 2px solid #d4a574;
+        }
+
+        .hedy-hair {
+            width: 55px;
+            height: 45px;
+            background: #1a0a00;
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .hedy-hair-wave {
+            position: absolute;
+            width: 20px;
+            height: 25px;
+            background: #1a0a00;
+            border-radius: 50%;
+            top: 10px;
+            left: -5px;
+        }
+
+        .hedy-face-detail {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            text-align: center;
+        }
+
+        .hedy-eyes {
+            font-size: 8px;
+            color: #2a1810;
+        }
+
+        .hedy-lips {
+            margin-top: 10px;
+            font-size: 10px;
+            color: #ff0000;
+        }
+
+        /* Player Character */
+        .player {
+            position: absolute;
+            bottom: 30%;
+            right: 25%;
+            width: 50px;
+            height: 80px;
+            background: linear-gradient(to bottom, #667eea 0%, #4a5aa8 100%);
+            border-radius: 25px 25px 10px 10px;
+            z-index: 100;
+            opacity: 0;
+            animation: playerAppear 1s ease-out 5s forwards;
+        }
+
+        @keyframes playerAppear {
+            0% { opacity: 0; transform: scale(0.5) translateY(-50px); }
+            50% { opacity: 1; transform: scale(1.2) translateY(-10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .player::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: #c4d7ff;
+            border-radius: 50%;
+            border: 2px solid #4a5aa8;
+        }
+
+        /* Dialogue Box */
+        .dialogue-box {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            max-width: 700px;
+            background: rgba(10, 10, 10, 0.95);
+            border: 4px solid #ffd700;
+            border-radius: 15px;
+            padding: 25px;
+            color: #ffffff;
+            display: none;
+            z-index: 1000;
+            animation: slideUp 0.5s ease-out;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .dialogue-box.active {
+            display: block;
+        }
+
+        .dialogue-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ffd700;
+        }
+
+        .dialogue-portrait {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #8b0000 0%, #5a0000 100%);
+            border-radius: 50%;
+            border: 3px solid #ffd700;
+            margin-right: 15px;
+        }
+
+        .dialogue-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .dialogue-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .dialogue-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .dialogue-btn {
+            background: linear-gradient(135deg, #8b0000 0%, #5a0000 100%);
+            border: 2px solid #ffd700;
+            color: #ffffff;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .dialogue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+            background: linear-gradient(135deg, #9b0000 0%, #6a0000 100%);
+        }
+
+        /* Frequency Puzzle Interface */
+        .frequency-puzzle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .frequency-puzzle.active {
+            display: flex;
+        }
+
+        .puzzle-panel {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 5px solid #ffd700;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
+        }
+
+        .puzzle-title {
+            font-size: 1.8rem;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .puzzle-instruction {
+            color: #ffffff;
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .pattern-requirement {
+            background: rgba(139, 0, 0, 0.3);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            color: #ffd700;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .frequency-builder {
+            background: rgba(42, 42, 42, 0.8);
+            border: 3px solid #4a4a4a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .builder-title {
+            color: #ffd700;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .sequence-slots {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .frequency-slot {
+            width: 80px;
+            height: 80px;
+            background: #1a1a1a;
+            border: 3px dashed #4a4a4a;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .frequency-slot::before {
+            content: attr(data-position);
+            position: absolute;
+            top: -25px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .frequency-slot.filled {
+            border-style: solid;
+            border-color: #ffd700;
+        }
+
+        .frequency-slot.valid-drop {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        .available-frequencies {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .frequency-block {
+            background: linear-gradient(135deg, #8b0000 0%, #5a0000 100%);
+            border: 3px solid #ffd700;
+            border-radius: 10px;
+            padding: 15px 10px;
+            cursor: move;
+            user-select: none;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .frequency-block:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .frequency-block.dragging {
+            opacity: 0.5;
+        }
+
+        .frequency-block.used {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .frequency-value {
+            font-size: 1.4rem;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .frequency-label {
+            font-size: 0.75rem;
+            color: #ffffff;
+        }
+
+        .test-signal-btn {
+            display: block;
+            margin: 20px auto;
+            background: linear-gradient(135deg, #4a4a6a 0%, #2a2a4a 100%);
+            border: 3px solid #ffd700;
+            color: #ffffff;
+            padding: 12px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .test-signal-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .test-signal-btn:disabled {
+            background: #333;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .transmit-btn {
+            display: block;
+            margin: 20px auto 0;
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            border: 3px solid #8b7355;
+            color: #1a1a1a;
+            padding: 15px 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+        }
+
+        .transmit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+        }
+
+        .transmit-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        /* Pattern Analysis */
+        .pattern-analysis {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #4a4a4a;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .pattern-analysis.visible {
+            display: block;
+        }
+
+        .analysis-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            color: #ffffff;
+        }
+
+        .analysis-label {
+            color: #aaa;
+        }
+
+        .analysis-value {
+            font-weight: bold;
+        }
+
+        .analysis-value.good {
+            color: #00ff00;
+        }
+
+        .analysis-value.bad {
+            color: #ff0000;
+        }
+
+        /* Success Flash */
+        .success-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, transparent 70%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2500;
+        }
+
+        .success-flash.active {
+            animation: flashSuccess 1.5s ease-out;
+        }
+
+        @keyframes flashSuccess {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* HUD */
+        .hud {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(10, 10, 10, 0.9);
+            border: 3px solid #ffd700;
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 1500;
+        }
+
+        .hud-title {
+            color: #ffd700;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .repair-progress {
+            display: flex;
+            gap: 5px;
+        }
+
+        .repair-piece {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #3a3a3a;
+            border-radius: 5px;
+            background: #1a1a1a;
+            transition: all 0.5s ease;
+        }
+
+        .repair-piece.active {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            animation: piecePulse 1s ease-out;
+        }
+
+        @keyframes piecePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Level Transition Screen -->
+    <div class="level-transition" id="levelTransition">
+        <h1 class="transition-title">⚡ INTERMEDIATE LEVEL ⚡</h1>
+        <p class="transition-message">
+            You've mastered the fundamentals! The pioneers are impressed with your progress.<br>
+            Now, face more complex challenges that will test your growing programming skills.
+        </p>
+        <div class="achievements-earned">
+            <div class="achievement">
+                <span class="achievement-icon">✓</span>
+                <span>Algorithm Master (Ada Lovelace)</span>
+            </div>
+            <div class="achievement">
+                <span class="achievement-icon">✓</span>
+                <span>Bug Hunter (Grace Hopper)</span>
+            </div>
+            <div class="achievement">
+                <span class="achievement-icon">✓</span>
+                <span>Logic Builder (Alan Turing)</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <!-- Studio Aesthetic -->
+        <div class="studio-overlay"></div>
+        <div class="spotlight spotlight-1"></div>
+        
+        <!-- Studio Props -->
+        <div class="film-reel">
+            <div class="reel-hole" style="top: 15px; left: 15px;"></div>
+            <div class="reel-hole" style="top: 15px; right: 15px;"></div>
+            <div class="reel-hole" style="bottom: 15px; left: 15px;"></div>
+            <div class="reel-hole" style="bottom: 15px; right: 15px;"></div>
+        </div>
+        <div class="camera"></div>
+
+        <!-- Workbench -->
+        <div class="workbench">
+            <div class="bench-surface">
+                <div class="radio-receiver">
+                    <div class="radio-dial"></div>
+                    <div class="radio-screen" id="radioScreen">
+                        AWAITING SIGNAL...
+                    </div>
+                </div>
+                <div class="frequency-display">
+                    <div class="hopping-indicator" id="hoppingIndicator"></div>
+                    <div class="signal-wave" id="signalWave">
+                        <div class="signal-bar" style="height: 20%;"></div>
+                        <div class="signal-bar" style="height: 40%;"></div>
+                        <div class="signal-bar" style="height: 60%;"></div>
+                        <div class="signal-bar" style="height: 80%;"></div>
+                        <div class="signal-bar" style="height: 100%;"></div>
+                        <div class="signal-bar" style="height: 70%;"></div>
+                        <div class="signal-bar" style="height: 50%;"></div>
+                        <div class="signal-bar" style="height: 30%;"></div>
+                    </div>
+                </div>
+                <div class="blueprint"></div>
+            </div>
+        </div>
+
+        <!-- Hedy Lamarr Character -->
+        <div class="hedy-character">
+            <div class="hedy-dress">
+                <div class="hedy-neckline"></div>
+                <div class="hedy-head">
+                    <div class="hedy-hair">
+                        <div class="hedy-hair-wave"></div>
+                    </div>
+                    <div class="hedy-face-detail">
+                        <div class="hedy-eyes">• •</div>
+                        <div class="hedy-lips">◡</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Player Character -->
+        <div class="player"></div>
+
+        <!-- Dialogue Box -->
+        <div class="dialogue-box" id="dialogueBox">
+            <div class="dialogue-header">
+                <div class="dialogue-portrait"></div>
+                <div class="dialogue-name">Hedy Lamarr</div>
+            </div>
+            <div class="dialogue-text" id="dialogueText"></div>
+            <div class="dialogue-buttons" id="dialogueButtons"></div>
+        </div>
+
+        <!-- HUD -->
+        <div class="hud">
+            <div class="hud-title">Time Machine Repair</div>
+            <div class="repair-progress">
+                <div class="repair-piece active"></div>
+                <div class="repair-piece active"></div>
+                <div class="repair-piece active"></div>
+                <div class="repair-piece" id="piece4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Frequency Puzzle Interface -->
+    <div class="frequency-puzzle" id="frequencyPuzzle">
+        <div class="puzzle-panel">
+            <h2 class="puzzle-title">FREQUENCY-HOPPING SPREAD SPECTRUM</h2>
+            <p class="puzzle-instruction">
+                Create an unpredictable frequency-hopping pattern for secure torpedo guidance.<br>
+                The signal must change frequencies rapidly to avoid enemy jamming.
+            </p>
+
+            <div class="pattern-requirement">
+                <strong>Requirements:</strong> Use 8 frequencies | No consecutive duplicates | Pattern must be unpredictable
+            </div>
+
+            <div class="frequency-builder">
+                <div class="builder-title">Signal Hopping Sequence</div>
+                <div class="sequence-slots" id="sequenceSlots">
+                    <div class="frequency-slot" data-position="1"></div>
+                    <div class="frequency-slot" data-position="2"></div>
+                    <div class="frequency-slot" data-position="3"></div>
+                    <div class="frequency-slot" data-position="4"></div>
+                    <div class="frequency-slot" data-position="5"></div>
+                    <div class="frequency-slot" data-position="6"></div>
+                    <div class="frequency-slot" data-position="7"></div>
+                    <div class="frequency-slot" data-position="8"></div>
+                </div>
+            </div>
+
+            <div class="builder-title">Available Frequencies (MHz)</div>
+            <div class="available-frequencies" id="availableFrequencies">
+                <div class="frequency-block" draggable="true" data-freq="88.5">
+                    <div class="frequency-value">88.5</div>
+                    <div class="frequency-label">MHz</div>
+                </div>
+                <div class="frequency-block" draggable="true" data-freq="92.3">
+                    <div class="frequency-value">92.3</div>
+                    <div class="frequency-label">MHz</div>
+                </div>
+                <div class="frequency-block" draggable="true" data-freq="96.7">
+                    <div class="frequency-value">96.7</div>
+                    <div class="frequency-label">MHz</div>
+                </div>
+                <div class="frequency-block" draggable="true" data-freq="101.1">
+                    <div class="frequency-value">101.1</div>
+                    <div class="frequency-label">MHz</div>
+                </div>
+                <div class="frequency-block" draggable="true" data-freq="105.9">
+                    <div class="frequency-value">105.9</div>
+                    <div class="frequency-label">MHz</div>
+                </div>
+                <div class="frequency-block" draggable="true" data-freq="88.5">
+                    <div class="frequency-value">88.5</div>
+                    <div class="frequency-label">MHz</div>
+                </div>
+                <div class="frequency-block" draggable="true" data-freq="92.3">
+                    <div class="frequency-value">92.3</div>
+                    <div class="frequency-label">MHz</div>
+                </div>
+                <div class="frequency-block" draggable="true" data-freq="96.7">
+                    <div class="frequency-value">96.7</div>
+                    <div class="frequency-label">MHz</div>
+                </div>
+                <div class="frequency-block" draggable="true" data-freq="101.1">
+                    <div class="frequency-value">101.1</div>
+                    <div class="frequency-label">MHz</div>
+                </div>
+                <div class="frequency-block" draggable="true" data-freq="105.9">
+                    <div class="frequency-value">105.9</div>
+                    <div class="frequency-label">MHz</div>
+                </div>
+            </div>
+
+            <button class="test-signal-btn" id="testSignalBtn" disabled>Test Signal Pattern</button>
+
+            <div class="pattern-analysis" id="patternAnalysis">
+                <div class="analysis-item">
+                    <span class="analysis-label">Pattern Length:</span>
+                    <span class="analysis-value" id="patternLength">0/8</span>
+                </div>
+                <div class="analysis-item">
+                    <span class="analysis-label">Consecutive Duplicates:</span>
+                    <span class="analysis-value" id="consecutiveDupes">Checking...</span>
+                </div>
+                <div class="analysis-item">
+                    <span class="analysis-label">Pattern Predictability:</span>
+                    <span class="analysis-value" id="predictability">Calculating...</span>
+                </div>
+            </div>
+
+            <button class="transmit-btn" id="transmitBtn" disabled>Transmit Signal</button>
+        </div>
+    </div>
+
+    <!-- Success Flash -->
+    <div class="success-flash" id="successFlash"></div>
+
+    <script>
+        // Game state
+        let gameState = {
+            arrivedInStudio: false,
+            metHedy: false,
+            puzzleActive: false,
+            puzzleSolved: false,
+            frequencySequence: [],
+            testPassed: false
+        };
+
+        // DOM elements
+        const dialogueBox = document.getElementById('dialogueBox');
+        const dialogueText = document.getElementById('dialogueText');
+        const dialogueButtons = document.getElementById('dialogueButtons');
+        const frequencyPuzzle = document.getElementById('frequencyPuzzle');
+        const radioScreen = document.getElementById('radioScreen');
+        const signalWave = document.getElementById('signalWave');
+        const hoppingIndicator = document.getElementById('hoppingIndicator');
+        const testSignalBtn = document.getElementById('testSignalBtn');
+        const transmitBtn = document.getElementById('transmitBtn');
+        const patternAnalysis = document.getElementById('patternAnalysis');
+        const successFlash = document.getElementById('successFlash');
+        const levelTransition = document.getElementById('levelTransition');
+
+        // Initialize
+        setTimeout(() => {
+            levelTransition.style.display = 'none';
+            introduceHedy();
+        }, 5500);
+
+        function introduceHedy() {
+            gameState.arrivedInStudio = true;
+            setTimeout(() => {
+                showDialogue(
+                    "Welcome! I'm glad you're here. I'm working on something revolutionary - a frequency-hopping system for torpedo guidance. The enemy can't jam a signal if it keeps changing frequencies unpredictably. Will you help me perfect this invention?",
+                    [{ text: "Tell me more!", action: explainInvention }]
+                );
+            }, 500);
+        }
+
+        function explainInvention() {
+            showDialogue(
+                "The concept is elegant: instead of transmitting on one frequency, we rapidly hop between multiple frequencies in a pattern. Like a pianist playing different keys - the melody is secure because the pattern is unpredictable. We need to create a sequence of 8 frequency changes with no consecutive duplicates.",
+                [{ text: "I'll help create the pattern!", action: startPuzzle }]
+            );
+        }
+
+        function startPuzzle() {
+            hideDialogue();
+            gameState.puzzleActive = true;
+            frequencyPuzzle.classList.add('active');
+            initializeDragAndDrop();
+        }
+
+        // Drag and Drop System
+        let draggedElement = null;
+
+        function initializeDragAndDrop() {
+            const blocks = document.querySelectorAll('.frequency-block');
+            const slots = document.querySelectorAll('.frequency-slot');
+            
+            blocks.forEach(block => {
+                block.addEventListener('dragstart', handleDragStart);
+                block.addEventListener('dragend', handleDragEnd);
+            });
+
+            slots.forEach(slot => {
+                slot.addEventListener('dragover', handleDragOver);
+                slot.addEventListener('drop', handleDrop);
+                slot.addEventListener('dragleave', handleDragLeave);
+            });
+
+            testSignalBtn.addEventListener('click', testSignalPattern);
+            transmitBtn.addEventListener('click', transmitSignal);
+        }
+
+        function handleDragStart(e) {
+            if (this.classList.contains('used')) return;
+            draggedElement = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            this.classList.add('valid-drop');
+            return false;
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('valid-drop');
+        }
+
+        function handleDrop(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            this.classList.remove('valid-drop');
+            
+            if (!draggedElement) return;
+            
+            const position = parseInt(this.getAttribute('data-position'));
+            const frequency = draggedElement.getAttribute('data-freq');
+            
+            // Check if slot is already filled
+            if (this.classList.contains('filled')) {
+                // Remove old block
+                const oldFreq = this.getAttribute('data-freq');
+                gameState.frequencySequence[position - 1] = null;
+                this.innerHTML = '';
+            }
+            
+            // Clone and place the block
+            const clonedBlock = draggedElement.cloneNode(true);
+            clonedBlock.draggable = false;
+            clonedBlock.style.cursor = 'pointer';
+            clonedBlock.style.margin = '0';
+            clonedBlock.style.transform = 'scale(0.9)';
+            
+            // Add click to remove
+            clonedBlock.addEventListener('click', function() {
+                this.parentElement.innerHTML = '';
+                this.parentElement.classList.remove('filled');
+                this.parentElement.removeAttribute('data-freq');
+                gameState.frequencySequence[position - 1] = null;
+                updateUI();
+            });
+            
+            this.innerHTML = '';
+            this.appendChild(clonedBlock);
+            this.classList.add('filled');
+            this.setAttribute('data-freq', frequency);
+            
+            // Update sequence
+            gameState.frequencySequence[position - 1] = frequency;
+            updateUI();
+            
+            return false;
+        }
+
+        function updateUI() {
+            const filledCount = gameState.frequencySequence.filter(f => f !== null && f !== undefined).length;
+            document.getElementById('patternLength').textContent = `${filledCount}/8`;
+            
+            if (filledCount === 8) {
+                testSignalBtn.disabled = false;
+            } else {
+                testSignalBtn.disabled = true;
+                transmitBtn.disabled = true;
+                gameState.testPassed = false;
+            }
+        }
+
+        function testSignalPattern() {
+            patternAnalysis.classList.add('visible');
+            
+            // Check for consecutive duplicates
+            let hasConsecutiveDupes = false;
+            for (let i = 0; i < gameState.frequencySequence.length - 1; i++) {
+                if (gameState.frequencySequence[i] === gameState.frequencySequence[i + 1]) {
+                    hasConsecutiveDupes = true;
+                    break;
+                }
+            }
+            
+            const dupesElement = document.getElementById('consecutiveDupes');
+            if (hasConsecutiveDupes) {
+                dupesElement.textContent = 'Found ✗';
+                dupesElement.classList.remove('good');
+                dupesElement.classList.add('bad');
+            } else {
+                dupesElement.textContent = 'None ✓';
+                dupesElement.classList.remove('bad');
+                dupesElement.classList.add('good');
+            }
+            
+            // Check pattern diversity (simple check - at least 4 different frequencies)
+            const uniqueFreqs = [...new Set(gameState.frequencySequence)].length;
+            const predictElement = document.getElementById('predictability');
+            
+            if (uniqueFreqs >= 4) {
+                predictElement.textContent = 'Low (Secure) ✓';
+                predictElement.classList.remove('bad');
+                predictElement.classList.add('good');
+            } else {
+                predictElement.textContent = 'High (Insecure) ✗';
+                predictElement.classList.remove('good');
+                predictElement.classList.add('bad');
+            }
+            
+            // Animate signal test
+            animateSignalTest();
+            
+            // Enable transmit if pattern is good
+            if (!hasConsecutiveDupes && uniqueFreqs >= 4) {
+                gameState.testPassed = true;
+                setTimeout(() => {
+                    transmitBtn.disabled = false;
+                    radioScreen.textContent = 'PATTERN SECURE ✓';
+                    radioScreen.style.color = '#00ff00';
+                }, 2000);
+            } else {
+                radioScreen.textContent = 'PATTERN INSECURE ✗';
+                radioScreen.style.color = '#ff0000';
+                setTimeout(() => {
+                    radioScreen.textContent = 'AWAITING SIGNAL...';
+                    radioScreen.style.color = '#00ff00';
+                }, 2000);
+            }
+        }
+
+        function animateSignalTest() {
+            const bars = signalWave.querySelectorAll('.signal-bar');
+            hoppingIndicator.classList.add('active');
+            
+            bars.forEach((bar, index) => {
+                setTimeout(() => {
+                    bar.classList.add('active');
+                    setTimeout(() => {
+                        bar.classList.remove('active');
+                    }, 300);
+                }, index * 250);
+            });
+            
+            setTimeout(() => {
+                hoppingIndicator.classList.remove('active');
+            }, 2000);
+        }
+
+        function transmitSignal() {
+            if (!gameState.testPassed) return;
+            
+            gameState.puzzleSolved = true;
+            
+            // Final animation
+            radioScreen.textContent = 'TRANSMITTING...';
+            radioScreen.style.color = '#ffd700';
+            
+            // Animate frequency hopping
+            hoppingIndicator.classList.add('active');
+            const bars = signalWave.querySelectorAll('.signal-bar');
+            
+            let animationCount = 0;
+            const interval = setInterval(() => {
+                bars.forEach((bar, index) => {
+                    setTimeout(() => {
+                        bar.classList.add('active');
+                        setTimeout(() => {
+                            bar.classList.remove('active');
+                        }, 200);
+                    }, index * 150);
+                });
+                
+                animationCount++;
+                if (animationCount >= 3) {
+                    clearInterval(interval);
+                    signalSuccess();
+                }
+            }, 1500);
+        }
+
+        function signalSuccess() {
+            // Flash effect
+            successFlash.classList.add('active');
+            setTimeout(() => {
+                successFlash.classList.remove('active');
+            }, 1500);
+            
+            // Update radio
+            radioScreen.textContent = 'SIGNAL LOCKED ✓';
+            radioScreen.style.color = '#00ff00';
+            
+            // Repair time machine
+            setTimeout(() => {
+                document.getElementById('piece4').classList.add('active');
+                hoppingIndicator.classList.remove('active');
+                
+                setTimeout(() => {
+                    frequencyPuzzle.classList.remove('active');
+                    completeScene();
+                }, 1500);
+            }, 1000);
+        }
+
+        function completeScene() {
+            showDialogue(
+                "Magnificent! Your frequency-hopping pattern is perfect - unpredictable, secure, and unjammable. This technology will revolutionize secure communications. I can see your time machine's communication module is now fully operational!",
+                [{ text: "What will happen to this invention?", action: hedyReflection }]
+            );
+        }
+
+        function hedyReflection() {
+            showDialogue(
+                "This frequency-hopping technology will eventually become the foundation for modern WiFi, Bluetooth, and GPS! Never underestimate the power of combining creativity with technical knowledge. Now, your journey continues - more pioneers await you!",
+                [{ text: "Continue Journey →", action: goToNextScene }]
+            );
+        }
+
+        function goToNextScene() {
+            alert("Brilliant work!\n\nNext: Scene 8 - Katherine Johnson (1960s)\n\nYou'll help Katherine calculate precise rocket trajectories for the space program!");
+            // In actual implementation:
+            window.location.href = 'KatherineJohnsonScene.html';
+        }
+
+        // Dialogue system
+        function showDialogue(text, buttons) {
+            dialogueText.textContent = text;
+            dialogueButtons.innerHTML = '';
+            
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = 'dialogue-btn';
+                button.textContent = btn.text;
+                button.onclick = btn.action;
+                dialogueButtons.appendChild(button);
+            });
+            
+            dialogueBox.classList.add('active');
+        }
+
+        function hideDialogue() {
+            dialogueBox.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
