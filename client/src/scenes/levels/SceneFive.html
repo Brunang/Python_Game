@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scene 8: Katherine Johnson - SHE<Codes/></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Game Container */
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url('images/nasa-control-room.jpg') center center no-repeat;
+            background-size: cover;
+            background-color: #1a1a2a;
+        }
+
+        /* Time transition - space themed */
+        .time-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #000428 0%, #004e92 50%, #000000 100%);
+            z-index: 3000;
+            animation: spaceTravel 3s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes spaceTravel {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0; transform: scale(1.5); }
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* NASA Control Room Elements */
+        .control-panel {
+            position: absolute;
+            top: 15%;
+            left: 8%;
+            width: 200px;
+            height: 150px;
+            background: linear-gradient(135deg, #2a2a3a 0%, #1a1a2a 100%);
+            border: 3px solid #3a3a4a;
+            border-radius: 5px;
+        }
+
+        .panel-lights {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            padding: 15px;
+        }
+
+        .indicator-light {
+            width: 100%;
+            height: 20px;
+            border-radius: 3px;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        .light-red { background: #ff0000; animation-delay: 0s; }
+        .light-green { background: #00ff00; animation-delay: 0.5s; }
+        .light-yellow { background: #ffff00; animation-delay: 1s; }
+        .light-blue { background: #0088ff; animation-delay: 1.5s; }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.3; box-shadow: none; }
+            50% { opacity: 1; box-shadow: 0 0 10px currentColor; }
+        }
+
+        .large-monitor {
+            position: absolute;
+            top: 12%;
+            right: 10%;
+            width: 250px;
+            height: 180px;
+            background: #0a0a0a;
+            border: 5px solid #3a3a4a;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .monitor-display {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #001a00 0%, #000a00 100%);
+            color: #00ff00;
+            font-size: 0.7rem;
+            padding: 10px;
+            line-height: 1.4;
+        }
+
+        .trajectory-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #ff0000;
+            top: 50%;
+            animation: trajectoryShift 2s ease-in-out infinite;
+        }
+
+        @keyframes trajectoryShift {
+            0%, 100% { transform: translateY(-10px); }
+            50% { transform: translateY(10px); }
+        }
+
+        .trajectory-line.corrected {
+            background: #00ff00;
+            animation: none;
+            transform: translateY(0);
+        }
+
+        /* Main Display - Blackboard */
+        .blackboard-section {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 550px;
+            height: 450px;
+            z-index: 10;
+        }
+
+        .blackboard {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a3a1a 0%, #0a2a0a 100%);
+            border: 8px solid #654321;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+        }
+
+        .blackboard-content {
+            padding: 30px;
+            color: #ffffff;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .equation-title {
+            font-size: 1.3rem;
+            color: #ffff99;
+            margin-bottom: 15px;
+            text-align: center;
+            text-decoration: underline;
+        }
+
+        .equation-display {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #556b2f;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #ffffcc;
+        }
+
+        .hint-box {
+            background: rgba(139, 69, 19, 0.3);
+            border: 2px solid #8b4513;
+            border-radius: 5px;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #ffd700;
+        }
+
+        .chalk-text {
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Katherine Johnson Character */
+        .katherine-character {
+            position: absolute;
+            top: 48%;
+            left: 18%;
+            transform: translateY(-50%);
+            width: 95px;
+            height: 170px;
+            z-index: 5;
+        }
+
+        .katherine-dress {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(to bottom, #4a5a8a 0%, #2a3a5a 100%);
+            position: relative;
+            border: 3px solid #3a4a6a;
+            border-radius: 10px 10px 65% 65% / 10px 10px 45% 45%;
+        }
+
+        .katherine-collar {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 45px;
+            height: 18px;
+            background: #ffffff;
+            border: 2px solid #4a5a8a;
+            border-radius: 50% 50% 0 0;
+        }
+
+        .katherine-head {
+            width: 46px;
+            height: 56px;
+            background: #8b6f47;
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            top: -52px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 2px solid #6b5537;
+        }
+
+        .katherine-hair {
+            width: 50px;
+            height: 38px;
+            background: #2a1a0a;
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .katherine-face-detail {
+            position: absolute;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            text-align: center;
+        }
+
+        .katherine-eyes {
+            font-size: 8px;
+            color: #1a0a00;
+        }
+
+        .katherine-smile {
+            margin-top: 9px;
+            font-size: 10px;
+            color: #5a3a1a;
+        }
+
+        .katherine-glasses {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 12px;
+            border: 2px solid #333;
+            border-radius: 50%;
+            background: transparent;
+        }
+
+        .katherine-glasses::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 2px;
+            background: #333;
+        }
+
+        :root {
+            --dialog-duration: 0.18s; /* default: snappy */
+            --dialog-ease: cubic-bezier(.2,.9,.2,1);
+            --dialog-opacity-duration: 0.12s;
+        }
+
+        /* Player Character */
+        .player {
+            position: absolute;
+            bottom: 30%;
+            right: 23%;
+            width: 50px;
+            height: 80px;
+            background: linear-gradient(to bottom, #667eea 0%, #4a5aa8 100%);
+            border-radius: 25px 25px 10px 10px;
+            z-index: 100;
+            opacity: 0;
+            animation: playerAppear 1s ease-out 3s forwards;
+        }
+
+        @keyframes playerAppear {
+            0% { opacity: 0; transform: scale(0.5) translateY(-50px); }
+            50% { opacity: 1; transform: scale(1.2) translateY(-10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .player::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: #c4d7ff;
+            border-radius: 50%;
+            border: 2px solid #4a5aa8;
+        }
+
+        /* Dialogue Box */
+        .dialogue-box {
+            position: absolute;
+            /* anchored to lower part of the screen so it doesn't block the blackboard */
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-6px);
+            width: min(72%, 720px);
+            max-width: 720px;
+            background: rgba(10, 10, 26, 0.95);
+            border: 4px solid #0088ff;
+            border-radius: 15px;
+            padding: 16px 18px;
+            color: #ffffff;
+            display: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: transform 0.18s cubic-bezier(.2,.9,.2,1), opacity 0.12s cubic-bezier(.2,.9,.2,1);
+            box-shadow: 0 0 30px rgba(0, 136, 255, 0.3);
+        }
+
+        .dialogue-box.active {
+            display: block;
+            /* visible state - animate to neutral position */
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .dialogue-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0088ff;
+        }
+
+        .dialogue-portrait {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4a5a8a 0%, #2a3a5a 100%);
+            border-radius: 50%;
+            border: 3px solid #0088ff;
+            margin-right: 15px;
+        }
+
+        .dialogue-name {
+            font-size: 1.12rem;
+            font-weight: bold;
+            color: #0088ff;
+        }
+
+        .dialogue-text {
+            /* slightly smaller text so the dialogue box takes up less screen height */
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        /* responsive: keep dialog readable but compact on small screens */
+        @media (max-width: 720px) {
+            .dialogue-box { width: 92%; max-width: 92%; padding: 12px 14px; }
+            .dialogue-text { font-size: 0.88rem; line-height: 1.6; }
+            .dialogue-name { font-size: 1rem; }
+            .dialogue-buttons { margin-top: 12px; gap: 10px; }
+            .dialogue-btn { padding: 10px 22px; font-size: 0.95rem; }
+        }
+
+        .dialogue-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* small repositioning helper - when repositioning, briefly offset and animate back */
+        /* repositioning helper removed — dialogues always anchored to bottom */
+
+        .dialogue-btn {
+            background: linear-gradient(135deg, #0088ff 0%, #0055cc 100%);
+            border: 2px solid #00aaff;
+            color: #ffffff;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .dialogue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 136, 255, 0.5);
+            background: linear-gradient(135deg, #0099ff 0%, #0066dd 100%);
+        }
+
+        /* Coding Interface */
+        .coding-interface {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .coding-interface.active {
+            display: flex;
+        }
+
+        .code-panel {
+            background: linear-gradient(135deg, #1a1a2a 0%, #0a0a1a 100%);
+            border: 5px solid #0088ff;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 136, 255, 0.4);
+        }
+
+        .code-title {
+            font-size: 1.8rem;
+            color: #0088ff;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 136, 255, 0.5);
+        }
+
+        .code-instruction {
+            color: #ffffff;
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .code-editor {
+            background: #0a0a1a;
+            border: 3px solid #2a2a3a;
+            border-radius: 10px;
+            padding: 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #00ff00;
+            margin-bottom: 20px;
+        }
+
+        .code-line {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .line-number {
+            color: #666;
+            min-width: 30px;
+            text-align: right;
+            user-select: none;
+        }
+
+        .code-text {
+            color: #00ff00;
+        }
+
+        .keyword {
+            color: #ff6b9d;
+            font-weight: bold;
+        }
+
+        .function-name {
+            color: #4ecdc4;
+        }
+
+        .variable {
+            color: #ffd700;
+        }
+
+        .comment {
+            color: #888;
+            font-style: italic;
+        }
+
+        .code-input {
+            background: #1a1a2a;
+            border: 2px solid #0088ff;
+            border-radius: 5px;
+            padding: 4px 8px;
+            color: #ffd700;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            min-width: 100px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .code-input:focus {
+            border-color: #00aaff;
+            box-shadow: 0 0 10px rgba(0, 136, 255, 0.3);
+        }
+
+        .code-input.correct {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        .code-input.incorrect {
+            border-color: #ff0000;
+            background: rgba(255, 0, 0, 0.1);
+            animation: shake 0.3s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .available-options {
+            background: rgba(42, 42, 58, 0.6);
+            border: 2px solid #2a2a3a;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .options-title {
+            color: #0088ff;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .options-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .option-chip {
+            background: #2a2a3a;
+            border: 2px solid #3a3a4a;
+            border-radius: 15px;
+            padding: 6px 15px;
+            color: #00aaff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .option-chip:hover {
+            background: #3a3a4a;
+            border-color: #0088ff;
+            transform: scale(1.05);
+        }
+
+        .option-chip.used {
+            opacity: 0.3;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* Visual indicator (soft) for chips that are currently used in any blank */
+        .option-chip.in-use {
+            box-shadow: 0 6px 18px rgba(0,170,255,0.25) inset, 0 8px 25px rgba(0,170,255,0.12);
+            border-color: #00aaff;
+            transform: translateY(-3px);
+            transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+        }
+
+        .execute-code-btn {
+            display: block;
+            margin: 20px auto 0;
+            background: linear-gradient(135deg, #00ff00 0%, #00aa00 100%);
+            border: 3px solid #00ff00;
+            color: #000000;
+            padding: 15px 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+        }
+
+        .execute-code-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 255, 0, 0.6);
+        }
+
+        .execute-code-btn:disabled {
+            background: #333;
+            border-color: #555;
+            color: #666;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        /* Success Flash */
+        .success-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 136, 255, 0.8) 0%, transparent 70%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2500;
+        }
+
+        .success-flash.active {
+            animation: flashSuccess 1.5s ease-out;
+        }
+
+        @keyframes flashSuccess {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* HUD */
+        .hud {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(10, 10, 26, 0.9);
+            border: 3px solid #0088ff;
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 1500;
+        }
+
+        .hud-title {
+            color: #0088ff;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .repair-progress {
+            display: flex;
+            gap: 5px;
+        }
+
+        .repair-piece {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #2a2a3a;
+            border-radius: 5px;
+            background: #0a0a1a;
+            transition: all 0.5s ease;
+        }
+
+        .repair-piece.active {
+            background: linear-gradient(135deg, #0088ff 0%, #0055cc 100%);
+            box-shadow: 0 0 15px rgba(0, 136, 255, 0.8);
+            animation: piecePulse 1s ease-out;
+        }
+
+        @keyframes piecePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
+
+        /* Spacecraft visualization */
+        .spacecraft-viz {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .spacecraft-icon {
+            font-size: 2rem;
+            position: absolute;
+            left: 10%;
+            animation: driftOff 3s ease-in-out infinite;
+        }
+
+        @keyframes driftOff {
+            0%, 100% { transform: translateY(-5px); }
+            50% { transform: translateY(5px); }
+        }
+
+        .spacecraft-icon.corrected {
+            animation: steadyFlight 1s ease-in-out infinite;
+            left: 50%;
+        }
+
+        @keyframes steadyFlight {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Time transition with stars -->
+        <div class="time-transition" id="timeTransition">
+            <div class="stars" id="stars"></div>
+        </div>
+
+        <!-- NASA Control Room Elements -->
+        <div class="control-panel">
+            <div class="panel-lights">
+                <div class="indicator-light light-red"></div>
+                <div class="indicator-light light-green"></div>
+                <div class="indicator-light light-yellow"></div>
+                <div class="indicator-light light-blue"></div>
+                <div class="indicator-light light-green"></div>
+                <div class="indicator-light light-red"></div>
+                <div class="indicator-light light-blue"></div>
+                <div class="indicator-light light-yellow"></div>
+            </div>
+        </div>
+
+        <div class="large-monitor">
+            <div class="monitor-display">
+                <div class="spacecraft-viz">
+                    <span class="spacecraft-icon" id="spacecraftIcon">🚀</span>
+                </div>
+                TRAJECTORY STATUS:<br>
+                <span id="trajectoryStatus" style="color: #ff0000;">OFF COURSE</span><br>
+                <div class="trajectory-line" id="trajectoryLine"></div>
+                <br>
+                CORRECTION REQUIRED<br>
+                AWAITING CALCULATIONS...
+            </div>
+        </div>
+
+        <!-- Blackboard Section -->
+        <div class="blackboard-section">
+            <div class="blackboard">
+                <div class="blackboard-content chalk-text">
+                    <div class="equation-title">Trajectory Correction Formula</div>
+                    <div class="equation-display">
+                        <strong>Given:</strong><br>
+                        • Current velocity: v = 7800 m/s<br>
+                        • Target angle: θ = 45°<br>
+                        • Time step: Δt = 1 second<br>
+                        • Iterations: n = 10<br><br>
+                        <strong>Calculate:</strong><br>
+                        x = v × cos(θ) × t<br>
+                        y = v × sin(θ) × t - 0.5 gt²<br>
+                    </div>
+                    <div class="hint-box">
+                        💡 <strong>Katherine's Note:</strong><br>
+                        "Precision matters! We must loop through each time step and calculate the position. Use the loop variable 'i', multiply velocity by time, and call the print function to output results."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Katherine Johnson Character -->
+        <div class="katherine-character">
+            <div class="katherine-dress">
+                <div class="katherine-collar"></div>
+                <div class="katherine-head">
+                    <div class="katherine-hair"></div>
+                    <div class="katherine-glasses"></div>
+                    <div class="katherine-face-detail">
+                        <div class="katherine-eyes">• •</div>
+                        <div class="katherine-smile">◡</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Player Character -->
+        <div class="player"></div>
+
+        <!-- Dialogue Box -->
+        <div class="dialogue-box" id="dialogueBox">
+            <div class="dialogue-header">
+                <div class="dialogue-portrait"></div>
+                <div class="dialogue-name">Katherine Johnson</div>
+            </div>
+            <div class="dialogue-text" id="dialogueText"></div>
+            <div class="dialogue-buttons" id="dialogueButtons"></div>
+        </div>
+
+        <!-- HUD -->
+        <div class="hud">
+            <div class="hud-title">Time Machine Repair</div>
+            <div class="repair-progress">
+                <div class="repair-piece active"></div>
+                <div class="repair-piece active"></div>
+                <div class="repair-piece active"></div>
+                <div class="repair-piece active"></div>
+                <div class="repair-piece" id="piece5"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Coding Interface -->
+    <div class="coding-interface" id="codingInterface">
+        <div class="code-panel">
+            <h2 class="code-title">TRAJECTORY CALCULATION CODE</h2>
+            <p class="code-instruction">
+                Complete the missing parts of the code to calculate the spacecraft's corrected trajectory.<br>
+                Fill in the blanks with the correct variable names, loop conditions, and function calls.
+            </p>
+
+            <div class="available-options">
+                <div class="options-title">Available Options (click to use):</div>
+                <div class="options-list">
+                    <div class="option-chip" data-value="velocity">velocity</div>
+                    <div class="option-chip" data-value="angle">angle</div>
+                    <div class="option-chip" data-value="i">i</div>
+                    <div class="option-chip" data-value="range">range</div>
+                    <div class="option-chip" data-value="10">10</div>
+                    <div class="option-chip" data-value="print">print</div>
+                    <div class="option-chip" data-value="calculate_trajectory">calculate_trajectory</div>
+                </div>
+            </div>
+
+            <div class="code-editor" id="codeEditor">
+                <div class="code-line">
+                    <span class="line-number">1</span>
+                    <span class="code-text"><span class="keyword">def</span> <span class="function-name">calculate_trajectory</span>(<input class="code-input" id="input1" data-answer="velocity" placeholder="???">, <input class="code-input" id="input2" data-answer="angle" placeholder="???">):</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-number">2</span>
+                    <span class="code-text">    <span class="comment"># Calculate trajectory over time</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-number">3</span>
+                    <span class="code-text">    <span class="keyword">for</span> <input class="code-input" id="input3" data-answer="i" style="width: 60px;" placeholder="?"> <span class="keyword">in</span> <input class="code-input" id="input4" data-answer="range" placeholder="???">(</span><input class="code-input" id="input5" data-answer="10" style="width: 60px;" placeholder="?"><span class="code-text">):</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-number">4</span>
+                    <span class="code-text">        <span class="variable">t</span> = <input class="code-input" id="input6" data-answer="i" style="width: 60px;" placeholder="?"> * <span class="variable">delta_t</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-number">5</span>
+                    <span class="code-text">        <span class="variable">x</span> = <input class="code-input" id="input7" data-answer="velocity" placeholder="???"> * <span class="function-name">cos</span>(<input class="code-input" id="input8" data-answer="angle" placeholder="???">) * <span class="variable">t</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-number">6</span>
+                    <span class="code-text">        <span class="variable">y</span> = <span class="variable">velocity</span> * <span class="function-name">sin</span>(<span class="variable">angle</span>) * <span class="variable">t</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-number">7</span>
+                    <span class="code-text">        <input class="code-input" id="input9" data-answer="print" placeholder="???">(f<span class="variable">"Time: {t}s, Position: ({x}, {y})"</span>)</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-number">8</span>
+                    <span class="code-text">    <span class="keyword">return</span> <span class="variable">True</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-number">9</span>
+                    <span class="code-text"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-number">10</span>
+                    <span class="code-text"><span class="comment"># Execute trajectory correction</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-number">11</span>
+                    <span class="code-text"><input class="code-input" id="input10" data-answer="calculate_trajectory" placeholder="???">(velocity=7800, angle=45)</span>
+                </div>
+            </div>
+
+            <button class="execute-code-btn" id="executeCodeBtn">Run Calculation</button>
+        </div>
+    </div>
+
+    <!-- Success Flash -->
+    <div class="success-flash" id="successFlash"></div>
+
+    <script>
+        // Game state
+        let gameState = {
+            arrivedAtNASA: false,
+            metKatherine: false,
+            codingStarted: false,
+            codeComplete: false,
+            selectedInput: null,
+            correctAnswers: {
+                input1: 'velocity',
+                input2: 'angle',
+                input3: 'i',
+                input4: 'range',
+                input5: '10',
+                input6: 'i',
+                input7: 'velocity',
+                input8: 'angle',
+                input9: 'print',
+                input10: 'calculate_trajectory'
+            },
+            userAnswers: {}
+        };
+
+        // DOM elements
+        const dialogueBox = document.getElementById('dialogueBox');
+        const dialogueText = document.getElementById('dialogueText');
+        const dialogueButtons = document.getElementById('dialogueButtons');
+        const codingInterface = document.getElementById('codingInterface');
+        const executeCodeBtn = document.getElementById('executeCodeBtn');
+        const trajectoryStatus = document.getElementById('trajectoryStatus');
+        const trajectoryLine = document.getElementById('trajectoryLine');
+        const spacecraftIcon = document.getElementById('spacecraftIcon');
+        const successFlash = document.getElementById('successFlash');
+        const timeTransition = document.getElementById('timeTransition');
+        const starsContainer = document.getElementById('stars');
+
+        // Create stars for transition
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // Initialize
+        setTimeout(() => {
+            timeTransition.style.display = 'none';
+            introduceKatherine();
+        }, 3500);
+
+        function introduceKatherine() {
+            gameState.arrivedAtNASA = true;
+            setTimeout(() => {
+                showDialogue(
+                    "Welcome to NASA Mission Control! We have a critical situation - one of our spacecraft is off course. The trajectory calculations need to be completed immediately or we could lose the mission. I need someone who can think precisely and code accurately. Can you help?",
+                    [{ text: "I'm ready to help!", action: explainMission }]
+                );
+            }, 500);
+        }
+
+        function explainMission() {
+            showDialogue(
+                "Excellent! I've written the trajectory correction equations on the blackboard. Now we need to translate that mathematics into working code. You'll complete a function with the correct variable names, loop structures, and function calls. Every detail matters - in space, precision is everything!",
+                [{ text: "Let's write the code!", action: startCoding }]
+            );
+        }
+
+        function startCoding() {
+            hideDialogue();
+            gameState.codingStarted = true;
+            codingInterface.classList.add('active');
+            initializeCodingInterface();
+        }
+
+        function initializeCodingInterface() {
+            const inputs = document.querySelectorAll('.code-input');
+            const optionChips = document.querySelectorAll('.option-chip');
+
+            // Add click handlers to inputs
+            inputs.forEach(input => {
+                input.addEventListener('click', function() {
+                    // Remove previous selection
+                    inputs.forEach(i => i.style.outline = 'none');
+                    // Highlight selected
+                    this.style.outline = '2px solid #00aaff';
+                    gameState.selectedInput = this;
+                });
+
+                // Allow typing
+                    input.addEventListener('input', function() {
+                        checkInput(this);
+                    });
+            });
+
+            // Add click handlers to option chips
+            optionChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    if (!gameState.selectedInput) {
+                        alert('Please click on a blank (???) in the code first!');
+                        return;
+                    }
+
+                    const value = this.getAttribute('data-value');
+                    // Put the option value into the selected blank
+                    gameState.selectedInput.value = value;
+                    checkInput(gameState.selectedInput);
+                    // update visual indicators for chips used in blanks
+                    updateChipUsage();
+
+                    // Clear selection UI
+                    gameState.selectedInput.style.outline = 'none';
+                    gameState.selectedInput = null;
+                });
+            });
+
+            executeCodeBtn.addEventListener('click', executeCode);
+
+            // initial chip usage state
+            updateChipUsage();
+        }
+
+        function checkInput(input) {
+            const inputId = input.id;
+            const userValue = input.value.trim();
+            const correctValue = gameState.correctAnswers[inputId];
+
+            gameState.userAnswers[inputId] = userValue;
+
+            if (userValue === correctValue) {
+                input.classList.remove('incorrect');
+                input.classList.add('correct');
+            } else if (userValue !== '') {
+                input.classList.remove('correct');
+                input.classList.add('incorrect');
+            } else {
+                input.classList.remove('correct', 'incorrect');
+            }
+
+            // Check if all inputs are filled
+            checkAllInputs();
+
+            // update chip visuals every time an input changes
+            updateChipUsage();
+        }
+
+        // Update chips to visually indicate which options are currently used
+        function updateChipUsage() {
+            const chips = document.querySelectorAll('.option-chip');
+            const inputs = document.querySelectorAll('.code-input');
+            // gather non-empty values from inputs
+            const usedValues = new Set(Array.from(inputs).map(i => i.value.trim()).filter(v => v !== ''));
+
+            chips.forEach(chip => {
+                const v = chip.getAttribute('data-value');
+                if (usedValues.has(v)) {
+                    chip.classList.add('in-use');
+                } else {
+                    chip.classList.remove('in-use');
+                }
+            });
+        }
+
+        function checkAllInputs() {
+            const allFilled = Object.keys(gameState.correctAnswers).every(key => {
+                return gameState.userAnswers[key] && gameState.userAnswers[key].trim() !== '';
+            });
+
+            executeCodeBtn.disabled = !allFilled;
+        }
+
+        function executeCode() {
+            // Check if all answers are correct
+            let allCorrect = true;
+            let incorrectCount = 0;
+
+            Object.keys(gameState.correctAnswers).forEach(key => {
+                const input = document.getElementById(key);
+                const userValue = gameState.userAnswers[key];
+                const correctValue = gameState.correctAnswers[key];
+
+                if (userValue !== correctValue) {
+                    allCorrect = false;
+                    incorrectCount++;
+                    input.classList.add('incorrect');
+                    input.classList.remove('correct');
+                }
+            });
+
+            if (allCorrect) {
+                codeSuccess();
+            } else {
+                codeFailed(incorrectCount);
+            }
+        }
+
+        function codeFailed(count) {
+            alert(`Code Error!\n\n${count} line(s) contain incorrect values.\nCheck the red-highlighted fields and try again.\n\nHint: Review Katherine's equations on the blackboard!`);
+        }
+
+        function codeSuccess() {
+            gameState.codeComplete = true;
+
+            // Simulate code execution
+            const codeEditor = document.getElementById('codeEditor');
+            codeEditor.style.animation = 'pulse 1s ease-in-out';
+
+            setTimeout(() => {
+                // Update trajectory status
+                trajectoryStatus.textContent = 'ON COURSE ✓';
+                trajectoryStatus.style.color = '#00ff00';
+                trajectoryLine.classList.add('corrected');
+                spacecraftIcon.classList.add('corrected');
+
+                // Flash effect
+                successFlash.classList.add('active');
+                setTimeout(() => {
+                    successFlash.classList.remove('active');
+                }, 1500);
+
+                // Show success message
+                setTimeout(() => {
+                    alert('CODE EXECUTED SUCCESSFULLY!\n\nTrajectory corrected!\nSpacecraft is now on the optimal path!');
+                    
+                    // Repair time machine
+                    document.getElementById('piece5').classList.add('active');
+
+                    setTimeout(() => {
+                        codingInterface.classList.remove('active');
+                        completeScene();
+                    }, 1500);
+                }, 1000);
+            }, 1000);
+        }
+
+        function completeScene() {
+            showDialogue(
+                "Perfect! Your calculations were flawless. The spacecraft is back on course thanks to your precise coding. You understand something crucial - in programming, just like in space navigation, every variable matters, every loop must be exact, and every function must be called correctly.",
+                [{ text: "Thank you for teaching me!", action: katherineWisdom }]
+            );
+        }
+
+        function katherineWisdom() {
+            showDialogue(
+                "Remember - people said a woman couldn't do this kind of work, that calculations this complex were impossible for anyone but a machine. But I knew that with determination, precision, and understanding the mathematics, anything is possible. Your time machine's navigation system is now repaired. Continue your journey with confidence!",
+                [{ text: "Continue Journey →", action: goToNextScene }]
+            );
+        }
+
+        function goToNextScene() {
+            
+            alert("Outstanding work!\n\nNext: Scene 6 - Margaret Hamilton (1960s-70s)\n\nYou'll help Margaret debug the Apollo mission software with conditional statements and error handling!");
+            // In actual implementation:
+            window.location.href = 'SceneSix.html';
+        }
+
+        // Dialogue system
+        function showDialogue(text, buttons) {
+            dialogueText.textContent = text;
+            dialogueButtons.innerHTML = '';
+            
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = 'dialogue-btn';
+                button.textContent = btn.text;
+                button.onclick = btn.action;
+                dialogueButtons.appendChild(button);
+            });
+            
+            // dialogue appears anchored at the lower part of the screen (no dynamic reposition)
+
+            dialogueBox.classList.add('active');
+        }
+
+        function hideDialogue() {
+            dialogueBox.classList.remove('active');
+            // clear inline top/bottom positioning so dialog will return to default on next show
+            dialogueBox.style.top = '';
+            dialogueBox.style.bottom = '';
+        }
+
+
+        // dialogue is bottom-anchored and uses default transition; motion API removed
+
+        // Add pulse animation for code success
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.02); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

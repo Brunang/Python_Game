@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scene 4: Ada Lovelace - SHE<Codes/></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+
+            /* repositioning helper removed — dialogues anchored to bottom */
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #2a1810;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Game Container */
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url('images/victorian-study.jpg') center center no-repeat;
+            background-size: cover;
+            background-color: #3d2817;
+        }
+
+        /* dialogue motion variables (reused across scenes) */
+        :root {
+            --dialog-duration: 0.18s; /* snappy default */
+            --dialog-ease: cubic-bezier(.2,.9,.2,1);
+            --dialog-opacity-duration: 0.12s;
+        }
+
+        /* Vortex overlay for arrival animation */
+        .vortex-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.95) 50%, transparent 100%);
+            z-index: 3000;
+            animation: vortexFade 3s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes vortexFade {
+            0% { opacity: 1; transform: scale(0.5) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+            100% { opacity: 0; transform: scale(1.5) rotate(360deg); }
+        }
+
+        /* Victorian Study Elements */
+        .bookshelf {
+            position: absolute;
+            width: 120px;
+            height: 300px;
+            background: linear-gradient(to right, #4a3022 0%, #3d2817 100%);
+            border: 3px solid #5a4032;
+        }
+
+        .bookshelf.left {
+            top: 15%;
+            left: 5%;
+        }
+
+        .bookshelf.right {
+            top: 15%;
+            right: 5%;
+        }
+
+        .book {
+            width: 90%;
+            height: 20px;
+            margin: 5px auto;
+            border: 1px solid #2a1810;
+        }
+
+        .book.red { background: #8b4513; }
+        .book.brown { background: #654321; }
+        .book.green { background: #556b2f; }
+        .book.blue { background: #4a5568; }
+
+        /* Desk with papers */
+        .desk {
+            position: absolute;
+            bottom: 15%;
+            right: 10%;
+            width: 150px;
+            height: 100px;
+            background: #654321;
+            border: 3px solid #4a3022;
+        }
+
+        .papers {
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            width: 80px;
+            height: 60px;
+            background: #f5f5dc;
+            border: 2px solid #d4af37;
+            transform: rotate(-5deg);
+        }
+
+        /* Analytical Engine */
+        .analytical-engine {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 350px;
+            z-index: 10;
+        }
+
+        .engine-frame {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #6b5742 0%, #4a3829 100%);
+            border: 5px solid #8b7355;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .engine-gears {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .gear {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #8b7355;
+            border: 4px solid #5a4a3a;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .gear::before,
+        .gear::after {
+            content: '';
+            position: absolute;
+            background: #5a4a3a;
+        }
+
+        .gear::before {
+            width: 100%;
+            height: 8px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .gear::after {
+            width: 8px;
+            height: 100%;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+
+        .gear.large {
+            width: 80px;
+            height: 80px;
+        }
+
+        .gear.spinning {
+            animation: rotateCW 3s linear infinite;
+        }
+
+        .gear.spinning-reverse {
+            animation: rotateCCW 3s linear infinite;
+        }
+
+        @keyframes rotateCW {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes rotateCCW {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+
+        .engine-display {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 60px;
+            background: #1a1a1a;
+            border: 3px solid #d4af37;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ff00;
+            font-size: 0.9rem;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* error feedback animation */
+        @keyframes shake {
+            0% { transform: translateX(-50%) translateY(0); }
+            20% { transform: translateX(-50%) translateY(-2px) rotate(-1deg); }
+            40% { transform: translateX(-50%) translateY(2px) rotate(1deg); }
+            60% { transform: translateX(-50%) translateY(-1px) rotate(-0.5deg); }
+            80% { transform: translateX(-50%) translateY(1px) rotate(0.5deg); }
+            100% { transform: translateX(-50%) translateY(0); }
+        }
+
+        .engine-display.error {
+            animation: shake 0.45s ease-in-out;
+            color: #ff0000 !important;
+        }
+
+        /* Ada Lovelace Character */
+        .ada-character {
+            position: absolute;
+            top: 50%;
+            left: 25%;
+            transform: translateY(-50%);
+            width: 100px;
+            height: 180px;
+            z-index: 5;
+        }
+
+        .ada-dress {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(to bottom, #8b4789 0%, #6b3768 100%);
+            border-radius: 50% 50% 60% 60% / 30% 30% 70% 70%;
+            position: relative;
+            border: 3px solid #5a2d58;
+        }
+
+        .ada-head {
+            width: 50px;
+            height: 60px;
+            background: #ffd1a3;
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            top: -55px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 2px solid #d4a574;
+        }
+
+        .ada-hair {
+            width: 60px;
+            height: 40px;
+            background: #3d2817;
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .ada-face-detail {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            text-align: center;
+        }
+
+        .ada-eyes {
+            font-size: 8px;
+            color: #2a1810;
+        }
+
+        .ada-mouth {
+            margin-top: 8px;
+            font-size: 10px;
+            color: #8b4513;
+        }
+
+        /* Player Character */
+        .player {
+            position: absolute;
+            bottom: 30%;
+            right: 20%;
+            width: 50px;
+            height: 80px;
+            background: linear-gradient(to bottom, #667eea 0%, #4a5aa8 100%);
+            border-radius: 25px 25px 10px 10px;
+            z-index: 100;
+            opacity: 0;
+            animation: playerAppear 1s ease-out 3s forwards;
+        }
+
+        @keyframes playerAppear {
+            0% { opacity: 0; transform: scale(0.5) translateY(-50px); }
+            50% { opacity: 1; transform: scale(1.2) translateY(-10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .player::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: #c4d7ff;
+            border-radius: 50%;
+            border: 2px solid #4a5aa8;
+        }
+
+        .player::after {
+            content: '⚡';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            animation: sparkle 1s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(0.8); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+        }
+
+        /* Dialogue Box */
+        .dialogue-box {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-6px);
+            width: 85%;
+            max-width: 700px;
+            background: rgba(61, 40, 23, 0.95);
+            border: 4px solid #d4af37;
+            border-radius: 15px;
+            padding: 22px;
+            color: #f5f5dc;
+            display: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: transform var(--dialog-duration) var(--dialog-ease), opacity var(--dialog-opacity-duration) var(--dialog-ease);
+        }
+
+        .dialogue-box.active {
+            display: block;
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .dialogue-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #d4af37;
+        }
+
+        .dialogue-portrait {
+            width: 50px;
+            height: 50px;
+            background: #8b4789;
+            border-radius: 50%;
+            border: 3px solid #d4af37;
+            margin-right: 15px;
+        }
+
+        .dialogue-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #d4af37;
+        }
+
+        .dialogue-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .dialogue-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .dialogue-btn {
+            background: linear-gradient(135deg, #8b4789 0%, #6b3768 100%);
+            border: 2px solid #d4af37;
+            color: #f5f5dc;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .dialogue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, #9b5799 0%, #7b4778 100%);
+        }
+
+        /* Puzzle Interface */
+        .puzzle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .puzzle-container.active {
+            display: flex;
+        }
+
+        .puzzle-box {
+            background: linear-gradient(135deg, #3d2817 0%, #2a1810 100%);
+            border: 5px solid #d4af37;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 900px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .puzzle-title {
+            font-size: 1.8rem;
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .puzzle-instruction {
+            color: #f5f5dc;
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .puzzle-areas {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+        }
+
+        .available-blocks {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .solution-area {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .area-title {
+            color: #d4af37;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .blocks-container {
+            background: rgba(42, 24, 16, 0.8);
+            border: 3px solid #8b7355;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 300px;
+        }
+
+        .drop-zone {
+            background: rgba(42, 24, 16, 0.8);
+            border: 3px dashed #d4af37;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 300px;
+        }
+
+        .drop-zone.valid-drop {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        .code-block {
+            background: linear-gradient(135deg, #8b4789 0%, #6b3768 100%);
+            border: 3px solid #d4af37;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin: 10px 0;
+            cursor: move;
+            user-select: none;
+            transition: all 0.3s ease;
+            text-align: center;
+            color: #f5f5dc;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-block:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(212, 175, 55, 0.5);
+        }
+
+        .code-block.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .code-block.placed {
+            cursor: default;
+        }
+
+        .check-solution-btn {
+            display: block;
+            margin: 30px auto 0;
+            background: linear-gradient(135deg, #00aa00 0%, #008800 100%);
+            border: 3px solid #d4af37;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .check-solution-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 255, 0, 0.4);
+        }
+
+        .check-solution-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        /* Success Flash */
+        .success-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, transparent 70%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2500;
+        }
+
+        .success-flash.active {
+            animation: flashSuccess 1s ease-out;
+        }
+
+        @keyframes flashSuccess {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* HUD - Time Machine Repair Indicator */
+        .hud {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(42, 24, 16, 0.9);
+            border: 3px solid #d4af37;
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 1500;
+            display: none;
+        }
+
+        .hud.active {
+            display: block;
+        }
+
+        .hud-title {
+            color: #d4af37;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .repair-progress {
+            display: flex;
+            gap: 5px;
+        }
+
+        .repair-piece {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #8b7355;
+            border-radius: 5px;
+            background: #2a1810;
+            transition: all 0.5s ease;
+        }
+
+        .repair-piece.active {
+            background: linear-gradient(135deg, #d4af37 0%, #ffd700 100%);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            animation: piecePulse 1s ease-out;
+        }
+
+        @keyframes piecePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Vortex arrival animation -->
+        <div class="vortex-overlay" id="vortexOverlay"></div>
+
+        <!-- Victorian Study Elements -->
+        <div class="bookshelf left">
+            <div class="book red"></div>
+            <div class="book brown"></div>
+            <div class="book green"></div>
+            <div class="book blue"></div>
+            <div class="book brown"></div>
+            <div class="book red"></div>
+            <div class="book green"></div>
+        </div>
+
+        <div class="bookshelf right">
+            <div class="book blue"></div>
+            <div class="book brown"></div>
+            <div class="book red"></div>
+            <div class="book green"></div>
+            <div class="book brown"></div>
+            <div class="book blue"></div>
+            <div class="book red"></div>
+        </div>
+
+        <div class="desk">
+            <div class="papers"></div>
+        </div>
+
+        <!-- Analytical Engine -->
+        <div class="analytical-engine">
+            <div class="engine-frame">
+                <div class="engine-gears" id="engineGears">
+                    <div class="gear" id="gear1"></div>
+                    <div class="gear large" id="gear2"></div>
+                    <div class="gear" id="gear3"></div>
+                </div>
+                <div class="engine-display" id="engineDisplay">
+                    AWAITING INPUT...
+                </div>
+            </div>
+        </div>
+
+        <!-- Ada Lovelace Character -->
+        <div class="ada-character">
+            <div class="ada-dress">
+                <div class="ada-head">
+                    <div class="ada-hair"></div>
+                    <div class="ada-face-detail">
+                        <div class="ada-eyes">• •</div>
+                        <div class="ada-mouth">◡</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Player Character -->
+        <div class="player" id="player"></div>
+
+        <!-- Dialogue Box -->
+        <div class="dialogue-box" id="dialogueBox">
+            <div class="dialogue-header">
+                <div class="dialogue-portrait"></div>
+                <div class="dialogue-name" id="dialogueName">Ada Lovelace</div>
+            </div>
+            <div class="dialogue-text" id="dialogueText"></div>
+            <div class="dialogue-buttons" id="dialogueButtons"></div>
+        </div>
+
+        <!-- HUD - Time Machine Repair -->
+        <div class="hud" id="hud">
+            <div class="hud-title">Time Machine Repair</div>
+            <div class="repair-progress">
+                <div class="repair-piece" id="piece1"></div>
+                <div class="repair-piece" id="piece2"></div>
+                <div class="repair-piece" id="piece3"></div>
+                <div class="repair-piece" id="piece4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Puzzle Interface -->
+    <div class="puzzle-container" id="puzzleContainer">
+        <div class="puzzle-box">
+            <h2 class="puzzle-title">Complete the Algorithm</h2>
+            <p class="puzzle-instruction">
+                Arrange the punch cards in the correct sequence to calculate Bernoulli numbers.<br>
+                Drag the blocks from the left to the right panel in the proper order.
+            </p>
+            <div class="puzzle-areas">
+                <div class="available-blocks">
+                    <div class="area-title">Available Commands</div>
+                    <div class="blocks-container" id="availableBlocks">
+                        <div class="code-block" draggable="true" data-command="input">INPUT n</div>
+                        <div class="code-block" draggable="true" data-command="calculate">CALCULATE sum</div>
+                        <div class="code-block" draggable="true" data-command="store">STORE result</div>
+                        <div class="code-block" draggable="true" data-command="repeat">REPEAT for n</div>
+                        <div class="code-block" draggable="true" data-command="print">PRINT output</div>
+                    </div>
+                </div>
+                <div class="solution-area">
+                    <div class="area-title">Algorithm Sequence</div>
+                    <div class="drop-zone" id="dropZone"></div>
+                </div>
+            </div>
+            <button class="check-solution-btn" id="checkSolution">Execute Algorithm</button>
+        </div>
+    </div>
+
+    <!-- Success Flash -->
+    <div class="success-flash" id="successFlash"></div>
+
+    <script>
+        // Game state
+        let gameState = {
+            arrivedInStudy: false,
+            metAda: false,
+            puzzleStarted: false,
+            puzzleComplete: false,
+            correctSequence: ['input', 'repeat', 'calculate', 'store', 'print']
+        };
+
+        // DOM elements
+        const dialogueBox = document.getElementById('dialogueBox');
+        const dialogueText = document.getElementById('dialogueText');
+        const dialogueButtons = document.getElementById('dialogueButtons');
+        const puzzleContainer = document.getElementById('puzzleContainer');
+        const availableBlocks = document.getElementById('availableBlocks');
+        const dropZone = document.getElementById('dropZone');
+        const checkSolution = document.getElementById('checkSolution');
+        const engineGears = document.getElementById('engineGears');
+        const engineDisplay = document.getElementById('engineDisplay');
+        const successFlash = document.getElementById('successFlash');
+        const hud = document.getElementById('hud');
+        const vortexOverlay = document.getElementById('vortexOverlay');
+
+        // Initialize scene
+        setTimeout(() => {
+            vortexOverlay.style.display = 'none';
+            introduceAda();
+        }, 3500);
+
+        function introduceAda() {
+            gameState.arrivedInStudy = true;
+            setTimeout(() => {
+                showDialogue(
+                    "Oh my! You've arrived just in time. The Analytical Engine is stalled. We must complete this algorithm, or history will be rewritten!",
+                    [
+                        { text: "How can I help?", action: explainChallenge }
+                    ]
+                );
+            }, 500);
+        }
+
+        function explainChallenge() {
+            showDialogue(
+                "The machine requires a specific sequence of commands to calculate Bernoulli numbers. Please, use these punch card blocks to complete the algorithm and set the machine right. The correct order is crucial!",
+                [
+                    { text: "I'll do my best!", action: startPuzzle }
+                ]
+            );
+        }
+
+        function startPuzzle() {
+            hideDialogue();
+            gameState.puzzleStarted = true;
+            puzzleContainer.classList.add('active');
+            hud.classList.add('active');
+            initializeDragAndDrop();
+            /**
+                ✅ Correct Sequence:
+                INPUT n
+                REPEAT for n
+                CALCULATE sum
+                STORE result
+                PRINT output
+             */
+        }
+
+        // Drag and Drop System
+        let draggedElement = null;
+
+        function initializeDragAndDrop() {
+            const blocks = document.querySelectorAll('.code-block');
+            
+            blocks.forEach(block => {
+                block.addEventListener('dragstart', handleDragStart);
+                block.addEventListener('dragend', handleDragEnd);
+            });
+
+            dropZone.addEventListener('dragover', handleDragOver);
+            dropZone.addEventListener('drop', handleDrop);
+            dropZone.addEventListener('dragleave', handleDragLeave);
+
+            checkSolution.addEventListener('click', checkPuzzleSolution);
+        }
+
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            dropZone.classList.add('valid-drop');
+            return false;
+        }
+
+        function handleDragLeave(e) {
+            dropZone.classList.remove('valid-drop');
+        }
+
+        function handleDrop(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            dropZone.classList.remove('valid-drop');
+            
+            if (draggedElement) {
+                // Clone the block
+                const clonedBlock = draggedElement.cloneNode(true);
+                clonedBlock.classList.add('placed');
+                clonedBlock.draggable = false;
+                
+                // Add click to remove
+                clonedBlock.addEventListener('click', function() {
+                    this.remove();
+                    updateCheckButton();
+                });
+                
+                dropZone.appendChild(clonedBlock);
+                updateCheckButton();
+            }
+            
+            return false;
+        }
+
+        function updateCheckButton() {
+            const placedBlocks = dropZone.querySelectorAll('.code-block');
+            checkSolution.disabled = placedBlocks.length === 0;
+        }
+
+        function checkPuzzleSolution() {
+            const placedBlocks = dropZone.querySelectorAll('.code-block');
+            const playerSequence = Array.from(placedBlocks).map(block => 
+                block.getAttribute('data-command')
+            );
+
+            if (arraysEqual(playerSequence, gameState.correctSequence)) {
+                puzzleSolved();
+            } else {
+                puzzleFailed();
+            }
+        }
+
+        function arraysEqual(a, b) {
+            return a.length === b.length && a.every((val, index) => val === b[index]);
+        }
+
+        // keep a single timeout handle so repeated failures don't stack
+        let puzzleFailTimeout = null;
+
+        function puzzleFailed() {
+            // clear previous pending reset
+            if (puzzleFailTimeout) {
+                clearTimeout(puzzleFailTimeout);
+                puzzleFailTimeout = null;
+            }
+
+            // immediate error feedback
+            engineDisplay.textContent = "ERROR: INCORRECT SEQUENCE";
+            engineDisplay.classList.add('error');
+
+            // prevent repeated submits while showing the error
+            if (checkSolution) checkSolution.disabled = true;
+
+            // shorter delay so the UI feels snappier
+            puzzleFailTimeout = setTimeout(() => {
+                engineDisplay.textContent = "AWAITING INPUT...";
+                engineDisplay.classList.remove('error');
+                if (checkSolution) checkSolution.disabled = false;
+                puzzleFailTimeout = null;
+            }, 900);
+        }
+
+        function puzzleSolved() {
+            gameState.puzzleComplete = true;
+            
+            // Animate gears
+            const gears = [
+                document.getElementById('gear1'),
+                document.getElementById('gear2'),
+                document.getElementById('gear3')
+            ];
+            
+            gears[0].classList.add('spinning');
+            gears[1].classList.add('spinning-reverse');
+            gears[2].classList.add('spinning');
+
+            // Update display
+            engineDisplay.textContent = "CALCULATING...";
+            engineDisplay.style.color = "#ffd700";
+
+            setTimeout(() => {
+                engineDisplay.textContent = "SUCCESS! ALGORITHM COMPLETE";
+                
+                // Flash effect
+                successFlash.classList.add('active');
+                setTimeout(() => {
+                    successFlash.classList.remove('active');
+                }, 1000);
+
+                // Repair time machine piece
+                document.getElementById('piece1').classList.add('active');
+
+                setTimeout(() => {
+                    puzzleContainer.classList.remove('active');
+                    completeScene();
+                }, 2000);
+            }, 2000);
+        }
+
+        function completeScene() {
+            showDialogue(
+                "Brilliant! You've done it! The algorithm is complete, and the Analytical Engine is working perfectly. I can see a piece of your time machine has been repaired. You must continue your journey through history!",
+                [
+                    { text: "Continue Journey →", action: goToNextScene }
+                ]
+            );
+        }
+
+        function goToNextScene() {
+            // TODO: Make transition smoother Navigate to Scene 2 (Grace Hopper)
+            alert("Excellent work!\n\nNext: Scene 2 - Grace Hopper (1940s)\n\nYou will help Grace find and fix the famous bug in the Mark II computer!");
+        
+            window.location.href = 'SceneTwo.html';
+        }
+
+        // Dialogue system
+        function showDialogue(text, buttons) {
+            dialogueText.textContent = text;
+            dialogueButtons.innerHTML = '';
+            
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = 'dialogue-btn';
+                button.textContent = btn.text;
+                button.onclick = btn.action;
+                dialogueButtons.appendChild(button);
+            });
+            
+            dialogueBox.classList.add('active');
+        }
+
+        function hideDialogue() {
+            dialogueBox.classList.remove('active');
+        }
+
+        // dialog motion API removed — dialogues anchor at bottom and keep a small, fixed transition
+    </script>
+</body>
+</html>
