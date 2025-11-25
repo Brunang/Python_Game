@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHE<Codes/> - Digital Time Machine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-20px) translateX(10px); }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            animation: fadeIn 1.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .title-wrapper {
+            margin-bottom: 60px;
+        }
+
+        .game-title {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
+                         0 0 40px rgba(102, 126, 234, 0.8);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 0 40px rgba(102, 126, 234, 0.8); }
+            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(118, 75, 162, 1); }
+        }
+
+        .game-title .brackets {
+            color: #ffd700;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #e0e0e0;
+            font-style: italic;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .tagline {
+            font-size: 1rem;
+            color: #c0c0c0;
+            margin-top: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .game-button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            color: white;
+            padding: 18px 60px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .game-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .game-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-button:active {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .credits-button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        /* Code-like decoration */
+        .code-decoration {
+            position: absolute;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.2);
+            font-family: 'Courier New', monospace;
+            animation: scrollCode 20s linear infinite;
+        }
+
+        @keyframes scrollCode {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100vw); }
+        }
+
+        /* Modal for Credits */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 5% auto;
+            padding: 40px;
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            color: white;
+            position: relative;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #ffd700;
+            float: right;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #ffffff;
+        }
+
+        .modal-content h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .credits-section {
+            margin: 20px 0;
+        }
+
+        .credits-section h3 {
+            color: #f093fb;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .credits-section p {
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .pioneer-list {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .pioneer-list li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .pioneer-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background particles -->
+    <div class="particle" style="width: 80px; height: 80px; top: 10%; left: 15%; animation-delay: 0s;"></div>
+    <div class="particle" style="width: 60px; height: 60px; top: 70%; left: 80%; animation-delay: 1s;"></div>
+    <div class="particle" style="width: 100px; height: 100px; top: 40%; left: 5%; animation-delay: 2s;"></div>
+    <div class="particle" style="width: 70px; height: 70px; top: 80%; left: 30%; animation-delay: 1.5s;"></div>
+
+    <!-- Code decoration -->
+    <div class="code-decoration" style="top: 20%;">def inspire_future(): return "code_with_purpose()"</div>
+    <div class="code-decoration" style="top: 60%; animation-delay: 10s;">for pioneer in history: legacy.append(pioneer.contribution)</div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="title-wrapper">
+            <h1 class="game-title">SHE<span class="brackets">&lt;</span>Codes<span class="brackets">/&gt;</span></h1>
+            <p class="subtitle">The Digital Time Machine</p>
+            <p class="tagline">Journey through computing history. Learn from the pioneers.</p>
+        </div>
+
+        <div class="button-container">
+            <button class="game-button start-button" onclick="startGame()">
+                <span>▶ Start Journey</span>
+            </button>
+            <button class="game-button credits-button" onclick="openCredits()">
+                <span>★ Credits</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Start Game Function
+        function startGame() {
+            console.log('Starting game...');
+
+            alert('Loading the basement discovery scene...\n\nGet ready to discover the Digital Time Machine!');
+            window.location.href = 'IntroScene.html';
+        }
+
+        // Open Credits 
+        function openCredits() {
+            window.location.href = 'CreditsScreen.html';
+        }
+    </script>
+</body>
+</html>

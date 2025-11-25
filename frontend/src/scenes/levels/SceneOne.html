@@ -9,6 +9,8 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+
+            /* repositioning helper removed — dialogues anchored to bottom */
         }
 
         body {
@@ -26,6 +28,13 @@
             background: url('images/victorian-study.jpg') center center no-repeat;
             background-size: cover;
             background-color: #3d2817;
+        }
+
+        /* dialogue motion variables (reused across scenes) */
+        :root {
+            --dialog-duration: 0.18s; /* snappy default */
+            --dialog-ease: cubic-bezier(.2,.9,.2,1);
+            --dialog-opacity-duration: 0.12s;
         }
 
         /* Vortex overlay for arrival animation */
@@ -206,6 +215,21 @@
             text-align: center;
         }
 
+        /* error feedback animation */
+        @keyframes shake {
+            0% { transform: translateX(-50%) translateY(0); }
+            20% { transform: translateX(-50%) translateY(-2px) rotate(-1deg); }
+            40% { transform: translateX(-50%) translateY(2px) rotate(1deg); }
+            60% { transform: translateX(-50%) translateY(-1px) rotate(-0.5deg); }
+            80% { transform: translateX(-50%) translateY(1px) rotate(0.5deg); }
+            100% { transform: translateX(-50%) translateY(0); }
+        }
+
+        .engine-display.error {
+            animation: shake 0.45s ease-in-out;
+            color: #ff0000 !important;
+        }
+
         /* Ada Lovelace Character */
         .ada-character {
             position: absolute;
@@ -322,21 +346,24 @@
             position: absolute;
             bottom: 80px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateY(-6px);
             width: 85%;
             max-width: 700px;
             background: rgba(61, 40, 23, 0.95);
             border: 4px solid #d4af37;
             border-radius: 15px;
-            padding: 25px;
+            padding: 22px;
             color: #f5f5dc;
             display: none;
             z-index: 1000;
-            animation: slideUp 0.5s ease-out;
+            opacity: 0;
+            transition: transform var(--dialog-duration) var(--dialog-ease), opacity var(--dialog-opacity-duration) var(--dialog-ease);
         }
 
         .dialogue-box.active {
             display: block;
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
 
         .dialogue-header {
@@ -610,10 +637,7 @@
             50% { transform: scale(1.2); }
         }
 
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
+        /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
     </style>
 </head>
 <body>
@@ -786,6 +810,14 @@
             puzzleContainer.classList.add('active');
             hud.classList.add('active');
             initializeDragAndDrop();
+            /**
+                ✅ Correct Sequence:
+                INPUT n
+                REPEAT for n
+                CALCULATE sum
+                STORE result
+                PRINT output
+             */
         }
 
         // Drag and Drop System
@@ -874,14 +906,30 @@
             return a.length === b.length && a.every((val, index) => val === b[index]);
         }
 
+        // keep a single timeout handle so repeated failures don't stack
+        let puzzleFailTimeout = null;
+
         function puzzleFailed() {
+            // clear previous pending reset
+            if (puzzleFailTimeout) {
+                clearTimeout(puzzleFailTimeout);
+                puzzleFailTimeout = null;
+            }
+
+            // immediate error feedback
             engineDisplay.textContent = "ERROR: INCORRECT SEQUENCE";
-            engineDisplay.style.color = "#ff0000";
-            
-            setTimeout(() => {
+            engineDisplay.classList.add('error');
+
+            // prevent repeated submits while showing the error
+            if (checkSolution) checkSolution.disabled = true;
+
+            // shorter delay so the UI feels snappier
+            puzzleFailTimeout = setTimeout(() => {
                 engineDisplay.textContent = "AWAITING INPUT...";
-                engineDisplay.style.color = "#00ff00";
-            }, 2000);
+                engineDisplay.classList.remove('error');
+                if (checkSolution) checkSolution.disabled = false;
+                puzzleFailTimeout = null;
+            }, 900);
         }
 
         function puzzleSolved() {
@@ -931,9 +979,10 @@
         }
 
         function goToNextScene() {
-            alert("Excellent work!\n\nNext: Scene 5 - Grace Hopper (1940s)\n\nYou will help Grace find and fix the famous bug in the Mark II computer!");
+            // TODO: Make transition smoother Navigate to Scene 2 (Grace Hopper)
+            alert("Excellent work!\n\nNext: Scene 2 - Grace Hopper (1940s)\n\nYou will help Grace find and fix the famous bug in the Mark II computer!");
         
-            window.location.href = 'GraceHopperScene.html';
+            window.location.href = 'SceneTwo.html';
         }
 
         // Dialogue system
@@ -955,6 +1004,8 @@
         function hideDialogue() {
             dialogueBox.classList.remove('active');
         }
+
+        // dialog motion API removed — dialogues anchor at bottom and keep a small, fixed transition
     </script>
 </body>
 </html>

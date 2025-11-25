@@ -332,21 +332,24 @@
             position: absolute;
             bottom: 80px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateY(-6px);
             width: 85%;
             max-width: 700px;
             background: rgba(26, 26, 26, 0.95);
             border: 4px solid #00ff00;
             border-radius: 15px;
-            padding: 25px;
+            padding: 20px;
             color: #ffffff;
             display: none;
             z-index: 1000;
-            animation: slideUp 0.5s ease-out;
+            opacity: 0;
+            transition: transform 0.18s cubic-bezier(.2,.9,.2,1), opacity 0.12s cubic-bezier(.2,.9,.2,1);
         }
 
         .dialogue-box.active {
             display: block;
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
 
         .dialogue-header {
@@ -600,10 +603,7 @@
             50% { transform: scale(1.2); }
         }
 
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
+        /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
     </style>
 </head>
 <body>
@@ -876,9 +876,10 @@
         }
 
         function goToNextScene() {
-            alert("Excellent debugging!\n\nNext: Scene 6 - Alan Turing (1940s)\n\nYou will help Alan break the Enigma code at Bletchley Park!");
+            // TODO: Make transition smoother Navigate to Scene 3 (Alan Turing)
+            alert("Excellent debugging!\n\nNext: Scene 3 - Alan Turing (1940s)\n\nYou will help Alan break the Enigma code at Bletchley Park!");
 
-            window.location.href = 'AlanTuringScene.html';
+            window.location.href = 'SceneThree.html';
         }
 
         // Close inspection without finding bug

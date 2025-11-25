@@ -390,27 +390,39 @@
             50% { filter: drop-shadow(0 0 20px #ffd700); }
         }
 
+        /* dialogue motion variables (reused) */
+        :root {
+            --dialog-duration: 0.18s;
+            --dialog-ease: cubic-bezier(.2,.9,.2,1);
+            --dialog-opacity-duration: 0.12s;
+        }
+
         /* Dialogue */
         .dialogue-box {
             position: absolute;
             bottom: 80px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateY(-6px);
             width: 85%;
             max-width: 700px;
             background: rgba(10, 10, 26, 0.95);
             border: 4px solid #4ecdc4;
             border-radius: 15px;
-            padding: 25px;
+            padding: 20px;
             color: #ffffff;
             display: none;
             z-index: 1000;
-            animation: slideUp 0.5s ease-out;
+            opacity: 0;
+            transition: transform var(--dialog-duration) var(--dialog-ease), opacity var(--dialog-opacity-duration) var(--dialog-ease);
         }
 
         .dialogue-box.active {
             display: block;
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
+
+        /* repositioning helper removed — dialogues anchored at bottom */
 
         .dialogue-box.scene12 {
             border-color: #ffd700;
@@ -725,10 +737,8 @@
             50% { transform: scale(1.2); }
         }
 
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
+        /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
+
     </style>
 </head>
 <body>
@@ -869,12 +879,12 @@
                 define a function that represents your coding journey, or write something uniquely yours!
             </div>
             <textarea class="code-textarea" id="legacyCode" placeholder="# Your code here
-# Example:
-# def inspire_future():
-#     print('Code with courage, learn with passion!')
-#
-# inspire_future()
-"></textarea>
+                # Example:
+                # def inspire_future():
+                #     print('Code with courage, learn with passion!')
+                #
+                # inspire_future()
+                "></textarea>
             <button class="execute-legacy-btn" id="executeLegacyBtn">
                 Transmit Through Time
             </button>
@@ -932,6 +942,9 @@
             <p class="final-call-to-action">
                 >> Your journey as a Guardian begins now... <<
             </p>
+            <button class="continue-to-credits-btn" onclick="showCredits()">
+                View Credits
+            </button>
         </div>
     </div>
 
@@ -944,7 +957,7 @@
             journeyComplete: false
         };
 
-        // SCENE 11: Adele Goldberg - UI Design
+        // SCENE 8: Adele Goldberg - UI Design
         function initScene11() {
             setTimeout(() => {
                 showDialogue11(
@@ -1226,6 +1239,15 @@
 
         // Initialize the game
         initScene11();
+
+        // dialogue anchored at bottom; motion API removed
+
+        // Credits function
+        function showCredits() {
+            // close final overlay then navigate to the credits page (credits.html lives in ../)
+            document.getElementById('finalMessageOverlay').classList.remove('active');
+            window.location.href = '../CreditsScreen.html';
+        }
     </script>
 </body>
 </html>

@@ -190,11 +190,16 @@
         }
 
         /* Dialogue Box */
+        :root {
+            --dialog-duration: 0.18s; /* snappy default */
+            --dialog-ease: cubic-bezier(.2,.9,.2,1);
+            --dialog-opacity-duration: 0.12s;
+        }
         .dialogue-box {
             position: absolute;
-            bottom: 50px;
+            bottom: 80px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateY(-6px);
             width: 80%;
             max-width: 600px;
             background: rgba(0, 0, 0, 0.9);
@@ -204,16 +209,14 @@
             color: #ffffff;
             display: none;
             z-index: 1000;
-            animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+            opacity: 0;
+            transition: transform var(--dialog-duration) var(--dialog-ease), opacity var(--dialog-opacity-duration) var(--dialog-ease);
         }
 
         .dialogue-box.active {
             display: block;
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
 
         .dialogue-text {
@@ -615,10 +618,10 @@
         }
 
         function goToAdaScene() {
-            // TODO: Navigate to Scene 4 (Ada Lovelace)
-            alert("Traveling through time...\n\nNext: Scene 4 - Ada Lovelace's Study (1840s)\n\nYou will help Ada complete the first computer algorithm!");
+            // TODO: Make transition smoother Navigate to Scene 1 (Ada Lovelace)
+            alert("Traveling through time...\n\nNext: Scene 1 - Ada Lovelace's Study (1840s)\n\nYou will help Ada complete the first computer algorithm!");
             // In actual implementation:
-            window.location.href = '/frontend/src/scenes/levels/AdaLovelaceScene.html';
+            window.location.href = '/frontend/src/scenes/levels/SceneOne.html';
         }
 
         // Dialogue system
@@ -641,8 +644,6 @@
             dialogueBox.classList.remove('active');
         }
 
-        // Add ambient sound effect (optional)
-        // You can add background music or sound effects here
     </script>
 </body>
 </html>

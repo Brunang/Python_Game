@@ -406,11 +406,16 @@
         }
 
         /* Dialogue Box */
+        :root {
+            --dialog-duration: 0.18s; /* snappy default */
+            --dialog-ease: cubic-bezier(.2,.9,.2,1);
+            --dialog-opacity-duration: 0.12s;
+        }
         .dialogue-box {
             position: absolute;
             bottom: 80px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateY(-6px);
             width: 85%;
             max-width: 700px;
             background: rgba(10, 10, 10, 0.95);
@@ -420,12 +425,15 @@
             color: #ffffff;
             display: none;
             z-index: 1000;
-            animation: slideUp 0.5s ease-out;
+            opacity: 0;
+            transition: transform var(--dialog-duration) var(--dialog-ease), opacity var(--dialog-opacity-duration) var(--dialog-ease);
             box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
         }
 
         .dialogue-box.active {
             display: block;
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
 
         .dialogue-header {
@@ -798,10 +806,7 @@
             50% { transform: scale(1.2); }
         }
 
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
+        /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
     </style>
 </head>
 <body>
@@ -1309,9 +1314,10 @@
         }
 
         function goToNextScene() {
-            alert("Brilliant work!\n\nNext: Scene 8 - Katherine Johnson (1960s)\n\nYou'll help Katherine calculate precise rocket trajectories for the space program!");
+            // TODO: Transition to Scene Five smoother and make level simpler
+            alert("Brilliant work!\n\nNext: Scene 5 - Katherine Johnson (1960s)\n\nYou'll help Katherine calculate precise rocket trajectories for the space program!");
             // In actual implementation:
-            window.location.href = 'KatherineJohnsonScene.html';
+            window.location.href = 'SceneFive.html';
         }
 
         // Dialogue system

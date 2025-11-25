@@ -294,6 +294,13 @@
             color: #8b4513;
         }
 
+        /* dialogue motion variables (reusable) */
+        :root {
+            --dialog-duration: 0.18s;
+            --dialog-ease: cubic-bezier(.2,.9,.2,1);
+            --dialog-opacity-duration: 0.12s;
+        }
+
         /* Player Character */
         .player {
             position: absolute;
@@ -332,7 +339,7 @@
             position: absolute;
             bottom: 80px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateY(-6px);
             width: 85%;
             max-width: 700px;
             background: rgba(26, 26, 26, 0.95);
@@ -342,12 +349,17 @@
             color: #ffffff;
             display: none;
             z-index: 1000;
-            animation: slideUp 0.5s ease-out;
+            opacity: 0;
+            transition: transform var(--dialog-duration) var(--dialog-ease), opacity var(--dialog-opacity-duration) var(--dialog-ease);
         }
 
         .dialogue-box.active {
             display: block;
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
+
+        /* repositioning helper removed — dialogues anchored to bottom */
 
         .dialogue-header {
             display: flex;
@@ -696,10 +708,7 @@
             50% { transform: scale(1.2); }
         }
 
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
+        /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
     </style>
 </head>
 <body>
@@ -1050,24 +1059,40 @@
             }
         }
 
+        // keep a single timeout handle so repeated failures don't stack
+        let puzzleFailTimeout = null;
+
         function puzzleFailed() {
+            // clear any pending reset
+            if (puzzleFailTimeout) {
+                clearTimeout(puzzleFailTimeout);
+                puzzleFailTimeout = null;
+            }
+
             machinePanel.innerHTML = `
                 ✗ DECRYPTION FAILED ✗<br>
                 LOGIC CHAIN INCORRECT<br>
                 TRY AGAIN
             `;
             machinePanel.style.color = '#ff0000';
-            
+
             // Shake animation
-            logicPuzzle.querySelector('.puzzle-panel').style.animation = 'shake 0.5s';
-            
-            setTimeout(() => {
+            const panel = logicPuzzle.querySelector('.puzzle-panel');
+            if (panel) panel.style.animation = 'shake 0.45s';
+
+            // disable execute button briefly so user sees feedback
+            if (typeof executeBtn !== 'undefined' && executeBtn) executeBtn.disabled = true;
+
+            // shorter delay
+            puzzleFailTimeout = setTimeout(() => {
                 machinePanel.innerHTML = `
                     ENCRYPTED MESSAGE DETECTED<br>
                     ROTOR CONFIGURATION REQUIRED
                 `;
-                logicPuzzle.querySelector('.puzzle-panel').style.animation = '';
-            }, 2000);
+                if (panel) panel.style.animation = '';
+                if (typeof executeBtn !== 'undefined' && executeBtn) executeBtn.disabled = false;
+                puzzleFailTimeout = null;
+            }, 900);
         }
 
         function puzzleSolved() {
@@ -1138,9 +1163,10 @@
         }
 
         function goToNextScene() {
+            // TODO: Transition to next scene (Hedy Lamarr)
             alert("Brilliant code-breaking!\n\nYou've completed the Beginner Level challenges!\n\nNext: Intermediate Level - New pioneers and more complex coding challenges await!\n\n[In the full game, this would transition to Hedy Lamarr's scene]");
             // In actual implementation:
-            window.location.href = 'HedyLamarScene.html';
+            window.location.href = 'SceneFour.html';
         }
 
         // Dialogue system
@@ -1162,6 +1188,8 @@
         function hideDialogue() {
             dialogueBox.classList.remove('active');
         }
+
+        // dialog motion API removed — dialogues anchor at bottom with compact transition
 
         // Add shake animation for errors
         const style = document.createElement('style');

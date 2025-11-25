@@ -305,6 +305,12 @@
             background: #333;
         }
 
+        :root {
+            --dialog-duration: 0.18s; /* default: snappy */
+            --dialog-ease: cubic-bezier(.2,.9,.2,1);
+            --dialog-opacity-duration: 0.12s;
+        }
+
         /* Player Character */
         .player {
             position: absolute;
@@ -341,24 +347,29 @@
         /* Dialogue Box */
         .dialogue-box {
             position: absolute;
+            /* anchored to lower part of the screen so it doesn't block the blackboard */
             bottom: 80px;
             left: 50%;
-            transform: translateX(-50%);
-            width: 85%;
-            max-width: 700px;
+            transform: translateX(-50%) translateY(-6px);
+            width: min(72%, 720px);
+            max-width: 720px;
             background: rgba(10, 10, 26, 0.95);
             border: 4px solid #0088ff;
             border-radius: 15px;
-            padding: 25px;
+            padding: 16px 18px;
             color: #ffffff;
             display: none;
             z-index: 1000;
-            animation: slideUp 0.5s ease-out;
+            opacity: 0;
+            transition: transform 0.18s cubic-bezier(.2,.9,.2,1), opacity 0.12s cubic-bezier(.2,.9,.2,1);
             box-shadow: 0 0 30px rgba(0, 136, 255, 0.3);
         }
 
         .dialogue-box.active {
             display: block;
+            /* visible state - animate to neutral position */
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
         .dialogue-header {
@@ -379,15 +390,25 @@
         }
 
         .dialogue-name {
-            font-size: 1.3rem;
+            font-size: 1.12rem;
             font-weight: bold;
             color: #0088ff;
         }
 
         .dialogue-text {
-            font-size: 1.1rem;
+            /* slightly smaller text so the dialogue box takes up less screen height */
+            font-size: 0.95rem;
             line-height: 1.8;
             margin-bottom: 15px;
+        }
+
+        /* responsive: keep dialog readable but compact on small screens */
+        @media (max-width: 720px) {
+            .dialogue-box { width: 92%; max-width: 92%; padding: 12px 14px; }
+            .dialogue-text { font-size: 0.88rem; line-height: 1.6; }
+            .dialogue-name { font-size: 1rem; }
+            .dialogue-buttons { margin-top: 12px; gap: 10px; }
+            .dialogue-btn { padding: 10px 22px; font-size: 0.95rem; }
         }
 
         .dialogue-buttons {
@@ -396,6 +417,9 @@
             justify-content: center;
             margin-top: 20px;
         }
+
+        /* small repositioning helper - when repositioning, briefly offset and animate back */
+        /* repositioning helper removed — dialogues always anchored to bottom */
 
         .dialogue-btn {
             background: linear-gradient(135deg, #0088ff 0%, #0055cc 100%);
@@ -591,6 +615,14 @@
             pointer-events: none;
         }
 
+        /* Visual indicator (soft) for chips that are currently used in any blank */
+        .option-chip.in-use {
+            box-shadow: 0 6px 18px rgba(0,170,255,0.25) inset, 0 8px 25px rgba(0,170,255,0.12);
+            border-color: #00aaff;
+            transform: translateY(-3px);
+            transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+        }
+
         .execute-code-btn {
             display: block;
             margin: 20px auto 0;
@@ -686,10 +718,7 @@
             50% { transform: scale(1.2); }
         }
 
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
+        /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
 
         /* Spacecraft visualization */
         .spacecraft-viz {
@@ -775,7 +804,7 @@
                         • Iterations: n = 10<br><br>
                         <strong>Calculate:</strong><br>
                         x = v × cos(θ) × t<br>
-                        y = v × sin(θ) × t - ½gt²<br>
+                        y = v × sin(θ) × t - 0.5 gt²<br>
                     </div>
                     <div class="hint-box">
                         💡 <strong>Katherine's Note:</strong><br>
@@ -840,19 +869,18 @@
                 <div class="options-list">
                     <div class="option-chip" data-value="velocity">velocity</div>
                     <div class="option-chip" data-value="angle">angle</div>
-                    <div class="option-chip" data-value="time">time</div>
                     <div class="option-chip" data-value="i">i</div>
                     <div class="option-chip" data-value="range">range</div>
                     <div class="option-chip" data-value="10">10</div>
                     <div class="option-chip" data-value="print">print</div>
-                    <div class="option-chip" data-value="calculate_position">calculate_position</div>
+                    <div class="option-chip" data-value="calculate_trajectory">calculate_trajectory</div>
                 </div>
             </div>
 
             <div class="code-editor" id="codeEditor">
                 <div class="code-line">
                     <span class="line-number">1</span>
-                    <span class="code-text"><span class="keyword">def</span> <span class="function-name">correct_trajectory</span>(<input class="code-input" id="input1" data-answer="velocity" placeholder="???">, <input class="code-input" id="input2" data-answer="angle" placeholder="???">):</span>
+                    <span class="code-text"><span class="keyword">def</span> <span class="function-name">calculate_trajectory</span>(<input class="code-input" id="input1" data-answer="velocity" placeholder="???">, <input class="code-input" id="input2" data-answer="angle" placeholder="???">):</span>
                 </div>
                 <div class="code-line">
                     <span class="line-number">2</span>
@@ -892,7 +920,7 @@
                 </div>
                 <div class="code-line">
                     <span class="line-number">11</span>
-                    <span class="code-text"><input class="code-input" id="input10" data-answer="calculate_position" placeholder="???">(velocity=7800, angle=45)</span>
+                    <span class="code-text"><input class="code-input" id="input10" data-answer="calculate_trajectory" placeholder="???">(velocity=7800, angle=45)</span>
                 </div>
             </div>
 
@@ -921,7 +949,7 @@
                 input7: 'velocity',
                 input8: 'angle',
                 input9: 'print',
-                input10: 'calculate_position'
+                input10: 'calculate_trajectory'
             },
             userAnswers: {}
         };
@@ -994,34 +1022,36 @@
                 });
 
                 // Allow typing
-                input.addEventListener('input', function() {
-                    checkInput(this);
-                });
+                    input.addEventListener('input', function() {
+                        checkInput(this);
+                    });
             });
 
             // Add click handlers to option chips
             optionChips.forEach(chip => {
                 chip.addEventListener('click', function() {
-                    if (this.classList.contains('used')) return;
                     if (!gameState.selectedInput) {
                         alert('Please click on a blank (???) in the code first!');
                         return;
                     }
 
                     const value = this.getAttribute('data-value');
+                    // Put the option value into the selected blank
                     gameState.selectedInput.value = value;
                     checkInput(gameState.selectedInput);
-                    
-                    // Mark chip as used
-                    this.classList.add('used');
-                    
-                    // Clear selection
+                    // update visual indicators for chips used in blanks
+                    updateChipUsage();
+
+                    // Clear selection UI
                     gameState.selectedInput.style.outline = 'none';
                     gameState.selectedInput = null;
                 });
             });
 
             executeCodeBtn.addEventListener('click', executeCode);
+
+            // initial chip usage state
+            updateChipUsage();
         }
 
         function checkInput(input) {
@@ -1043,6 +1073,26 @@
 
             // Check if all inputs are filled
             checkAllInputs();
+
+            // update chip visuals every time an input changes
+            updateChipUsage();
+        }
+
+        // Update chips to visually indicate which options are currently used
+        function updateChipUsage() {
+            const chips = document.querySelectorAll('.option-chip');
+            const inputs = document.querySelectorAll('.code-input');
+            // gather non-empty values from inputs
+            const usedValues = new Set(Array.from(inputs).map(i => i.value.trim()).filter(v => v !== ''));
+
+            chips.forEach(chip => {
+                const v = chip.getAttribute('data-value');
+                if (usedValues.has(v)) {
+                    chip.classList.add('in-use');
+                } else {
+                    chip.classList.remove('in-use');
+                }
+            });
         }
 
         function checkAllInputs() {
@@ -1132,9 +1182,10 @@
         }
 
         function goToNextScene() {
-            alert("Outstanding work!\n\nNext: Scene 9 - Margaret Hamilton (1960s-70s)\n\nYou'll help Margaret debug the Apollo mission software with conditional statements and error handling!");
+            
+            alert("Outstanding work!\n\nNext: Scene 6 - Margaret Hamilton (1960s-70s)\n\nYou'll help Margaret debug the Apollo mission software with conditional statements and error handling!");
             // In actual implementation:
-            window.location.href = 'MargaretHamiltonScene.html';
+            window.location.href = 'SceneSix.html';
         }
 
         // Dialogue system
@@ -1150,12 +1201,20 @@
                 dialogueButtons.appendChild(button);
             });
             
+            // dialogue appears anchored at the lower part of the screen (no dynamic reposition)
+
             dialogueBox.classList.add('active');
         }
 
         function hideDialogue() {
             dialogueBox.classList.remove('active');
+            // clear inline top/bottom positioning so dialog will return to default on next show
+            dialogueBox.style.top = '';
+            dialogueBox.style.bottom = '';
         }
+
+
+        // dialogue is bottom-anchored and uses default transition; motion API removed
 
         // Add pulse animation for code success
         const style = document.createElement('style');
