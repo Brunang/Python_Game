@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+now <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -236,61 +236,16 @@
             top: 50%;
             left: 25%;
             transform: translateY(-50%);
-            width: 100px;
-            height: 180px;
+            width: 140px;
+            height: auto;
             z-index: 5;
         }
 
-        .ada-dress {
+        .ada-character img {
+            display: block;
             width: 100%;
-            height: 120px;
-            background: linear-gradient(to bottom, #8b4789 0%, #6b3768 100%);
-            border-radius: 50% 50% 60% 60% / 30% 30% 70% 70%;
-            position: relative;
-            border: 3px solid #5a2d58;
-        }
-
-        .ada-head {
-            width: 50px;
-            height: 60px;
-            background: #ffd1a3;
-            border-radius: 50% 50% 45% 45%;
-            position: absolute;
-            top: -55px;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 2px solid #d4a574;
-        }
-
-        .ada-hair {
-            width: 60px;
-            height: 40px;
-            background: #3d2817;
-            border-radius: 50% 50% 0 0;
-            position: absolute;
-            top: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .ada-face-detail {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            text-align: center;
-        }
-
-        .ada-eyes {
-            font-size: 8px;
-            color: #2a1810;
-        }
-
-        .ada-mouth {
-            margin-top: 8px;
-            font-size: 10px;
-            color: #8b4513;
+            height: auto;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
         }
 
         /* Player Character */
@@ -298,10 +253,8 @@
             position: absolute;
             bottom: 30%;
             right: 20%;
-            width: 50px;
-            height: 80px;
-            background: linear-gradient(to bottom, #667eea 0%, #4a5aa8 100%);
-            border-radius: 25px 25px 10px 10px;
+            width: 80px;
+            height: auto;
             z-index: 100;
             opacity: 0;
             animation: playerAppear 1s ease-out 3s forwards;
@@ -311,34 +264,6 @@
             0% { opacity: 0; transform: scale(0.5) translateY(-50px); }
             50% { opacity: 1; transform: scale(1.2) translateY(-10px); }
             100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        .player::before {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 30px;
-            background: #c4d7ff;
-            border-radius: 50%;
-            border: 2px solid #4a5aa8;
-        }
-
-        .player::after {
-            content: '⚡';
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.5rem;
-            animation: sparkle 1s ease-in-out infinite;
-        }
-
-        @keyframes sparkle {
-            0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(0.8); }
-            50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
         }
 
         /* Dialogue Box */
@@ -637,6 +562,107 @@
             50% { transform: scale(1.2); }
         }
 
+        /* Typing Challenge Interface */
+        .typing-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .typing-container.active {
+            display: flex;
+        }
+
+        .typing-box {
+            background: linear-gradient(135deg, #3d2817 0%, #2a1810 100%);
+            border: 5px solid #d4af37;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 700px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .typing-title {
+            font-size: 1.8rem;
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .typing-instruction {
+            color: #f5f5dc;
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .code-input {
+            width: 100%;
+            background: #1a1a1a;
+            border: 3px solid #d4af37;
+            border-radius: 10px;
+            padding: 20px;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        .code-input:focus {
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .submit-code-btn {
+            display: block;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #00aa00 0%, #008800 100%);
+            border: 3px solid #d4af37;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .submit-code-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 255, 0, 0.4);
+        }
+
+        .submit-code-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .typing-feedback {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            min-height: 30px;
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        .typing-feedback.success {
+            color: #00ff00;
+        }
+
         /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
     </style>
 </head>
@@ -686,19 +712,11 @@
 
         <!-- Ada Lovelace Character -->
         <div class="ada-character">
-            <div class="ada-dress">
-                <div class="ada-head">
-                    <div class="ada-hair"></div>
-                    <div class="ada-face-detail">
-                        <div class="ada-eyes">• •</div>
-                        <div class="ada-mouth">◡</div>
-                    </div>
-                </div>
-            </div>
+            <img src="../../assets/Characterpurple.png" alt="Ada Lovelace" />
         </div>
 
         <!-- Player Character -->
-        <div class="player" id="player"></div>
+        <img src="../../assets/Characterblue.png" alt="Player character - blue explorer" class="player" id="player" />
 
         <!-- Dialogue Box -->
         <div class="dialogue-box" id="dialogueBox">
@@ -725,33 +743,57 @@
     <!-- Puzzle Interface -->
     <div class="puzzle-container" id="puzzleContainer">
         <div class="puzzle-box">
-            <h2 class="puzzle-title">Complete the Algorithm</h2>
+            <h2 class="puzzle-title">Create a Print Statement</h2>
             <p class="puzzle-instruction">
-                Arrange the punch cards in the correct sequence to calculate Bernoulli numbers.<br>
-                Drag the blocks from the left to the right panel in the proper order.
+                Drag the blocks to create a Python print statement that tells the machine<br>
+                the year and event: "1848 - Seneca Falls Convention"
             </p>
             <div class="puzzle-areas">
                 <div class="available-blocks">
-                    <div class="area-title">Available Commands</div>
+                    <div class="area-title">Available Blocks</div>
                     <div class="blocks-container" id="availableBlocks">
-                        <div class="code-block" draggable="true" data-command="input">INPUT n</div>
-                        <div class="code-block" draggable="true" data-command="calculate">CALCULATE sum</div>
-                        <div class="code-block" draggable="true" data-command="store">STORE result</div>
-                        <div class="code-block" draggable="true" data-command="repeat">REPEAT for n</div>
-                        <div class="code-block" draggable="true" data-command="print">PRINT output</div>
+                        <div class="code-block" draggable="true" data-command="print">print(</div>
+                        <div class="code-block" draggable="true" data-command="quote1">"</div>
+                        <div class="code-block" draggable="true" data-command="year">1848</div>
+                        <div class="code-block" draggable="true" data-command="dash"> - </div>
+                        <div class="code-block" draggable="true" data-command="event">Seneca Falls Convention</div>
+                        <div class="code-block" draggable="true" data-command="quote2">"</div>
+                        <div class="code-block" draggable="true" data-command="close">)</div>
                     </div>
                 </div>
                 <div class="solution-area">
-                    <div class="area-title">Algorithm Sequence</div>
+                    <div class="area-title">Build Your Code</div>
                     <div class="drop-zone" id="dropZone"></div>
                 </div>
             </div>
-            <button class="check-solution-btn" id="checkSolution">Execute Algorithm</button>
+            <button class="check-solution-btn" id="checkSolution">Run Code</button>
         </div>
     </div>
 
     <!-- Success Flash -->
     <div class="success-flash" id="successFlash"></div>
+
+    <!-- Typing Challenge Interface -->
+    <div class="typing-container" id="typingContainer">
+        <div class="typing-box">
+            <h2 class="typing-title">Type the Print Statement</h2>
+            <p class="typing-instruction">
+                Great job! Now let's practice typing it yourself.<br>
+                Type the exact print statement to tell the machine about the event:
+                Print("1848 - Seneca Falls Convention")
+            </p>
+            <input 
+                type="text" 
+                class="code-input" 
+                id="codeInput" 
+                placeholder='print("1848 - Seneca Falls Convention")'
+                autocomplete="off"
+                spellcheck="false"
+            />
+            <div class="typing-feedback" id="typingFeedback"></div>
+            <button class="submit-code-btn" id="submitCode">Run Code</button>
+        </div>
+    </div>
 
     <script>
         // Game state
@@ -760,7 +802,7 @@
             metAda: false,
             puzzleStarted: false,
             puzzleComplete: false,
-            correctSequence: ['input', 'repeat', 'calculate', 'store', 'print']
+            correctSequence: ['print', 'quote1', 'year', 'dash', 'event', 'quote2', 'close']
         };
 
         // DOM elements
@@ -776,6 +818,10 @@
         const successFlash = document.getElementById('successFlash');
         const hud = document.getElementById('hud');
         const vortexOverlay = document.getElementById('vortexOverlay');
+        const typingContainer = document.getElementById('typingContainer');
+        const codeInput = document.getElementById('codeInput');
+        const submitCode = document.getElementById('submitCode');
+        const typingFeedback = document.getElementById('typingFeedback');
 
         // Initialize scene
         setTimeout(() => {
@@ -787,20 +833,51 @@
             gameState.arrivedInStudy = true;
             setTimeout(() => {
                 showDialogue(
-                    "Oh my! You've arrived just in time. The Analytical Engine is stalled. We must complete this algorithm, or history will be rewritten!",
+                    "Oh my! You've arrived just in time. It's the year 1848 and history is glitching! If we don't fix this algorithm, the first women's rights convention will never happen!",
                     [
-                        { text: "How can I help?", action: explainChallenge }
+                        { text: "Next →", action: continueIntroduction }
                     ]
                 );
             }, 500);
         }
 
+        function continueIntroduction() {
+            showDialogue(
+                "That meeting is supposed to spark the entire women's rights movement and introduce the Declaration of Sentiments. The document demanding equal rights and the right to vote. But right now? The timeline is corrupted, and the event is about to be erased! Quick! Help me stabilize the code before history rewrites itself!",
+                [
+                    { text: "How can I help?", action: explainChallenge }
+                ]
+            );
+        }
+
         function explainChallenge() {
             showDialogue(
-                "The machine requires a specific sequence of commands to calculate Bernoulli numbers. Please, use these punch card blocks to complete the algorithm and set the machine right. The correct order is crucial!",
+        `The machine's timeline is unstable.
+        It doesn't remember what year it is, or what's supposed to happen here.
+
+        To fix it, we need to tell the machine the year and the event using a Python command.`,
                 [
-                    { text: "I'll do my best!", action: startPuzzle }
+                    { text: "I'll do my best!", action: playerExplainsPrint }
                 ]
+            );
+        }
+
+        function playerExplainsPrint() {
+            showDialogue(
+                `In Python, we can send a message to the screen using the print statement.
+
+Think of print as telling the computer: 'Hey, show this text to the user!'
+
+For example, this code:
+
+print("Hello, world!")
+
+tells the computer to display the words Hello, world!`,
+                [
+                    { text: "Got it! Let's start!", action: startPuzzle }
+                ],
+                'Edwin Lovelace',
+                '#667eea'
             );
         }
 
@@ -812,11 +889,15 @@
             initializeDragAndDrop();
             /**
                 ✅ Correct Sequence:
-                INPUT n
-                REPEAT for n
-                CALCULATE sum
-                STORE result
-                PRINT output
+                print(
+                "
+                1848
+                 - 
+                Seneca Falls Convention
+                "
+                )
+                
+                Result: print("1848 - Seneca Falls Convention")
              */
         }
 
@@ -947,11 +1028,61 @@
             gears[2].classList.add('spinning');
 
             // Update display
-            engineDisplay.textContent = "CALCULATING...";
+            engineDisplay.textContent = "RUNNING CODE...";
             engineDisplay.style.color = "#ffd700";
 
             setTimeout(() => {
-                engineDisplay.textContent = "SUCCESS! ALGORITHM COMPLETE";
+                engineDisplay.textContent = "OUTPUT: 1848 - Seneca Falls Convention";
+                
+                // Flash effect
+                successFlash.classList.add('active');
+                setTimeout(() => {
+                    successFlash.classList.remove('active');
+                }, 1000);
+
+                setTimeout(() => {
+                    puzzleContainer.classList.remove('active');
+                    showTypingChallenge();
+                }, 2000);
+            }, 2000);
+        }
+
+        function showTypingChallenge() {
+            showDialogue(
+                "Excellent work! You understand how the blocks fit together. Now let's try typing it yourself. This will help you remember how to write a print statement from scratch!",
+                [
+                    { text: "I'm ready!", action: startTypingChallenge }
+                ]
+            );
+        }
+
+        function startTypingChallenge() {
+            hideDialogue();
+            typingContainer.classList.add('active');
+            codeInput.focus();
+            
+            // Add event listener for Enter key
+            codeInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkTypedCode();
+                }
+            });
+            
+            submitCode.addEventListener('click', checkTypedCode);
+        }
+
+        function checkTypedCode() {
+            const userCode = codeInput.value.trim();
+            const correctCode = 'print("1848 - Seneca Falls Convention")';
+            
+            // Case-insensitive comparison
+            if (userCode.toLowerCase() === correctCode.toLowerCase()) {
+                typingFeedback.textContent = "Perfect! Code executed successfully!";
+                typingFeedback.className = "typing-feedback success";
+                
+                // Animate engine display
+                engineDisplay.textContent = "OUTPUT: 1848 - Seneca Falls Convention";
+                engineDisplay.style.color = "#00ff00";
                 
                 // Flash effect
                 successFlash.classList.add('active');
@@ -961,17 +1092,25 @@
 
                 // Repair time machine piece
                 document.getElementById('piece1').classList.add('active');
-
+                
                 setTimeout(() => {
-                    puzzleContainer.classList.remove('active');
+                    typingContainer.classList.remove('active');
                     completeScene();
                 }, 2000);
-            }, 2000);
+            } else {
+                typingFeedback.textContent = "Not quite right. Check your syntax!";
+                typingFeedback.className = "typing-feedback";
+                codeInput.style.borderColor = "#ff0000";
+                
+                setTimeout(() => {
+                    codeInput.style.borderColor = "#d4af37";
+                }, 1000);
+            }
         }
 
         function completeScene() {
             showDialogue(
-                "Brilliant! You've done it! The algorithm is complete, and the Analytical Engine is working perfectly. I can see a piece of your time machine has been repaired. You must continue your journey through history!",
+                "Perfect! The machine now knows it's 1848 and the Seneca Falls Convention is happening! The timeline is stabilizing. I can see a piece of your time machine has been repaired. You must continue your journey through history!",
                 [
                     { text: "Continue Journey →", action: goToNextScene }
                 ]
@@ -979,14 +1118,17 @@
         }
 
         function goToNextScene() {
-            // TODO: Make transition smoother Navigate to Scene 2 (Grace Hopper)
-            alert("Excellent work!\n\nNext: Scene 2 - Grace Hopper (1940s)\n\nYou will help Grace find and fix the famous bug in the Mark II computer!");
-        
+            // Navigate to Scene 2 (Grace Hopper)
             window.location.href = 'SceneTwo.html';
         }
 
         // Dialogue system
-        function showDialogue(text, buttons) {
+        function showDialogue(text, buttons, speaker = 'Ada Lovelace', portraitColor = '#8b4789') {
+            const dialogueName = document.getElementById('dialogueName');
+            const dialoguePortrait = document.querySelector('.dialogue-portrait');
+            
+            dialogueName.textContent = speaker;
+            dialoguePortrait.style.background = portraitColor;
             dialogueText.textContent = text;
             dialogueButtons.innerHTML = '';
             
