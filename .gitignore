@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment files
+.env
+**/.env
+
+# Logs
+*.log
+server/server.log
+
+# SQLite database files
+server/db/*.db
+
+# Build outputs
+dist/
+**/dist/
+
+# macOS
+.DS_Store
+**/.DS_Store
