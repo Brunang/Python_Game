@@ -523,10 +523,6 @@ now <!DOCTYPE html>
             border-radius: 10px;
             padding: 15px;
             z-index: 1500;
-            display: none;
-        }
-
-        .hud.active {
             display: block;
         }
 
@@ -555,6 +551,12 @@ now <!DOCTYPE html>
             background: linear-gradient(135deg, #d4af37 0%, #ffd700 100%);
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
             animation: piecePulse 1s ease-out;
+            cursor: pointer;
+        }
+
+        .repair-piece.active:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 1);
         }
 
         @keyframes piecePulse {
@@ -736,6 +738,10 @@ now <!DOCTYPE html>
                 <div class="repair-piece" id="piece2"></div>
                 <div class="repair-piece" id="piece3"></div>
                 <div class="repair-piece" id="piece4"></div>
+                <div class="repair-piece" id="piece5"></div>
+                <div class="repair-piece" id="piece6"></div>
+                <div class="repair-piece" id="piece7"></div>
+                <div class="repair-piece" id="piece8"></div>
             </div>
         </div>
     </div>
@@ -823,6 +829,76 @@ now <!DOCTYPE html>
         const submitCode = document.getElementById('submitCode');
         const typingFeedback = document.getElementById('typingFeedback');
 
+        // Add click listeners to repair pieces for navigation
+        function initializeRepairPieceNavigation() {
+            const levelScenes = {
+                1: 'SceneOne.html',
+                2: 'SceneTwo.html',
+                3: 'SceneThree.html',
+                4: 'SceneFour.html',
+                5: 'SceneFive.html',
+                6: 'SceneSix.html',
+                7: 'SceneSeven.html',
+                8: 'SceneEight.html'
+            };
+
+            for (let i = 1; i <= 8; i++) {
+                const piece = document.getElementById(`piece${i}`);
+                if (piece) {
+                    piece.addEventListener('click', function() {
+                        // Only navigate if the piece is active (completed)
+                        if (this.classList.contains('active')) {
+                            window.location.href = levelScenes[i];
+                        }
+                    });
+                }
+            }
+        }
+
+        // Initialize repair piece navigation
+        initializeRepairPieceNavigation();
+
+        // Load user progress and update repair boxes
+        async function loadUserProgress() {
+            try {
+                const user = getUserFromLocalStorage();
+                if (!user || !user.id) {
+                    console.log('No user found in localStorage');
+                    return;
+                }
+
+                // Fetch user profile to get current progress
+                const response = await fetch(`http://localhost:3001/api/users/${user.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    const progress = userData.progress || 0;
+                    
+                    // Calculate how many levels completed based on progress (12.5% per level)
+                    const completedLevels = Math.floor(progress / 12.5);
+                    
+                    // Activate repair boxes for completed levels
+                    for (let i = 1; i <= completedLevels; i++) {
+                        const piece = document.getElementById(`piece${i}`);
+                        if (piece && !piece.classList.contains('active')) {
+                            piece.classList.add('active');
+                        }
+                    }
+                    
+                    console.log(`✅ Loaded progress: ${progress}% - ${completedLevels} levels completed`);
+                }
+            } catch (error) {
+                console.error('Error loading user progress:', error);
+            }
+        }
+
+        // Load progress when page loads
+        loadUserProgress();
+
         // Initialize scene
         setTimeout(() => {
             vortexOverlay.style.display = 'none';
@@ -885,7 +961,6 @@ tells the computer to display the words Hello, world!`,
             hideDialogue();
             gameState.puzzleStarted = true;
             puzzleContainer.classList.add('active');
-            hud.classList.add('active');
             initializeDragAndDrop();
             /**
                 ✅ Correct Sequence:
@@ -1071,7 +1146,7 @@ tells the computer to display the words Hello, world!`,
             submitCode.addEventListener('click', checkTypedCode);
         }
 
-        function checkTypedCode() {
+        async function checkTypedCode() {
             const userCode = codeInput.value.trim();
             const correctCode = 'print("1848 - Seneca Falls Convention")';
             
@@ -1092,6 +1167,18 @@ tells the computer to display the words Hello, world!`,
 
                 // Repair time machine piece
                 document.getElementById('piece1').classList.add('active');
+                
+                // ✅ UPDATE PROGRESS IMMEDIATELY when code is correct
+                try {
+                    const user = getUserFromLocalStorage();
+                    if (user && user.id) {
+                        await updateUserProgress(user.id, 1, 100, true);
+                        console.log('✅ Progress saved: 12.5%');
+                    }
+                } catch (error) {
+                    console.error('Error updating progress:', error);
+                    // Continue anyway - don't block the game flow
+                }
                 
                 setTimeout(() => {
                     typingContainer.classList.remove('active');
@@ -1119,7 +1206,40 @@ tells the computer to display the words Hello, world!`,
 
         function goToNextScene() {
             // Navigate to Scene 2 (Grace Hopper)
+            // Note: Progress already updated in checkTypedCode()
             window.location.href = 'SceneTwo.html';
+        }
+
+        // Helper function to get user from localStorage
+        function getUserFromLocalStorage() {
+            try {
+                const userStr = localStorage.getItem('user');
+                return userStr ? JSON.parse(userStr) : null;
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                return null;
+            }
+        }
+
+        // Helper function to update user progress
+        async function updateUserProgress(userId, levelId, score, completed) {
+            const API_BASE_URL = 'http://localhost:3001';
+            const token = localStorage.getItem('token');
+            
+            const response = await fetch(`${API_BASE_URL}/api/progress/${userId}/level/${levelId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ score, completed })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update progress');
+            }
+
+            return response.json();
         }
 
         // Dialogue system

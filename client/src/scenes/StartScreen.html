@@ -433,7 +433,7 @@
                 <div class="error-message" id="loginError"></div>
                 <div class="success-message" id="loginSuccess"></div>
                 <button class="login-btn" onclick="handleLogin()" style="width: 100%; margin-top: 10px;">
-                    <span>🔓 Login</span>
+                    <span> Login</span>
                 </button>
             </div>
         </div>
@@ -456,13 +456,13 @@
                 <span>▶ Start Journey</span>
             </button>
             <button class="game-button start-button" id="continueBtn" style="display:none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" onclick="continueJourney()">
-                <span>📖 Continue Journey</span>
+                <span> Continue Journey</span>
             </button>
             <button class="game-button credits-button" onclick="openCredits()">
                 <span>★ Credits</span>
             </button>
             <button class="game-button credits-button" id="logoutBtn" style="display:none;" onclick="logout()">
-                <span>🚪 Logout</span>
+                <span> Logout</span>
             </button>
         </div>
     </div>
@@ -543,7 +543,7 @@
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
 
-                successDiv.textContent = '✅ Login successful! Redirecting...';
+                successDiv.textContent = ' Login successful! Redirecting...';
                 successDiv.style.display = 'block';
 
                 setTimeout(() => {
@@ -660,17 +660,83 @@
         }
 
         // Continue Journey (for returning players)
-        function continueJourney() {
+        async function continueJourney() {
             console.log('Continuing journey...');
-            const lastLevel = sessionStorage.getItem('lastLevel');
             
-            if (lastLevel) {
-                const level = JSON.parse(lastLevel);
-                alert(`Welcome back! Continuing from Level ${level.level_number}: ${level.title}`);
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            
+            if (!token || !user) {
+                // If not logged in, redirect to login
+                window.location.href = 'Login.html';
+                return;
             }
+
+            const userData = JSON.parse(user);
             
-            // Navigate to intro scene or last level
-            window.location.href = 'IntroScene.html';
+            try {
+                // Fetch user data to get progress percentage
+                const response = await fetch(`${API_URL}/api/users/${userData.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    // If user not found, start from the beginning
+                    window.location.href = 'IntroScene.html';
+                    return;
+                }
+
+                const userDataFromDB = await response.json();
+                const progress = userDataFromDB.progress || 0;
+                
+                // Determine the next scene based on progress percentage
+                const nextScene = determineNextSceneByProgress(progress);
+                window.location.href = nextScene;
+
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                // Default to IntroScene if there's an error
+                window.location.href = 'IntroScene.html';
+            }
+        }
+
+        // Determine which scene to load based on progress percentage
+        function determineNextSceneByProgress(progress) {
+            // Map progress percentages to scenes
+            // 0% = IntroScene
+            // >0-12.5% (in progress Scene 1) = SceneOne
+            // >12.5-25% (completed Scene 1) = SceneTwo
+            // >25-37.5% (completed Scene 2) = SceneThree
+            // >37.5-50% (completed Scene 3) = SceneFour
+            // >50-62.5% (completed Scene 4) = SceneFive
+            // >62.5-75% (completed Scene 5) = SceneSix
+            // >75-87.5% (completed Scene 6) = SceneSeven
+            // >87.5-100% (completed Scene 7) = SceneEight
+            
+            if (progress === 0) {
+                return 'IntroScene.html';
+            } else if (progress > 0 && progress <= 12.5) {
+                return 'levels/SceneOne.html';
+            } else if (progress > 12.5 && progress <= 25) {
+                return 'levels/SceneTwo.html';
+            } else if (progress > 25 && progress <= 37.5) {
+                return 'levels/SceneThree.html';
+            } else if (progress > 37.5 && progress <= 50) {
+                return 'levels/SceneFour.html';
+            } else if (progress > 50 && progress <= 62.5) {
+                return 'levels/SceneFive.html';
+            } else if (progress > 62.5 && progress <= 75) {
+                return 'levels/SceneSix.html';
+            } else if (progress > 75 && progress <= 87.5) {
+                return 'levels/SceneSeven.html';
+            } else {
+                // 100% or close to it
+                return 'levels/SceneEight.html'; // Or 'CreditsScreen.html'
+            }
         }
 
         // Logout Function

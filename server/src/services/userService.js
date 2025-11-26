@@ -52,7 +52,7 @@ export const userService = {
     return new Promise((resolve, reject) => {
       const db = getDatabase();
       db.get(
-        'SELECT id, username, email, created_at FROM users WHERE id = ?',
+        'SELECT id, username, email, progress, created_at FROM users WHERE id = ?',
         [id],
         (err, row) => {
           if (err) reject(err);

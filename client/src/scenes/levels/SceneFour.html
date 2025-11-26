@@ -799,6 +799,12 @@
             background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
             animation: piecePulse 1s ease-out;
+            cursor: pointer;
+        }
+
+        .repair-piece.active:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 1);
         }
 
         @keyframes piecePulse {
@@ -906,10 +912,14 @@
         <div class="hud">
             <div class="hud-title">Time Machine Repair</div>
             <div class="repair-progress">
-                <div class="repair-piece active"></div>
-                <div class="repair-piece active"></div>
-                <div class="repair-piece active"></div>
-                <div class="repair-piece" id="piece4"></div>
+                <div class="repair-piece" id="piece1" data-scene="SceneOne.html"></div>
+                <div class="repair-piece" id="piece2" data-scene="SceneTwo.html"></div>
+                <div class="repair-piece" id="piece3" data-scene="SceneThree.html"></div>
+                <div class="repair-piece" id="piece4" data-scene="SceneFour.html"></div>
+                <div class="repair-piece" id="piece5" data-scene="SceneFive.html"></div>
+                <div class="repair-piece" id="piece6" data-scene="SceneSix.html"></div>
+                <div class="repair-piece" id="piece7" data-scene="SceneSeven.html"></div>
+                <div class="repair-piece" id="piece8" data-scene="SceneEight.html"></div>
             </div>
         </div>
     </div>
@@ -1039,6 +1049,66 @@
             levelTransition.style.display = 'none';
             introduceHedy();
         }, 5500);
+
+        // Initialize repair box navigation
+        function initializeRepairBoxes() {
+            const repairPieces = document.querySelectorAll('.repair-piece');
+            repairPieces.forEach(piece => {
+                piece.addEventListener('click', () => {
+                    // Only navigate if the piece is active (completed)
+                    if (piece.classList.contains('active')) {
+                        const scene = piece.getAttribute('data-scene');
+                        if (scene) {
+                            window.location.href = scene;
+                        }
+                    }
+                });
+            });
+        }
+
+        // Initialize click handlers for all repair boxes
+        initializeRepairBoxes();
+
+        // Load user progress and update repair boxes
+        async function loadUserProgress() {
+            try {
+                const user = getUserFromLocalStorage();
+                if (!user || !user.id) {
+                    console.log('No user found in localStorage');
+                    return;
+                }
+
+                // Fetch user profile to get current progress
+                const response = await fetch(`http://localhost:3001/api/users/${user.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    const progress = userData.progress || 0;
+                    
+                    // Calculate how many levels completed based on progress (12.5% per level)
+                    const completedLevels = Math.floor(progress / 12.5);
+                    
+                    // Activate repair boxes for completed levels
+                    for (let i = 1; i <= completedLevels; i++) {
+                        const piece = document.getElementById(`piece${i}`);
+                        if (piece && !piece.classList.contains('active')) {
+                            piece.classList.add('active');
+                        }
+                    }
+                    
+                    console.log(`✅ Loaded progress: ${progress}% - ${completedLevels} levels completed`);
+                }
+            } catch (error) {
+                console.error('Error loading user progress:', error);
+            }
+        }
+
+        // Load progress when page loads
+        loadUserProgress();
 
         function introduceHedy() {
             gameState.arrivedInStudio = true;
@@ -1338,6 +1408,18 @@
 
         function hideDialogue() {
             dialogueBox.classList.remove('active');
+        }
+
+        // Helper function to get user from localStorage
+        function getUserFromLocalStorage() {
+            try {
+                const userStr = localStorage.getItem('user');
+                if (!userStr) return null;
+                return JSON.parse(userStr);
+            } catch (error) {
+                console.error('Error parsing user from localStorage:', error);
+                return null;
+            }
         }
     </script>
 </body>

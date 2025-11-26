@@ -32,8 +32,7 @@ export const initializeDatabase = () => {
         username TEXT UNIQUE NOT NULL,
         email TEXT UNIQUE,
         password TEXT NOT NULL,
-        progress INTEGER DEFAULT 0,
-        progress_percent REAL DEFAULT 0.0,
+        progress REAL DEFAULT 0.0,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
@@ -97,13 +96,13 @@ export const initializeDatabase = () => {
           const hashed = bcryptjs.hashSync('testplayer', 10);
 
           database.run(
-            'INSERT INTO users (username, email, password, progress, progress_percent) VALUES (?, ?, ?, ?, ?)',
-            ['testplayer', null, hashed, 0, 5.0],
+            'INSERT INTO users (username, password, progress) VALUES (?, ?, ?)',
+            ['testplayer', hashed, 0.0],
             function(insertErr) {
               if (insertErr) {
                 console.error('Error seeding test user:', insertErr);
               } else {
-                console.log('Seeded default user: testplayer (5% progress)');
+                console.log('Seeded default user: testplayer (0% progress)');
               }
             }
           );

@@ -39,6 +39,8 @@ export const progressService = {
   updateProgress: (userId, levelId, score, completed) => {
     return new Promise((resolve, reject) => {
       const db = getDatabase();
+      
+      // First, update the user_progress table
       db.run(
         `INSERT INTO user_progress (user_id, level_id, score, completed, completed_at, attempts)
          VALUES (?, ?, ?, ?, ?, 1)
@@ -49,8 +51,36 @@ export const progressService = {
          completed_at = CASE WHEN ? = 1 THEN CURRENT_TIMESTAMP ELSE completed_at END`,
         [userId, levelId, score, completed ? 1 : 0, completed ? new Date() : null, score, completed ? 1 : 0, completed],
         (err) => {
-          if (err) reject(err);
-          else resolve({ success: true });
+          if (err) {
+            reject(err);
+            return;
+          }
+          
+          // If level is completed, update the user's overall progress percentage
+          if (completed) {
+            // Calculate progress: each level = 12.5% (8 levels total = 100%)
+            const progressIncrement = 12.5;
+            
+            db.run(
+              `UPDATE users 
+               SET progress = (
+                 SELECT COUNT(DISTINCT level_id) * ? 
+                 FROM user_progress 
+                 WHERE user_id = ? AND completed = 1
+               )
+               WHERE id = ?`,
+              [progressIncrement, userId, userId],
+              (updateErr) => {
+                if (updateErr) {
+                  reject(updateErr);
+                } else {
+                  resolve({ success: true });
+                }
+              }
+            );
+          } else {
+            resolve({ success: true });
+          }
         }
       );
     });
