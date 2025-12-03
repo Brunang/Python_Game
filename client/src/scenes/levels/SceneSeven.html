@@ -1306,8 +1306,19 @@
             }
         }
 
-        function executeClass() {
+        async function executeClass() {
             gameState.classComplete = true;
+
+            // Save progress to backend
+            try {
+                const user = getUserFromLocalStorage();
+                if (user && user.id) {
+                    await updateUserProgress(user.id, 7, 100, true);
+                    console.log('✅ Level 7 Progress Saved');
+                }
+            } catch (error) {
+                console.error('Error saving progress:', error);
+            }
 
             // Simulate compilation and execution
             terminalDisplay.innerHTML = `
@@ -1383,6 +1394,41 @@
 
         function hideDialogue() {
             dialogueBox.classList.remove('active');
+        }
+
+        // Helper function to get user from localStorage
+        function getUserFromLocalStorage() {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    return JSON.parse(userStr);
+                } catch (e) {
+                    console.error('Error parsing user from localStorage:', e);
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        // Helper function to update user progress
+        async function updateUserProgress(userId, levelId, score, completed) {
+            const API_BASE_URL = 'http://localhost:3001';
+            const token = localStorage.getItem('token');
+
+            const response = await fetch(`${API_BASE_URL}/api/progress/${userId}/level/${levelId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ score, completed })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update progress');
+            }
+
+            return response.json();
         }
     </script>
 </body>

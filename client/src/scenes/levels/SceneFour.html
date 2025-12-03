@@ -1422,42 +1422,39 @@ Before you try it, here's a simple example:`;
             try {
                 const user = getUserFromLocalStorage();
                 if (user && user.id) {
-                    const response = await fetch(`http://localhost:3001/api/users/${user.id}/progress`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${user.token}`
-                        },
-                        body: JSON.stringify({ progress: 50, completed: true })
-                    });
-                    
-                    if (response.ok) {
-                        console.log('✅ Progress updated to 50% - Level 4 completed');
-                        // Wait a moment to ensure save completes, then navigate
-                        setTimeout(() => {
-                            window.location.href = 'SceneFive.html';
-                        }, 500);
-                    } else {
-                        console.error('❌ Failed to save progress:', response.status);
-                        // Navigate anyway to not block the player
-                        setTimeout(() => {
-                            window.location.href = 'SceneFive.html';
-                        }, 500);
-                    }
-                } else {
-                    console.error('❌ No user found in localStorage');
-                    // Navigate anyway
-                    setTimeout(() => {
-                        window.location.href = 'SceneFive.html';
-                    }, 500);
+                    // FIXED: Use the correct level-based endpoint (Level 4)
+                    await updateUserProgress(user.id, 4, 100, true);
+                    console.log('✅ Level 4 Progress Saved');
                 }
             } catch (error) {
                 console.error('❌ Error updating progress:', error);
-                // Navigate anyway to not block the player
-                setTimeout(() => {
-                    window.location.href = 'SceneFive.html';
-                }, 500);
             }
+
+            // Navigate to the next scene
+            setTimeout(() => {
+                window.location.href = 'SceneFive.html';
+            }, 500);
+        }
+
+        // Helper function to update user progress
+        async function updateUserProgress(userId, levelId, score, completed) {
+            const API_BASE_URL = 'http://localhost:3001';
+            const token = localStorage.getItem('token');
+
+            const response = await fetch(`${API_BASE_URL}/api/progress/${userId}/level/${levelId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ score, completed })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update progress');
+            }
+
+            return response.json();
         }
 
         // Dialogue system
