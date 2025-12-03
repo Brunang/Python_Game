@@ -220,8 +220,8 @@
             50% { box-shadow: 0 0 15px #ff0000; }
         }
 
-        /* Alex Turing Character */
-        .alex-character {
+        /* Alan Turing Character */
+        .alan-character {
             position: absolute;
             top: 48%;
             left: 18%;
@@ -235,23 +235,23 @@
             background-position: center;
         }
 
-        .alex-suit {
+        .alan-suit {
             display: none;
         }
 
-        .alex-tie {
+        .alan-tie {
             display: none;
         }
 
-        .alex-head {
+        .alan-head {
             display: none;
         }
 
-        .alex-hair {
+        .alan-hair {
             display: none;
         }
 
-        .alex-face-detail {
+        .alan-face-detail {
             position: absolute;
             top: 16px;
             left: 50%;
@@ -260,12 +260,12 @@
             text-align: center;
         }
 
-        .alex-eyes {
+        .alan-eyes {
             font-size: 8px;
             color: #2a1810;
         }
 
-        .alex-mouth {
+        .alan-mouth {
             margin-top: 8px;
             font-size: 8px;
             color: #8b4513;
@@ -749,15 +749,15 @@
             </div>
         </div>
 
-        <!-- Alex Turing Character -->
-        <div class="alex-character">
-            <div class="alex-suit">
-                <div class="alex-tie"></div>
-                <div class="alex-head">
-                    <div class="alex-hair"></div>
-                    <div class="alex-face-detail">
-                        <div class="alex-eyes">• •</div>
-                        <div class="alex-mouth">—</div>
+        <!-- alan Turing Character -->
+        <div class="alan-character">
+            <div class="alan-suit">
+                <div class="alan-tie"></div>
+                <div class="alan-head">
+                    <div class="alan-hair"></div>
+                    <div class="alan-face-detail">
+                        <div class="alan-eyes">• •</div>
+                        <div class="alan-mouth">—</div>
                     </div>
                 </div>
             </div>
@@ -770,7 +770,7 @@
         <div class="dialogue-box" id="dialogueBox">
             <div class="dialogue-header">
                 <div class="dialogue-portrait"></div>
-                <div class="dialogue-name">Alex Turing</div>
+                <div class="dialogue-name">alan Turing</div>
             </div>
             <div class="dialogue-text" id="dialogueText"></div>
             <div class="dialogue-buttons" id="dialogueButtons"></div>
@@ -881,7 +881,7 @@
         // Initialize
         setTimeout(() => {
             timeTransition.style.display = 'none';
-            introduceAlex();
+            introducealan();
         }, 3500);
 
         function initializeRepairBoxes() {
@@ -943,7 +943,7 @@
         // Load progress when page loads
         loadUserProgress();
 
-        function introduceAlex() {
+        function introducealan() {
             gameState.arrivedAtBletchley = true;
             setTimeout(() => {
                 // Split the long speech into two parts with a Next step
@@ -1231,11 +1231,11 @@
         function completeScene() {
             showDialogue(
                 "You fixed it! The sorting machine is running better than ever. Those IF/THEN rules really do the trick — and they’re the foundation of how computers make decisions.",
-                [{ text: "What's next?", action: alexFarewell }]
+                [{ text: "What's next?", action: alanFarewell }]
             );
         }
 
-        function alexFarewell() {
+        function alanFarewell() {
             showDialogue(
                 "Work like this is what keeps the factory moving. Women everywhere are stepping up, proving they’re just as skilled, strong, and capable as anyone. Your time machine looks like it’s stabilizing… Ready for the next stop in history?",
                 [{ text: "Continue Journey →", action: goToNextScene }]
