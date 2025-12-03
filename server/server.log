@@ -1,0 +1,11 @@
+📊 Database tables initialized
+
+==================================================
+🎮 SHE<Codes/> Backend Server
+==================================================
+✅ Server running on http://localhost:3001
+📚 API Health Check: http://localhost:3001/api/health
+🏠 Home: http://localhost:3001
+==================================================
+
+✅ Connected to SQLite database at /Users/brunagentil/Python_Game/Python_Game-2/server/db/shecodes.db

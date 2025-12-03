@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scene 5: Grace Hopper - SHE<Codes/></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Game Container */
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url('images/laboratory-1940s.jpg') center center no-repeat;
+            background-size: cover;
+            background-color: #2a2a2a;
+        }
+
+        /* Time transition effect */
+        .time-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(102, 126, 234, 0.95) 50%, #1a1a1a 100%);
+            z-index: 3000;
+            animation: timeWarp 3s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes timeWarp {
+            0% { opacity: 1; transform: scale(1.5); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.8); }
+        }
+
+        /* Laboratory Elements */
+        .lab-table {
+            position: absolute;
+            bottom: 10%;
+            left: 10%;
+            width: 150px;
+            height: 100px;
+            background: linear-gradient(to bottom, #555 0%, #333 100%);
+            border: 3px solid #666;
+        }
+
+        .lab-equipment {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            background: #4a4a4a;
+            border: 2px solid #666;
+            border-radius: 5px;
+        }
+
+        .equipment-1 {
+            bottom: 15%;
+            right: 15%;
+        }
+
+        .equipment-2 {
+            top: 20%;
+            right: 10%;
+        }
+
+        /* Blinking lights */
+        .blinking-light {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        .light-red {
+            background: #ff0000;
+            box-shadow: 0 0 15px #ff0000;
+            top: 15%;
+            left: 15%;
+        }
+
+        .light-green {
+            background: #00ff00;
+            box-shadow: 0 0 15px #00ff00;
+            top: 20%;
+            left: 20%;
+            animation-delay: 0.5s;
+        }
+
+        .light-yellow {
+            background: #ffff00;
+            box-shadow: 0 0 15px #ffff00;
+            top: 25%;
+            left: 17%;
+            animation-delay: 1s;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Mark II Computer */
+        .mark-ii {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 350px;
+            z-index: 10;
+        }
+
+        .computer-frame {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 100%);
+            border: 5px solid #666;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .computer-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 80px;
+            background: #1a1a1a;
+            border: 3px solid #555;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .computer-panel:hover {
+            border-color: #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        .panel-text {
+            color: #ff0000;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 20px;
+            animation: errorPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes errorPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .inspect-prompt {
+            color: #00ff00;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .control-panel {
+            position: absolute;
+            bottom: 15px;
+            left: 20px;
+            right: 20px;
+            height: 50px;
+            background: #333;
+            border: 2px solid #555;
+            border-radius: 5px;
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            justify-content: center;
+        }
+
+        .control-button {
+            width: 40px;
+            height: 30px;
+            border-radius: 5px;
+            border: 2px solid #666;
+        }
+
+        .btn-red { background: #8b0000; }
+        .btn-green { background: #006400; }
+        .btn-yellow { background: #8b8b00; }
+        .btn-blue { background: #00008b; }
+
+        /* Grace Hopper Character */
+        .grace-character {
+            position: absolute;
+            top: 45%;
+            left: 20%;
+            transform: translateY(-50%);
+            width: 220px;
+            height: 300px;
+            background-image: url('../../assets/Charactercop.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 5;
+        }
+
+        /* Player Character */
+        .player {
+            position: absolute;
+            bottom: 30%;
+            right: 25%;
+            width: 80px;
+            height: 120px;
+            background-image: url('../../assets/Characterpink.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 100;
+            opacity: 0;
+            animation: playerAppear 1s ease-out 3s forwards;
+        }
+
+        @keyframes playerAppear {
+            0% { opacity: 0; transform: scale(0.5) translateY(-50px); }
+            50% { opacity: 1; transform: scale(1.2) translateY(-10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Dialogue Box */
+        .dialogue-box {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-6px);
+            width: 85%;
+            max-width: 700px;
+            background: rgba(26, 26, 26, 0.95);
+            border: 4px solid #00ff00;
+            border-radius: 15px;
+            padding: 20px;
+            color: #ffffff;
+            display: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: transform 0.18s cubic-bezier(.2,.9,.2,1), opacity 0.12s cubic-bezier(.2,.9,.2,1);
+        }
+
+        .dialogue-box.active {
+            display: block;
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .dialogue-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #00ff00;
+        }
+
+        .dialogue-portrait {
+            width: 50px;
+            height: 50px;
+            background: #1e3a5f;
+            border-radius: 50%;
+            border: 3px solid #00ff00;
+            margin-right: 15px;
+        }
+
+        .dialogue-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #00ff00;
+        }
+
+        .dialogue-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .dialogue-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .dialogue-btn {
+            background: linear-gradient(135deg, #1e3a5f 0%, #0f1f3f 100%);
+            border: 2px solid #00ff00;
+            color: #ffffff;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .dialogue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 0, 0.4);
+            background: linear-gradient(135deg, #2e4a6f 0%, #1f2f4f 100%);
+        }
+
+        /* Close-up Inspection View */
+        .inspection-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .inspection-view.active {
+            display: flex;
+        }
+
+        .inspection-panel {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 5px solid #00ff00;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .inspection-title {
+            font-size: 1.8rem;
+            color: #00ff00;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .inspection-subtitle {
+            color: #ffffff;
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .component {
+            background: #333;
+            border: 3px solid #555;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .component:hover {
+            border-color: #00ff00;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        .component-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .component-label {
+            color: #ffffff;
+            font-size: 0.9rem;
+        }
+
+        .component.bug {
+            border-color: #ff0000;
+            animation: bugWiggle 0.5s ease-in-out infinite;
+        }
+
+        .component.bug:hover {
+            border-color: #ff0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        @keyframes bugWiggle {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+
+        .moth-icon {
+            font-size: 3rem;
+            animation: mothFlutter 0.3s ease-in-out infinite;
+        }
+
+        @keyframes mothFlutter {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .close-inspection-btn {
+            display: block;
+            margin: 20px auto 0;
+            background: #555;
+            border: 2px solid #777;
+            color: white;
+            padding: 10px 30px;
+            font-size: 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Success Animation */
+        .success-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 255, 0, 0.8) 0%, transparent 70%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2500;
+        }
+
+        .success-flash.active {
+            animation: flashSuccess 1s ease-out;
+        }
+
+        @keyframes flashSuccess {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* Machine Running Animation */
+        .computer-frame.running {
+            animation: machineHum 0.5s ease-in-out infinite;
+        }
+
+        @keyframes machineHum {
+            0%, 100% { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8); }
+            50% { box-shadow: 0 10px 40px rgba(0, 255, 0, 0.5); }
+        }
+
+        /* HUD - Time Machine Repair Indicator */
+        .hud {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(26, 26, 26, 0.9);
+            border: 3px solid #00ff00;
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 1500;
+        }
+
+        .hud-title {
+            color: #00ff00;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .repair-progress {
+            display: flex;
+            gap: 5px;
+        }
+
+        .repair-piece {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #555;
+            border-radius: 5px;
+            background: #1a1a1a;
+            transition: all 0.5s ease;
+        }
+
+        .repair-piece.active {
+            background: linear-gradient(135deg, #00ff00 0%, #00aa00 100%);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+            animation: piecePulse 1s ease-out;
+            cursor: pointer;
+        }
+
+        .repair-piece.active:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 1);
+        }
+
+        @keyframes piecePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Time transition effect -->
+        <div class="time-transition" id="timeTransition"></div>
+
+        <!-- Laboratory Elements -->
+        <div class="blinking-light light-red"></div>
+        <div class="blinking-light light-green"></div>
+        <div class="blinking-light light-yellow"></div>
+
+        <div class="lab-table"></div>
+        <div class="lab-equipment equipment-1"></div>
+        <div class="lab-equipment equipment-2"></div>
+
+        <!-- Mark II Computer -->
+        <div class="mark-ii">
+            <div class="computer-frame" id="computerFrame">
+                <div class="computer-panel" id="computerPanel">
+                    <div class="panel-text" id="panelText">
+                        ⚠ ERROR ⚠<br>
+                        SYSTEM MALFUNCTION<br>
+                        RELAY FAILURE DETECTED
+                    </div>
+                    <div class="inspect-prompt">
+                        &gt; Click to inspect internal components &lt;
+                    </div>
+                </div>
+                <div class="control-panel">
+                    <div class="control-button btn-red"></div>
+                    <div class="control-button btn-green"></div>
+                    <div class="control-button btn-yellow"></div>
+                    <div class="control-button btn-blue"></div>
+                    <div class="control-button btn-red"></div>
+                    <div class="control-button btn-green"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grace Hopper Character -->
+        <div class="grace-character"></div>
+
+        <!-- Player Character -->
+        <div class="player" id="player"></div>
+
+        <!-- Dialogue Box -->
+        <div class="dialogue-box" id="dialogueBox">
+            <div class="dialogue-header">
+                <div class="dialogue-portrait"></div>
+                <div class="dialogue-name" id="dialogueName">Commander Grace Hopper</div>
+            </div>
+            <div class="dialogue-text" id="dialogueText"></div>
+            <div class="dialogue-buttons" id="dialogueButtons"></div>
+        </div>
+
+        <!-- HUD - Time Machine Repair -->
+        <div class="hud" id="hud">
+            <div class="hud-title">Time Machine Repair</div>
+            <div class="repair-progress">
+                <div class="repair-piece" id="piece1" data-scene="SceneOne.html"></div>
+                <div class="repair-piece" id="piece2" data-scene="SceneTwo.html"></div>
+                <div class="repair-piece" id="piece3" data-scene="SceneThree.html"></div>
+                <div class="repair-piece" id="piece4" data-scene="SceneFour.html"></div>
+                <div class="repair-piece" id="piece5" data-scene="SceneFive.html"></div>
+                <div class="repair-piece" id="piece6" data-scene="SceneSix.html"></div>
+                <div class="repair-piece" id="piece7" data-scene="SceneSeven.html"></div>
+                <div class="repair-piece" id="piece8" data-scene="SceneEight.html"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inspection View -->
+    <div class="inspection-view" id="inspectionView">
+        <div class="inspection-panel">
+            <h2 class="inspection-title">MARK II INTERNAL COMPONENTS</h2>
+            <p class="inspection-subtitle">Click on the malfunctioning component to debug the system</p>
+            <div class="components-grid">
+                <div class="component" data-component="vacuum-tube">
+                    <div class="component-icon">💡</div>
+                    <div class="component-label">Vacuum Tube</div>
+                </div>
+                <div class="component" data-component="relay">
+                    <div class="component-icon">🔌</div>
+                    <div class="component-label">Relay Switch</div>
+                </div>
+                <div class="component" data-component="capacitor">
+                    <div class="component-icon">⚡</div>
+                    <div class="component-label">Capacitor</div>
+                </div>
+                <div class="component" data-component="resistor">
+                    <div class="component-icon">⚙️</div>
+                    <div class="component-label">Resistor</div>
+                </div>
+                <div class="component bug" data-component="bug" id="bugComponent">
+                    <div class="component-icon moth-icon">🦋</div>
+                    <div class="component-label">Relay #70</div>
+                </div>
+                <div class="component" data-component="transistor">
+                    <div class="component-icon">🔧</div>
+                    <div class="component-label">Circuit Board</div>
+                </div>
+            </div>
+            <button class="close-inspection-btn" id="closeInspection">Cancel Inspection</button>
+        </div>
+    </div>
+
+    <!-- Success Flash -->
+    <div class="success-flash" id="successFlash"></div>
+
+    <script>
+        // Game state
+        let gameState = {
+            arrivedInLab: false,
+            metGrace: false,
+            inspecting: false,
+            bugFound: false
+        };
+
+        // DOM elements
+        const dialogueBox = document.getElementById('dialogueBox');
+        const dialogueText = document.getElementById('dialogueText');
+        const dialogueButtons = document.getElementById('dialogueButtons');
+        const computerPanel = document.getElementById('computerPanel');
+        const panelText = document.getElementById('panelText');
+        const inspectionView = document.getElementById('inspectionView');
+        const closeInspection = document.getElementById('closeInspection');
+        const bugComponent = document.getElementById('bugComponent');
+        const computerFrame = document.getElementById('computerFrame');
+        const successFlash = document.getElementById('successFlash');
+        const timeTransition = document.getElementById('timeTransition');
+
+        // Add click listeners to repair pieces for navigation
+        function initializeRepairPieceNavigation() {
+            const levelScenes = {
+                1: 'SceneOne.html',
+                2: 'SceneTwo.html',
+                3: 'SceneThree.html',
+                4: 'SceneFour.html',
+                5: 'SceneFive.html',
+                6: 'SceneSix.html',
+                7: 'SceneSeven.html',
+                8: 'SceneEight.html'
+            };
+
+            for (let i = 1; i <= 8; i++) {
+                const piece = document.getElementById(`piece${i}`);
+                if (piece) {
+                    piece.addEventListener('click', function() {
+                        // Only navigate if the piece is active (completed)
+                        if (this.classList.contains('active')) {
+                            window.location.href = levelScenes[i];
+                        }
+                    });
+                }
+            }
+        }
+
+        // Initialize repair piece navigation
+        initializeRepairPieceNavigation();
+
+        // Load user progress and update repair boxes
+        async function loadUserProgress() {
+            try {
+                const user = getUserFromLocalStorage();
+                if (!user || !user.id) {
+                    console.log('No user found in localStorage');
+                    return;
+                }
+
+                // Fetch user profile to get current progress
+                const response = await fetch(`http://localhost:3001/api/users/${user.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    const progress = userData.progress || 0;
+                    
+                    // Calculate how many levels completed based on progress (12.5% per level)
+                    const completedLevels = Math.floor(progress / 12.5);
+                    
+                    // Activate repair boxes for completed levels
+                    for (let i = 1; i <= completedLevels; i++) {
+                        const piece = document.getElementById(`piece${i}`);
+                        if (piece && !piece.classList.contains('active')) {
+                            piece.classList.add('active');
+                        }
+                    }
+                    
+                    console.log(`✅ Loaded progress: ${progress}% - ${completedLevels} levels completed`);
+                }
+            } catch (error) {
+                console.error('Error loading user progress:', error);
+            }
+        }
+
+        // Load progress when page loads
+        loadUserProgress();
+
+        // Initialize scene
+        setTimeout(() => {
+            timeTransition.style.display = 'none';
+            introduceGrace();
+        }, 3500);
+
+        function introduceGrace() {
+            gameState.arrivedInLab = true;
+            setTimeout(() => {
+                showDialogue(
+                    "Welcome to 1920! The 19th Amendment has just been ratified, granting women in the United States the right to vote. But there’s a problem. The machine that stabilizes this timeline is malfunctioning, and the event could become distorted. I need your help to find out what’s wrong before history glitches",
+                    [
+                        { text: "What should I look for?", action: explainProblem }
+                    ]
+                );
+            }, 500);
+        }
+
+        function explainProblem() {
+            showDialogue(
+                "We've narrowed it down to relay #70. Something's physically blocking it - I've seen this before. You'll need to inspect the internal components closely and find what doesn't belong. Click on the machine panel when you're ready.",
+                [
+                    { text: "I'll find the problem!", action: enableInspection }
+                ]
+            );
+        }
+
+        function enableInspection() {
+            hideDialogue();
+            gameState.metGrace = true;
+            
+            // Enable computer panel clicking
+            computerPanel.addEventListener('click', openInspection);
+        }
+
+        function openInspection() {
+            if (gameState.bugFound) return;
+            
+            gameState.inspecting = true;
+            inspectionView.classList.add('active');
+            
+            // Set up component clicking
+            const components = document.querySelectorAll('.component');
+            components.forEach(comp => {
+                comp.addEventListener('click', handleComponentClick);
+            });
+        }
+
+        function handleComponentClick(e) {
+            const component = e.currentTarget;
+            const componentType = component.getAttribute('data-component');
+            
+            if (componentType === 'bug') {
+                foundTheBug();
+            } else {
+                wrongComponent(component);
+            }
+        }
+
+        function wrongComponent(component) {
+            const originalBorder = component.style.borderColor;
+            component.style.borderColor = '#ff0000';
+            component.style.animation = 'shake 0.3s';
+            
+            setTimeout(() => {
+                component.style.borderColor = '';
+                component.style.animation = '';
+            }, 300);
+        }
+
+        function foundTheBug() {
+            gameState.bugFound = true;
+            
+            // Animate bug removal
+            bugComponent.style.transition = 'all 0.5s ease';
+            bugComponent.style.transform = 'scale(0) rotate(180deg)';
+            bugComponent.style.opacity = '0';
+            
+            setTimeout(() => {
+                inspectionView.classList.remove('active');
+                bugRemoved();
+            }, 600);
+        }
+
+        async function bugRemoved() {
+            // Flash effect
+            successFlash.classList.add('active');
+            setTimeout(() => {
+                successFlash.classList.remove('active');
+            }, 1000);
+            
+            // Update computer display
+            panelText.innerHTML = `
+                ✓ BUG REMOVED ✓<br>
+                SYSTEM RESTARTING...<br>
+                ALL SYSTEMS OPERATIONAL
+            `;
+            panelText.style.color = '#00ff00';
+            panelText.style.animation = 'none';
+            
+            // Animate machine running
+            computerFrame.classList.add('running');
+            
+            // ✅ UPDATE PROGRESS IMMEDIATELY when bug is found
+            try {
+                const user = getUserFromLocalStorage();
+                if (user && user.id) {
+                    await updateUserProgress(user.id, 2, 100, true);
+                    console.log('✅ Progress saved: 25%');
+                }
+            } catch (error) {
+                console.error('Error updating progress:', error);
+                // Continue anyway - don't block the game flow
+            }
+            
+            // Repair time machine piece
+            setTimeout(() => {
+                document.getElementById('piece2').classList.add('active');
+                
+                setTimeout(() => {
+                    showGraceResponse();
+                }, 1000);
+            }, 1500);
+        }
+
+        function showGraceResponse() {
+            showDialogue(
+                "Incredible! You found it - an actual moth trapped in the relay! This is exactly what we call a 'bug' in the system. You've just helped coin a term that will last for generations. The Mark II is running perfectly now, and I can see your time machine's energy core is stabilizing!",
+                [
+                    { text: "What happens now?", action: explainNext }
+                ]
+            );
+        }
+
+        function explainNext() {
+            showDialogue(
+                "Your journey continues! The time machine is drawing you forward through history. Remember this moment - debugging isn't just about code, it's about careful observation and problem-solving. Good luck on your next adventure!",
+                [
+                    { text: "Continue Journey →", action: goToNextScene }
+                ]
+            );
+        }
+
+        function goToNextScene() {
+            // Navigate to Scene 3 (Alan Turing)
+            // Note: Progress already updated in bugRemoved()
+            window.location.href = 'SceneThree.html';
+        }
+
+        // Helper function to get user from localStorage
+        function getUserFromLocalStorage() {
+            try {
+                const userStr = localStorage.getItem('user');
+                return userStr ? JSON.parse(userStr) : null;
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                return null;
+            }
+        }
+
+        // Helper function to update user progress
+        async function updateUserProgress(userId, levelId, score, completed) {
+            const API_BASE_URL = 'http://localhost:3001';
+            const token = localStorage.getItem('token');
+            
+            const response = await fetch(`${API_BASE_URL}/api/progress/${userId}/level/${levelId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ score, completed })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update progress');
+            }
+
+            return response.json();
+        }
+
+        // Close inspection without finding bug
+        closeInspection.addEventListener('click', () => {
+            inspectionView.classList.remove('active');
+            gameState.inspecting = false;
+        });
+
+        // Dialogue system
+        function showDialogue(text, buttons) {
+            dialogueText.textContent = text;
+            dialogueButtons.innerHTML = '';
+            
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = 'dialogue-btn';
+                button.textContent = btn.text;
+                button.onclick = btn.action;
+                dialogueButtons.appendChild(button);
+            });
+            
+            dialogueBox.classList.add('active');
+        }
+
+        function hideDialogue() {
+            dialogueBox.classList.remove('active');
+        }
+    </script>
+</body>
+</html>

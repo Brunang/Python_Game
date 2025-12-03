@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHE<Codes/> - Final Journey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Base container for all scenes */
+        .scene {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .scene.active {
+            display: block;
+        }
+
+        /* Scene 11: Adele Goldberg - Xerox PARC */
+        #scene11 {
+            background: linear-gradient(135deg, #ff6b9d 0%, #4ecdc4 50%, #95e1d3 100%);
+        }
+
+        .parc-lab {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .experimental-device {
+            position: absolute;
+            width: 120px;
+            height: 100px;
+            background: linear-gradient(135deg, #fff 0%, #ddd 100%);
+            border: 4px solid #888;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .device-1 { top: 15%; left: 10%; }
+        .device-2 { top: 20%; right: 12%; }
+        .device-3 { bottom: 20%; left: 15%; }
+
+        .ui-design-station {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 500px;
+            background: linear-gradient(135deg, #2a2a3a 0%, #1a1a2a 100%);
+            border: 5px solid #4ecdc4;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(78, 205, 196, 0.5);
+        }
+
+        .design-canvas {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            width: 400px;
+            height: 400px;
+            background: #ffffff;
+            border: 3px solid #4ecdc4;
+            border-radius: 10px;
+        }
+
+        .ui-elements-palette {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            width: 240px;
+            height: 400px;
+            background: rgba(42, 42, 58, 0.8);
+            border: 3px solid #ff6b9d;
+            border-radius: 10px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .palette-title {
+            color: #ff6b9d;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .ui-element {
+            margin: 10px 0;
+            padding: 12px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #f38181 100%);
+            border: 2px solid #fff;
+            border-radius: 8px;
+            cursor: move;
+            text-align: center;
+            color: #fff;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .ui-element:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.5);
+        }
+
+        .ui-element.dragging {
+            opacity: 0.5;
+        }
+
+        .placed-element {
+            position: absolute;
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+
+        .placed-element:hover {
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.8);
+        }
+
+        .placed-button {
+            background: #4ecdc4;
+            border: 2px solid #2a9d8f;
+            border-radius: 5px;
+            padding: 8px 16px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .placed-textbox {
+            background: #fff;
+            border: 2px solid #888;
+            border-radius: 3px;
+            padding: 6px;
+            min-width: 150px;
+            min-height: 30px;
+        }
+
+        .placed-window {
+            background: #f0f0f0;
+            border: 3px solid #666;
+            border-radius: 8px;
+            padding: 10px;
+            min-width: 200px;
+            min-height: 150px;
+        }
+
+        .window-title-bar {
+            background: #4ecdc4;
+            margin: -10px -10px 10px -10px;
+            padding: 5px 10px;
+            border-radius: 5px 5px 0 0;
+            color: #fff;
+            font-size: 0.8rem;
+        }
+
+        /* Scene 12: Final Challenge - Hybrid Space */
+        #scene12 {
+            background: radial-gradient(circle, #1a1a3a 0%, #0a0a1a 100%);
+        }
+
+        .hybrid-space {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .time-console-final {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 450px;
+        }
+
+        .console-glow {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 8px solid #ffd700;
+            border-radius: 15px;
+            box-shadow: 0 0 80px rgba(255, 215, 0, 0.9);
+            animation: finalGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes finalGlow {
+            0%, 100% { box-shadow: 0 0 80px rgba(255, 215, 0, 0.9); }
+            50% { box-shadow: 0 0 120px rgba(255, 215, 0, 1); }
+        }
+
+        .final-screen {
+            margin: 30px;
+            width: calc(100% - 60px);
+            height: 340px;
+            background: #0a0a1a;
+            border: 4px solid #ffd700;
+            border-radius: 10px;
+            padding: 20px;
+            color: #ffd700;
+            font-size: 1.3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .legacy-prompt {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .holographic-pioneers {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .hologram {
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.6;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hologram-1 { top: 15%; left: 10%; animation-delay: 0s; }
+        .hologram-2 { top: 20%; right: 10%; animation-delay: 0.5s; }
+        .hologram-3 { bottom: 25%; left: 15%; animation-delay: 1s; }
+        .hologram-4 { bottom: 20%; right: 12%; animation-delay: 1.5s; }
+        .hologram-5 { top: 50%; left: 5%; animation-delay: 2s; }
+        .hologram-6 { top: 50%; right: 5%; animation-delay: 2.5s; }
+
+        /* Scene 13: Return to Basement */
+        #scene13 {
+            background: linear-gradient(to bottom, #2d2d2d 0%, #1a1a1a 100%);
+        }
+
+        .basement-return {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .old-console {
+            width: 250px;
+            height: 200px;
+            background: #4a4a4a;
+            border: 5px solid #666;
+            border-radius: 10px;
+            position: relative;
+            animation: powerDown 3s ease-out forwards;
+        }
+
+        @keyframes powerDown {
+            0% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.8); }
+            100% { box-shadow: none; }
+        }
+
+        /* Characters */
+        .adele-character {
+            position: absolute;
+            top: 45%;
+            left: 18%;
+            transform: translateY(-50%);
+            width: 170px; 
+            height: 280px; 
+        }
+
+        .adele-character img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+        }
+
+        .adele-outfit {
+            width: 100%;
+            height: 125px;
+            background: linear-gradient(to bottom, #ff6b9d 0%, #f38181 100%);
+            border: 3px solid #e76f51;
+            border-radius: 10px 10px 65% 65% / 10px 10px 45% 45%;
+            position: relative;
+        }
+
+        .adele-head {
+            width: 48px;
+            height: 58px;
+            background: #ffd1a3;
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            top: -54px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 2px solid #d4a574;
+        }
+
+        .adele-hair {
+            width: 52px;
+            height: 40px;
+            background: #8b4513;
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .character-face {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            text-align: center;
+        }
+
+        .character-eyes {
+            font-size: 8px;
+            color: #2a1810;
+        }
+
+        .character-smile {
+            margin-top: 8px;
+            font-size: 9px;
+            color: #8b4513;
+        }
+
+        .player-final {
+            position: absolute;
+            bottom: 30%;
+            right: 24%;
+            width: 90px; 
+            height: auto;
+        }
+
+        .player-final::before { content: none; }
+
+        .player-final img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+        }
+
+        /* Crown removed */
+
+        /* dialogue motion variables (reused) */
+        :root {
+            --dialog-duration: 0.18s;
+            --dialog-ease: cubic-bezier(.2,.9,.2,1);
+            --dialog-opacity-duration: 0.12s;
+        }
+
+        /* Dialogue */
+        .dialogue-box {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-6px);
+            width: 85%;
+            max-width: 700px;
+            background: rgba(10, 10, 26, 0.95);
+            border: 4px solid #4ecdc4;
+            border-radius: 15px;
+            padding: 20px;
+            color: #ffffff;
+            display: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: transform var(--dialog-duration) var(--dialog-ease), opacity var(--dialog-opacity-duration) var(--dialog-ease);
+        }
+
+        .dialogue-box.active {
+            display: block;
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* repositioning helper removed — dialogues anchored at bottom */
+
+        .dialogue-box.scene12 {
+            border-color: #ffd700;
+        }
+
+        .dialogue-box.scene13 {
+            border-color: #667eea;
+        }
+
+        .dialogue-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid currentColor;
+        }
+
+        .dialogue-portrait {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid currentColor;
+            margin-right: 15px;
+        }
+
+        .dialogue-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .dialogue-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .dialogue-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .dialogue-btn {
+            border: 2px solid currentColor;
+            color: #ffffff;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .dialogue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Code Editor for Final Challenge */
+        .final-code-editor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .final-code-editor.active {
+            display: flex;
+        }
+
+        .final-editor-panel {
+            background: linear-gradient(135deg, #1a1a2a 0%, #0a0a1a 100%);
+            border: 5px solid #ffd700;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.8);
+        }
+
+        .final-editor-title {
+            font-size: 2.2rem;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+
+        .final-instruction {
+            color: #ffffff;
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .code-textarea {
+            width: 100%;
+            min-height: 300px;
+            background: #0a0a1a;
+            border: 3px solid #ffd700;
+            border-radius: 10px;
+            padding: 20px;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            resize: vertical;
+            outline: none;
+        }
+
+        .code-textarea:focus {
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .example-hint {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #ffd700;
+        }
+
+        .execute-legacy-btn {
+            display: block;
+            margin: 30px auto 0;
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            border: 3px solid #fff;
+            color: #000;
+            padding: 18px 60px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            border-radius: 35px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+        }
+
+        .execute-legacy-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.8);
+        }
+
+        /* Success/Transmission effects */
+        .transmission-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.9) 0%, transparent 70%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2500;
+        }
+
+        .transmission-effect.active {
+            animation: transmit 3s ease-out;
+        }
+
+        @keyframes transmit {
+            0%, 100% { opacity: 0; }
+            30%, 70% { opacity: 1; }
+        }
+
+        /* Final message overlay */
+        .final-message-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0a0a1a 100%);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .final-message-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .final-message-content {
+            text-align: center;
+            max-width: 900px;
+            padding: 50px;
+        }
+
+        .final-title {
+            font-size: 3.5rem;
+            color: #ffd700;
+            margin-bottom: 40px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 1);
+            animation: titlePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .final-quote {
+            font-size: 1.8rem;
+            color: #ffffff;
+            line-height: 1.8;
+            margin-bottom: 50px;
+            font-style: italic;
+        }
+
+        .pioneers-list {
+            background: rgba(0, 0, 0, 0.6);
+            border: 3px solid #ffd700;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+
+        .pioneers-title {
+            font-size: 1.5rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .pioneer-item {
+            color: #ffffff;
+            font-size: 1.1rem;
+            margin: 12px 0;
+            padding: 10px;
+            border-left: 4px solid #4ecdc4;
+            padding-left: 20px;
+        }
+
+        .pioneer-name {
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+
+        .final-call-to-action {
+            font-size: 1.5rem;
+            color: #ffd700;
+            margin-top: 40px;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* HUD */
+        .hud {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(10, 10, 26, 0.9);
+            border: 3px solid #ffd700;
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 1500;
+        }
+
+        .hud-title {
+            color: #ffd700;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .repair-progress {
+            display: flex;
+            gap: 5px;
+        }
+
+        .repair-piece {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #2a2a3a;
+            border-radius: 5px;
+            background: #0a0a1a;
+            transition: all 0.5s ease;
+        }
+
+        .repair-piece.active {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            animation: piecePulse 1s ease-out;
+            cursor: pointer;
+        }
+
+        .repair-piece.active:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 1);
+            border-color: #ffdd00;
+        }
+
+        @keyframes piecePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
+
+    </style>
+</head>
+<body>
+    <!-- HUD (persists across scenes) -->
+    <div class="hud" id="hud">
+        <div class="hud-title">Time Machine Repair</div>
+        <div class="repair-progress">
+            <div class="repair-piece" id="piece1" data-scene="SceneOne.html"></div>
+            <div class="repair-piece" id="piece2" data-scene="SceneTwo.html"></div>
+            <div class="repair-piece" id="piece3" data-scene="SceneThree.html"></div>
+            <div class="repair-piece" id="piece4" data-scene="SceneFour.html"></div>
+            <div class="repair-piece" id="piece5" data-scene="SceneFive.html"></div>
+            <div class="repair-piece" id="piece6" data-scene="SceneSix.html"></div>
+            <div class="repair-piece" id="piece7" data-scene="SceneSeven.html"></div>
+            <div class="repair-piece" id="piece8" data-scene="SceneEight.html"></div>
+        </div>
+    </div>
+
+    <!-- SCENE 11: Adele Goldberg -->
+    <div class="scene active" id="scene11">
+        <div class="parc-lab">
+            <div class="experimental-device device-1"></div>
+            <div class="experimental-device device-2"></div>
+            <div class="experimental-device device-3"></div>
+
+            <div class="ui-design-station">
+                <h2 style="color: #4ecdc4; text-align: center; margin-top: 15px; font-size: 1.3rem;">
+                    GRAPHICAL USER INTERFACE DESIGNER
+                </h2>
+                <div class="design-canvas" id="designCanvas"></div>
+                <div class="ui-elements-palette">
+                    <div class="palette-title">UI Components</div>
+                    <div class="ui-element" draggable="true" data-type="button">Button</div>
+                    <div class="ui-element" draggable="true" data-type="textbox">Text Box</div>
+                    <div class="ui-element" draggable="true" data-type="window">Window</div>
+                    <div class="ui-element" draggable="true" data-type="button">Button</div>
+                    <div class="ui-element" draggable="true" data-type="textbox">Text Box</div>
+                </div>
+            </div>
+
+            <div class="adele-character">
+                <img src="../../assets/Characterpink.png" alt="Character" />
+            </div>
+
+            <div class="player-final">
+                <img src="../../assets/Characterblack.png" alt="Guardian Character" />
+            </div>
+        </div>
+
+        <div class="dialogue-box" id="dialogue11">
+            <div class="dialogue-header">
+                <div class="dialogue-portrait" style="background: linear-gradient(135deg, #ff6b9d 0%, #f38181 100%); border-color: #4ecdc4;"></div>
+                <div class="dialogue-name" style="color: #4ecdc4;">Adele Goldberg</div>
+            </div>
+            <div class="dialogue-text" id="dialogueText11"></div>
+            <div class="dialogue-buttons" id="dialogueButtons11" style="color: #4ecdc4;"></div>
+        </div>
+    </div>
+
+    <!-- SCENE 12: Final Challenge -->
+    <div class="scene" id="scene12">
+        <div class="hybrid-space">
+            <div class="holographic-pioneers">
+                <div class="hologram hologram-1">👩‍💻</div>
+                <div class="hologram hologram-2">⚡</div>
+                <div class="hologram hologram-3">🔐</div>
+                <div class="hologram hologram-4">📡</div>
+                <div class="hologram hologram-5">🚀</div>
+                <div class="hologram hologram-6">🛡️</div>
+            </div>
+
+            <div class="time-console-final">
+                <div class="console-glow">
+                    <div class="final-screen">
+                        <div class="legacy-prompt">
+                            TO ACTIVATE LEGACY MODE<br>
+                            WRITE THE FUTURE
+                        </div>
+                        <div style="font-size: 1rem; opacity: 0.8;">
+                            The Guardians await your code...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="player-final" style="bottom: 35%; right: 50%; transform: translateX(50%);">
+                <div class="guardian-crown">👑</div>
+            </div>
+        </div>
+
+        <div class="dialogue-box scene12" id="dialogue12">
+            <div class="dialogue-header">
+                <div class="dialogue-portrait" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-color: #ffd700;"></div>
+                <div class="dialogue-name" style="color: #ffd700;">The Guardians</div>
+            </div>
+            <div class="dialogue-text" id="dialogueText12"></div>
+            <div class="dialogue-buttons" id="dialogueButtons12" style="color: #ffd700;"></div>
+        </div>
+    </div>
+
+    <!-- SCENE 13: Return to Basement -->
+    <div class="scene" id="scene13">
+        <div class="basement-return">
+            <div class="old-console"></div>
+            <div class="player-final" style="bottom: 40%; right: 55%;">
+                <div class="guardian-crown">👑</div>
+            </div>
+        </div>
+
+        <div class="dialogue-box scene13" id="dialogue13">
+            <div class="dialogue-header">
+                <div class="dialogue-portrait" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-color: #667eea;"></div>
+                <div class="dialogue-name" style="color: #667eea;">Narrator</div>
+            </div>
+            <div class="dialogue-text" id="dialogueText13"></div>
+            <div class="dialogue-buttons" id="dialogueButtons13" style="color: #667eea;"></div>
+        </div>
+    </div>
+
+    <!-- Final Code Editor -->
+    <div class="final-code-editor" id="finalCodeEditor">
+        <div class="final-editor-panel">
+            <h2 class="final-editor-title">✦ WRITE YOUR LEGACY ✦</h2>
+            <p class="final-instruction">
+                Create a Python program that inspires future generations of coders.<br>
+                Your message will echo through time, just like the pioneers who came before you.
+            </p>
+            <div class="example-hint">
+                <strong>💡 Ideas:</strong> Print an inspirational message, create a motivational loop,
+                define a function that represents your coding journey, or write something uniquely yours!
+            </div>
+            <textarea class="code-textarea" id="legacyCode" placeholder="# Your code here
+                # Example:
+                # def inspire_future():
+                #     print('Code with courage, learn with passion!')
+                #
+                # inspire_future()
+                "></textarea>
+            <button class="execute-legacy-btn" id="executeLegacyBtn">
+                Transmit Through Time
+            </button>
+        </div>
+    </div>
+
+    <!-- Transmission Effect -->
+    <div class="transmission-effect" id="transmissionEffect"></div>
+
+    <!-- Final Message Overlay -->
+    <div class="final-message-overlay" id="finalMessageOverlay">
+        <div class="final-message-content">
+            <h1 class="final-title">🎓 GUARDIAN INITIATION COMPLETE 🎓</h1>
+            <p class="final-quote">
+                "You've learned from the best. Now it's your turn to write the future.<br>
+                Follow their code, forge your own path."
+            </p>
+
+            <div class="pioneers-list">
+                <div class="pioneers-title">✦ THE GUARDIANS OF CODE ✦</div>
+                <div class="pioneer-item">
+                    <span class="pioneer-name">Ada Lovelace (1815-1852)</span><br>
+                    First Computer Programmer - Created the first algorithm
+                </div>
+                <div class="pioneer-item">
+                    <span class="pioneer-name">Grace Hopper (1906-1992)</span><br>
+                    Creator of the First Compiler - Coined "debugging"
+                </div>
+                <div class="pioneer-item">
+                    <span class="pioneer-name">Alan Turing (1912-1954)</span><br>
+                    Father of Computer Science - Code breaker and pioneer
+                </div>
+                <div class="pioneer-item">
+                    <span class="pioneer-name">Hedy Lamarr (1914-2000)</span><br>
+                    Inventor of Frequency-Hopping - Foundation of WiFi & Bluetooth
+                </div>
+                <div class="pioneer-item">
+                    <span class="pioneer-name">Katherine Johnson (1918-2020)</span><br>
+                    NASA Mathematician - Calculated trajectories for Apollo missions
+                </div>
+                <div class="pioneer-item">
+                    <span class="pioneer-name">Margaret Hamilton (1936-present)</span><br>
+                    Apollo Software Engineer - Pioneered software engineering practices
+                </div>
+                <div class="pioneer-item">
+                    <span class="pioneer-name">Barbara Liskov (1939-present)</span><br>
+                    Data Abstraction Pioneer - Turing Award winner
+                </div>
+                <div class="pioneer-item">
+                    <span class="pioneer-name">Adele Goldberg (1945-present)</span><br>
+                    Smalltalk Co-Developer - Graphical user interface innovator
+                </div>
+            </div>
+
+            <p class="final-call-to-action">
+                >> Your journey as a Guardian begins now... <<
+            </p>
+            <button class="continue-to-credits-btn" onclick="showCredits()">
+                View Credits
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let gameState = {
+            currentScene: 11,
+            uiElementsPlaced: 0,
+            legacyCodeWritten: false,
+            journeyComplete: false
+        };
+
+        function initializeRepairBoxes() {
+            const repairPieces = document.querySelectorAll('.repair-piece');
+            repairPieces.forEach(piece => {
+                piece.addEventListener('click', () => {
+                    // Only navigate if the piece is active (completed)
+                    if (piece.classList.contains('active')) {
+                        const scene = piece.getAttribute('data-scene');
+                        if (scene) {
+                            window.location.href = scene;
+                        }
+                    }
+                });
+            });
+        }
+
+        // Initialize click handlers for all repair boxes
+        initializeRepairBoxes();
+
+        // Load user progress and update repair boxes
+        async function loadUserProgress() {
+            try {
+                const user = getUserFromLocalStorage();
+                if (!user || !user.id) {
+                    console.log('No user found in localStorage');
+                    return;
+                }
+
+                // Fetch user profile to get current progress
+                const response = await fetch(`http://localhost:3001/api/users/${user.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    const progress = userData.progress || 0;
+                    
+                    // Calculate how many levels completed based on progress (12.5% per level)
+                    const completedLevels = Math.floor(progress / 12.5);
+                    
+                    // Since we're on Scene 8, ensure at least boxes 1-7 are filled
+                    const currentScene = 8;
+                    const boxesToActivate = Math.max(completedLevels, currentScene - 1);
+                    
+                    // Activate repair boxes for all completed levels
+                    // This allows players to click and revisit any completed level
+                    for (let i = 1; i <= boxesToActivate; i++) {
+                        const piece = document.getElementById(`piece${i}`);
+                        if (piece && !piece.classList.contains('active')) {
+                            piece.classList.add('active');
+                        }
+                    }
+                    
+                    console.log(`✅ Loaded progress: ${progress}% - ${boxesToActivate} boxes activated`);
+                }
+            } catch (error) {
+                console.error('Error loading user progress:', error);
+            }
+        }
+
+        function getUserFromLocalStorage() {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    return JSON.parse(userStr);
+                } catch (e) {
+                    console.error('Error parsing user from localStorage:', e);
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        // Load progress when page loads
+        loadUserProgress();
+
+        // SCENE 8: Adele Goldberg - UI Design
+        function initScene11() {
+            setTimeout(() => {
+                showDialogue11(
+                    "Welcome to Xerox PARC! This is where we're revolutionizing how humans interact with computers. Instead of just text commands, imagine visual interfaces - windows, buttons, interactive elements! You've learned to write classes. Now, let's use them to design a user interface.",
+                    [{ text: "Show me how!", action: explainUIDesign }]
+                );
+            }, 1000);
+        }
+
+        function explainUIDesign() {
+            showDialogue11(
+                "Each UI element is an object - an instance of a class with properties and methods. A button knows how to draw itself, respond to clicks, change colors. You'll drag visual components onto the canvas to create an interface. This is object-oriented design in action!",
+                [{ text: "Let's design the interface!", action: startUIDesign }]
+            );
+        }
+
+        function startUIDesign() {
+            hideDialogue11();
+            initDragAndDrop();
+        }
+
+        // Drag and drop UI design
+        let draggedElement = null;
+
+        function initDragAndDrop() {
+            const elements = document.querySelectorAll('.ui-element');
+            const canvas = document.getElementById('designCanvas');
+
+            elements.forEach(element => {
+                element.addEventListener('dragstart', function(e) {
+                    draggedElement = this;
+                    e.dataTransfer.effectAllowed = 'copy';
+                });
+            });
+
+            canvas.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+            });
+
+            canvas.addEventListener('drop', function(e) {
+                e.preventDefault();
+                if (!draggedElement) return;
+
+                const type = draggedElement.getAttribute('data-type');
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                createUIElement(type, x, y);
+                gameState.uiElementsPlaced++;
+
+                if (gameState.uiElementsPlaced >= 3) {
+                    setTimeout(completeUIDesign, 1000);
+                }
+            });
+        }
+
+        function createUIElement(type, x, y) {
+            const canvas = document.getElementById('designCanvas');
+            const element = document.createElement('div');
+            element.className = 'placed-element';
+            element.style.left = x + 'px';
+            element.style.top = y + 'px';
+
+            if (type === 'button') {
+                element.className += ' placed-button';
+                element.textContent = 'Click Me';
+            } else if (type === 'textbox') {
+                element.className += ' placed-textbox';
+                element.textContent = 'Enter text...';
+            } else if (type === 'window') {
+                element.className += ' placed-window';
+                element.innerHTML = '<div class="window-title-bar">New Window</div>Content area';
+            }
+
+            // Make it draggable within canvas
+            element.draggable = true;
+            element.addEventListener('dragstart', function(e) {
+                e.dataTransfer.effectAllowed = 'move';
+                this.style.opacity = '0.5';
+            });
+            element.addEventListener('dragend', function() {
+                this.style.opacity = '1';
+            });
+
+            canvas.appendChild(element);
+        }
+
+        function completeUIDesign() {
+            document.getElementById('piece8').classList.add('active');
+            
+            setTimeout(() => {
+                showDialogue11(
+                    "Beautiful! You've created a functional user interface using object-oriented principles. Each element is an object with its own behavior. This visual approach to computing will change everything. Your time machine's visual display is now fully restored - and it's revealing something incredible!",
+                    [{ text: "What is it showing?", action: revealLegacyMode }]
+                );
+            }, 500);
+        }
+
+        function revealLegacyMode() {
+            showDialogue11(
+                "The display shows 'Legacy Mode' - the time machine's true purpose. It's not just for learning from the past... it's for inspiring the future. The Guardians built it to find those worthy of carrying their knowledge forward. That's you. One final challenge awaits.",
+                [{ text: "I'm ready for the final test", action: transitionToScene12 }]
+            );
+        }
+
+        function transitionToScene12() {
+            hideDialogue11();
+            document.getElementById('hud').style.display = 'none';
+            
+            setTimeout(() => {
+                document.getElementById('scene11').classList.remove('active');
+                document.getElementById('scene12').classList.add('active');
+                initScene12();
+            }, 1000);
+        }
+
+        // SCENE 12: Final Challenge
+        function initScene12() {
+            setTimeout(() => {
+                showDialogue12(
+                    "Guardian Initiate, you stand before us - Ada, Grace, Alan, Hedy, Katherine, Margaret, Barbara, Adele, and all who came before. You've proven your skills. Now, prove your heart. Write code that inspires. Write code that matters. Write YOUR code.",
+                    [{ text: "Open the code editor", action: openFinalEditor }]
+                );
+            }, 1500);
+        }
+
+        function openFinalEditor() {
+            hideDialogue12();
+            document.getElementById('finalCodeEditor').classList.add('active');
+            document.getElementById('legacyCode').focus();
+        }
+
+        document.getElementById('executeLegacyBtn').addEventListener('click', function() {
+            const code = document.getElementById('legacyCode').value.trim();
+            
+            if (code.length < 10) {
+                alert('Write something meaningful - your legacy code should inspire future generations!');
+                return;
+            }
+
+            executeLegacyCode(code);
+        });
+
+        function executeLegacyCode(code) {
+            gameState.legacyCodeWritten = true;
+            document.getElementById('finalCodeEditor').classList.remove('active');
+
+            // Show transmission effect
+            const transmission = document.getElementById('transmissionEffect');
+            transmission.classList.add('active');
+
+            setTimeout(() => {
+                transmission.classList.remove('active');
+                showFinalApproval();
+            }, 3000);
+        }
+
+        function showFinalApproval() {
+            showDialogue12(
+                "Perfect. Your code echoes through time, reaching countless future programmers who will be inspired by your journey. The Guardians approve. You are now one of us - a protector of computing history, a teacher of the next generation.",
+                [{ text: "Complete the journey", action: transitionToScene13 }]
+            );
+        }
+
+        function transitionToScene13() {
+            hideDialogue12();
+            
+            setTimeout(() => {
+                document.getElementById('scene12').classList.remove('active');
+                document.getElementById('scene13').classList.add('active');
+                initScene13();
+            }, 1000);
+        }
+
+        // SCENE 13: Return to Present
+        function initScene13() {
+            setTimeout(() => {
+                showDialogue13(
+                    "The humming fades. The lights dim. You're back in the school basement where it all began. But you're not the same person who found that old console. The knowledge of the pioneers lives within you now.",
+                    [{ text: "Look around...", action: finalReflection }]
+                );
+            }, 1500);
+        }
+
+        function finalReflection() {
+            showDialogue13(
+                "The computer looks ordinary again, but you know its secret. Every line of code you write carries the legacy of those who came before. Ada's creativity. Grace's determination. Alan's logic. Their brilliance courses through every program ever written.",
+                [{ text: "What now?", action: finalMessage }]
+            );
+        }
+
+        function finalMessage() {
+            showDialogue13(
+                "Now? Now you code. You learn. You inspire others. You follow their path while forging your own. The Guardians didn't just teach you programming - they taught you that anyone, regardless of who they are, can change the world with code.",
+                [{ text: "Begin my journey as a Guardian", action: showFinalOverlay }]
+            );
+        }
+
+        function showFinalOverlay() {
+            hideDialogue13();
+            gameState.journeyComplete = true;
+            
+            setTimeout(() => {
+                document.getElementById('finalMessageOverlay').classList.add('active');
+            }, 1000);
+        }
+
+        // Dialogue system for each scene
+        function showDialogue11(text, buttons) {
+            const dialogue = document.getElementById('dialogue11');
+            const dialogueText = document.getElementById('dialogueText11');
+            const dialogueButtons = document.getElementById('dialogueButtons11');
+            
+            dialogueText.textContent = text;
+            dialogueButtons.innerHTML = '';
+            
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = 'dialogue-btn';
+                button.textContent = btn.text;
+                button.onclick = btn.action;
+                dialogueButtons.appendChild(button);
+            });
+            
+            dialogue.classList.add('active');
+        }
+
+        function hideDialogue11() {
+            document.getElementById('dialogue11').classList.remove('active');
+        }
+
+        function showDialogue12(text, buttons) {
+            const dialogue = document.getElementById('dialogue12');
+            const dialogueText = document.getElementById('dialogueText12');
+            const dialogueButtons = document.getElementById('dialogueButtons12');
+            
+            dialogueText.textContent = text;
+            dialogueButtons.innerHTML = '';
+            
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = 'dialogue-btn';
+                button.textContent = btn.text;
+                button.onclick = btn.action;
+                dialogueButtons.appendChild(button);
+            });
+            
+            dialogue.classList.add('active');
+        }
+
+        function hideDialogue12() {
+            document.getElementById('dialogue12').classList.remove('active');
+        }
+
+        function showDialogue13(text, buttons) {
+            const dialogue = document.getElementById('dialogue13');
+            const dialogueText = document.getElementById('dialogueText13');
+            const dialogueButtons = document.getElementById('dialogueButtons13');
+            
+            dialogueText.textContent = text;
+            dialogueButtons.innerHTML = '';
+            
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = 'dialogue-btn';
+                button.textContent = btn.text;
+                button.onclick = btn.action;
+                dialogueButtons.appendChild(button);
+            });
+            
+            dialogue.classList.add('active');
+        }
+
+        function hideDialogue13() {
+            document.getElementById('dialogue13').classList.remove('active');
+        }
+
+        // Initialize the game
+        initScene11();
+
+        // dialogue anchored at bottom; motion API removed
+
+        // Credits function
+        function showCredits() {
+            // close final overlay then navigate to the credits page (credits.html lives in ../)
+            document.getElementById('finalMessageOverlay').classList.remove('active');
+            window.location.href = '../CreditsScreen.html';
+        }
+    </script>
+</body>
+</html>

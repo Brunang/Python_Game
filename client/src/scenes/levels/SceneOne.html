@@ -1,0 +1,1273 @@
+now <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scene 4: Ada Lovelace - SHE<Codes/></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+
+            /* repositioning helper removed — dialogues anchored to bottom */
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #2a1810;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Game Container */
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url('images/victorian-study.jpg') center center no-repeat;
+            background-size: cover;
+            background-color: #3d2817;
+        }
+
+        /* dialogue motion variables (reused across scenes) */
+        :root {
+            --dialog-duration: 0.18s; /* snappy default */
+            --dialog-ease: cubic-bezier(.2,.9,.2,1);
+            --dialog-opacity-duration: 0.12s;
+        }
+
+        /* Vortex overlay for arrival animation */
+        .vortex-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.95) 50%, transparent 100%);
+            z-index: 3000;
+            animation: vortexFade 3s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes vortexFade {
+            0% { opacity: 1; transform: scale(0.5) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+            100% { opacity: 0; transform: scale(1.5) rotate(360deg); }
+        }
+
+        /* Victorian Study Elements */
+        .bookshelf {
+            position: absolute;
+            width: 120px;
+            height: 300px;
+            background: linear-gradient(to right, #4a3022 0%, #3d2817 100%);
+            border: 3px solid #5a4032;
+        }
+
+        .bookshelf.left {
+            top: 15%;
+            left: 5%;
+        }
+
+        .bookshelf.right {
+            top: 15%;
+            right: 5%;
+        }
+
+        .book {
+            width: 90%;
+            height: 20px;
+            margin: 5px auto;
+            border: 1px solid #2a1810;
+        }
+
+        .book.red { background: #8b4513; }
+        .book.brown { background: #654321; }
+        .book.green { background: #556b2f; }
+        .book.blue { background: #4a5568; }
+
+        /* Desk with papers */
+        .desk {
+            position: absolute;
+            bottom: 15%;
+            right: 10%;
+            width: 150px;
+            height: 100px;
+            background: #654321;
+            border: 3px solid #4a3022;
+        }
+
+        .papers {
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            width: 80px;
+            height: 60px;
+            background: #f5f5dc;
+            border: 2px solid #d4af37;
+            transform: rotate(-5deg);
+        }
+
+        /* Analytical Engine */
+        .analytical-engine {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 350px;
+            z-index: 10;
+        }
+
+        .engine-frame {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #6b5742 0%, #4a3829 100%);
+            border: 5px solid #8b7355;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .engine-gears {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .gear {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #8b7355;
+            border: 4px solid #5a4a3a;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .gear::before,
+        .gear::after {
+            content: '';
+            position: absolute;
+            background: #5a4a3a;
+        }
+
+        .gear::before {
+            width: 100%;
+            height: 8px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .gear::after {
+            width: 8px;
+            height: 100%;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+
+        .gear.large {
+            width: 80px;
+            height: 80px;
+        }
+
+        .gear.spinning {
+            animation: rotateCW 3s linear infinite;
+        }
+
+        .gear.spinning-reverse {
+            animation: rotateCCW 3s linear infinite;
+        }
+
+        @keyframes rotateCW {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes rotateCCW {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+
+        .engine-display {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 60px;
+            background: #1a1a1a;
+            border: 3px solid #d4af37;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ff00;
+            font-size: 0.9rem;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* error feedback animation */
+        @keyframes shake {
+            0% { transform: translateX(-50%) translateY(0); }
+            20% { transform: translateX(-50%) translateY(-2px) rotate(-1deg); }
+            40% { transform: translateX(-50%) translateY(2px) rotate(1deg); }
+            60% { transform: translateX(-50%) translateY(-1px) rotate(-0.5deg); }
+            80% { transform: translateX(-50%) translateY(1px) rotate(0.5deg); }
+            100% { transform: translateX(-50%) translateY(0); }
+        }
+
+        .engine-display.error {
+            animation: shake 0.45s ease-in-out;
+            color: #ff0000 !important;
+        }
+
+        /* Ada Lovelace Character */
+        .ada-character {
+            position: absolute;
+            top: 50%;
+            left: 25%;
+            transform: translateY(-50%);
+            width: 140px;
+            height: auto;
+            z-index: 5;
+        }
+
+        .ada-character img {
+            display: block;
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
+        }
+
+        /* Player Character */
+        .player {
+            position: absolute;
+            bottom: 30%;
+            right: 20%;
+            width: 80px;
+            height: auto;
+            z-index: 100;
+            opacity: 0;
+            animation: playerAppear 1s ease-out 3s forwards;
+        }
+
+        @keyframes playerAppear {
+            0% { opacity: 0; transform: scale(0.5) translateY(-50px); }
+            50% { opacity: 1; transform: scale(1.2) translateY(-10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Dialogue Box */
+        .dialogue-box {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-6px);
+            width: 85%;
+            max-width: 700px;
+            background: rgba(61, 40, 23, 0.95);
+            border: 4px solid #d4af37;
+            border-radius: 15px;
+            padding: 22px;
+            color: #f5f5dc;
+            display: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: transform var(--dialog-duration) var(--dialog-ease), opacity var(--dialog-opacity-duration) var(--dialog-ease);
+        }
+
+        .dialogue-box.active {
+            display: block;
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .dialogue-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #d4af37;
+        }
+
+        .dialogue-portrait {
+            width: 50px;
+            height: 50px;
+            background: #8b4789;
+            border-radius: 50%;
+            border: 3px solid #d4af37;
+            margin-right: 15px;
+        }
+
+        .dialogue-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #d4af37;
+        }
+
+        .dialogue-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .dialogue-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .dialogue-btn {
+            background: linear-gradient(135deg, #8b4789 0%, #6b3768 100%);
+            border: 2px solid #d4af37;
+            color: #f5f5dc;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .dialogue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, #9b5799 0%, #7b4778 100%);
+        }
+
+        /* Puzzle Interface */
+        .puzzle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .puzzle-container.active {
+            display: flex;
+        }
+
+        .puzzle-box {
+            background: linear-gradient(135deg, #3d2817 0%, #2a1810 100%);
+            border: 5px solid #d4af37;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 900px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .puzzle-title {
+            font-size: 1.8rem;
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .puzzle-instruction {
+            color: #f5f5dc;
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .puzzle-areas {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+        }
+
+        .available-blocks {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .solution-area {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .area-title {
+            color: #d4af37;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .blocks-container {
+            background: rgba(42, 24, 16, 0.8);
+            border: 3px solid #8b7355;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 300px;
+        }
+
+        .drop-zone {
+            background: rgba(42, 24, 16, 0.8);
+            border: 3px dashed #d4af37;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 300px;
+        }
+
+        .drop-zone.valid-drop {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        .code-block {
+            background: linear-gradient(135deg, #8b4789 0%, #6b3768 100%);
+            border: 3px solid #d4af37;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin: 10px 0;
+            cursor: move;
+            user-select: none;
+            transition: all 0.3s ease;
+            text-align: center;
+            color: #f5f5dc;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-block:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(212, 175, 55, 0.5);
+        }
+
+        .code-block.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .code-block.placed {
+            cursor: default;
+        }
+
+        .check-solution-btn {
+            display: block;
+            margin: 30px auto 0;
+            background: linear-gradient(135deg, #00aa00 0%, #008800 100%);
+            border: 3px solid #d4af37;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .check-solution-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 255, 0, 0.4);
+        }
+
+        .check-solution-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        /* Success Flash */
+        .success-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, transparent 70%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2500;
+        }
+
+        .success-flash.active {
+            animation: flashSuccess 1s ease-out;
+        }
+
+        @keyframes flashSuccess {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* HUD - Time Machine Repair Indicator */
+        .hud {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(42, 24, 16, 0.9);
+            border: 3px solid #d4af37;
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 1500;
+            display: block;
+        }
+
+        .hud-title {
+            color: #d4af37;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .repair-progress {
+            display: flex;
+            gap: 5px;
+        }
+
+        .repair-piece {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #8b7355;
+            border-radius: 5px;
+            background: #2a1810;
+            transition: all 0.5s ease;
+        }
+
+        .repair-piece.active {
+            background: linear-gradient(135deg, #d4af37 0%, #ffd700 100%);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            animation: piecePulse 1s ease-out;
+            cursor: pointer;
+        }
+
+        .repair-piece.active:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 1);
+        }
+
+        @keyframes piecePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Typing Challenge Interface */
+        .typing-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .typing-container.active {
+            display: flex;
+        }
+
+        .typing-box {
+            background: linear-gradient(135deg, #3d2817 0%, #2a1810 100%);
+            border: 5px solid #d4af37;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 700px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .typing-title {
+            font-size: 1.8rem;
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .typing-instruction {
+            color: #f5f5dc;
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .code-input {
+            width: 100%;
+            background: #1a1a1a;
+            border: 3px solid #d4af37;
+            border-radius: 10px;
+            padding: 20px;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        .code-input:focus {
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .submit-code-btn {
+            display: block;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #00aa00 0%, #008800 100%);
+            border: 3px solid #d4af37;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .submit-code-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 255, 0, 0.4);
+        }
+
+        .submit-code-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .typing-feedback {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            min-height: 30px;
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        .typing-feedback.success {
+            color: #00ff00;
+        }
+
+        /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Vortex arrival animation -->
+        <div class="vortex-overlay" id="vortexOverlay"></div>
+
+        <!-- Victorian Study Elements -->
+        <div class="bookshelf left">
+            <div class="book red"></div>
+            <div class="book brown"></div>
+            <div class="book green"></div>
+            <div class="book blue"></div>
+            <div class="book brown"></div>
+            <div class="book red"></div>
+            <div class="book green"></div>
+        </div>
+
+        <div class="bookshelf right">
+            <div class="book blue"></div>
+            <div class="book brown"></div>
+            <div class="book red"></div>
+            <div class="book green"></div>
+            <div class="book brown"></div>
+            <div class="book blue"></div>
+            <div class="book red"></div>
+        </div>
+
+        <div class="desk">
+            <div class="papers"></div>
+        </div>
+
+        <!-- Analytical Engine -->
+        <div class="analytical-engine">
+            <div class="engine-frame">
+                <div class="engine-gears" id="engineGears">
+                    <div class="gear" id="gear1"></div>
+                    <div class="gear large" id="gear2"></div>
+                    <div class="gear" id="gear3"></div>
+                </div>
+                <div class="engine-display" id="engineDisplay">
+                    AWAITING INPUT...
+                </div>
+            </div>
+        </div>
+
+        <!-- Ada Lovelace Character -->
+        <div class="ada-character">
+            <img src="../../assets/Characterpurple.png" alt="Ada Lovelace" />
+        </div>
+
+        <!-- Player Character -->
+        <img src="../../assets/Characterblue.png" alt="Player character - blue explorer" class="player" id="player" />
+
+        <!-- Dialogue Box -->
+        <div class="dialogue-box" id="dialogueBox">
+            <div class="dialogue-header">
+                <div class="dialogue-portrait"></div>
+                <div class="dialogue-name" id="dialogueName">Ada Lovelace</div>
+            </div>
+            <div class="dialogue-text" id="dialogueText"></div>
+            <div class="dialogue-buttons" id="dialogueButtons"></div>
+        </div>
+
+        <!-- HUD - Time Machine Repair -->
+        <div class="hud" id="hud">
+            <div class="hud-title">Time Machine Repair</div>
+            <div class="repair-progress">
+                <div class="repair-piece" id="piece1" data-scene="SceneOne.html"></div>
+                <div class="repair-piece" id="piece2" data-scene="SceneTwo.html"></div>
+                <div class="repair-piece" id="piece3" data-scene="SceneThree.html"></div>
+                <div class="repair-piece" id="piece4" data-scene="SceneFour.html"></div>
+                <div class="repair-piece" id="piece5" data-scene="SceneFive.html"></div>
+                <div class="repair-piece" id="piece6" data-scene="SceneSix.html"></div>
+                <div class="repair-piece" id="piece7" data-scene="SceneSeven.html"></div>
+                <div class="repair-piece" id="piece8" data-scene="SceneEight.html"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Puzzle Interface -->
+    <div class="puzzle-container" id="puzzleContainer">
+        <div class="puzzle-box">
+            <h2 class="puzzle-title">Create a Print Statement</h2>
+            <p class="puzzle-instruction">
+                Drag the blocks to create a Python print statement that tells the machine<br>
+                the year and event: "1848 - Seneca Falls Convention"
+            </p>
+            <div class="puzzle-areas">
+                <div class="available-blocks">
+                    <div class="area-title">Available Blocks</div>
+                    <div class="blocks-container" id="availableBlocks">
+                        <div class="code-block" draggable="true" data-command="print">print(</div>
+                        <div class="code-block" draggable="true" data-command="quote1">"</div>
+                        <div class="code-block" draggable="true" data-command="year">1848</div>
+                        <div class="code-block" draggable="true" data-command="dash"> - </div>
+                        <div class="code-block" draggable="true" data-command="event">Seneca Falls Convention</div>
+                        <div class="code-block" draggable="true" data-command="quote2">"</div>
+                        <div class="code-block" draggable="true" data-command="close">)</div>
+                    </div>
+                </div>
+                <div class="solution-area">
+                    <div class="area-title">Build Your Code</div>
+                    <div class="drop-zone" id="dropZone"></div>
+                </div>
+            </div>
+            <button class="check-solution-btn" id="checkSolution">Run Code</button>
+        </div>
+    </div>
+
+    <!-- Success Flash -->
+    <div class="success-flash" id="successFlash"></div>
+
+    <!-- Typing Challenge Interface -->
+    <div class="typing-container" id="typingContainer">
+        <div class="typing-box">
+            <h2 class="typing-title">Type the Print Statement</h2>
+            <p class="typing-instruction">
+                Great job! Now let's practice typing it yourself.<br>
+                Type the exact print statement to tell the machine about the event:
+                Print("1848 - Seneca Falls Convention")
+            </p>
+            <input 
+                type="text" 
+                class="code-input" 
+                id="codeInput" 
+                placeholder='print("1848 - Seneca Falls Convention")'
+                autocomplete="off"
+                spellcheck="false"
+            />
+            <div class="typing-feedback" id="typingFeedback"></div>
+            <button class="submit-code-btn" id="submitCode">Run Code</button>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let gameState = {
+            arrivedInStudy: false,
+            metAda: false,
+            puzzleStarted: false,
+            puzzleComplete: false,
+            correctSequence: ['print', 'quote1', 'year', 'dash', 'event', 'quote2', 'close']
+        };
+
+        // DOM elements
+        const dialogueBox = document.getElementById('dialogueBox');
+        const dialogueText = document.getElementById('dialogueText');
+        const dialogueButtons = document.getElementById('dialogueButtons');
+        const puzzleContainer = document.getElementById('puzzleContainer');
+        const availableBlocks = document.getElementById('availableBlocks');
+        const dropZone = document.getElementById('dropZone');
+        const checkSolution = document.getElementById('checkSolution');
+        const engineGears = document.getElementById('engineGears');
+        const engineDisplay = document.getElementById('engineDisplay');
+        const successFlash = document.getElementById('successFlash');
+        const hud = document.getElementById('hud');
+        const vortexOverlay = document.getElementById('vortexOverlay');
+        const typingContainer = document.getElementById('typingContainer');
+        const codeInput = document.getElementById('codeInput');
+        const submitCode = document.getElementById('submitCode');
+        const typingFeedback = document.getElementById('typingFeedback');
+
+        // Add click listeners to repair pieces for navigation
+        function initializeRepairPieceNavigation() {
+            const levelScenes = {
+                1: 'SceneOne.html',
+                2: 'SceneTwo.html',
+                3: 'SceneThree.html',
+                4: 'SceneFour.html',
+                5: 'SceneFive.html',
+                6: 'SceneSix.html',
+                7: 'SceneSeven.html',
+                8: 'SceneEight.html'
+            };
+
+            for (let i = 1; i <= 8; i++) {
+                const piece = document.getElementById(`piece${i}`);
+                if (piece) {
+                    piece.addEventListener('click', function() {
+                        // Only navigate if the piece is active (completed)
+                        if (this.classList.contains('active')) {
+                            window.location.href = levelScenes[i];
+                        }
+                    });
+                }
+            }
+        }
+
+        // Initialize repair piece navigation
+        initializeRepairPieceNavigation();
+
+        // Load user progress and update repair boxes
+        async function loadUserProgress() {
+            try {
+                const user = getUserFromLocalStorage();
+                if (!user || !user.id) {
+                    console.log('No user found in localStorage');
+                    return;
+                }
+
+                // Fetch user profile to get current progress
+                const response = await fetch(`http://localhost:3001/api/users/${user.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    const progress = userData.progress || 0;
+                    
+                    // Calculate how many levels completed based on progress (12.5% per level)
+                    const completedLevels = Math.floor(progress / 12.5);
+                    
+                    // Activate repair boxes for completed levels
+                    for (let i = 1; i <= completedLevels; i++) {
+                        const piece = document.getElementById(`piece${i}`);
+                        if (piece && !piece.classList.contains('active')) {
+                            piece.classList.add('active');
+                        }
+                    }
+                    
+                    console.log(`✅ Loaded progress: ${progress}% - ${completedLevels} levels completed`);
+                }
+            } catch (error) {
+                console.error('Error loading user progress:', error);
+            }
+        }
+
+        // Load progress when page loads
+        loadUserProgress();
+
+        // Initialize scene
+        setTimeout(() => {
+            vortexOverlay.style.display = 'none';
+            introduceAda();
+        }, 3500);
+
+        function introduceAda() {
+            gameState.arrivedInStudy = true;
+            setTimeout(() => {
+                showDialogue(
+                    "Oh my! You've arrived just in time. It's the year 1848 and history is glitching! If we don't fix this algorithm, the first women's rights convention will never happen!",
+                    [
+                        { text: "Next →", action: continueIntroduction }
+                    ]
+                );
+            }, 500);
+        }
+
+        function continueIntroduction() {
+            showDialogue(
+                "That meeting is supposed to spark the entire women's rights movement and introduce the Declaration of Sentiments. The document demanding equal rights and the right to vote. But right now? The timeline is corrupted, and the event is about to be erased! Quick! Help me stabilize the code before history rewrites itself!",
+                [
+                    { text: "How can I help?", action: explainChallenge }
+                ]
+            );
+        }
+
+        function explainChallenge() {
+            showDialogue(
+        `The machine's timeline is unstable.
+        It doesn't remember what year it is, or what's supposed to happen here.
+
+        To fix it, we need to tell the machine the year and the event using a Python command.`,
+                [
+                    { text: "I'll do my best!", action: playerExplainsPrint }
+                ]
+            );
+        }
+
+        function playerExplainsPrint() {
+            showDialogue(
+                `In Python, we can send a message to the screen using the print statement.
+
+Think of print as telling the computer: 'Hey, show this text to the user!'
+
+For example, this code:
+
+print("Hello, world!")
+
+tells the computer to display the words Hello, world!`,
+                [
+                    { text: "Got it! Let's start!", action: startPuzzle }
+                ],
+                'Edwin Lovelace',
+                '#667eea'
+            );
+        }
+
+        function startPuzzle() {
+            hideDialogue();
+            gameState.puzzleStarted = true;
+            puzzleContainer.classList.add('active');
+            initializeDragAndDrop();
+            /**
+                ✅ Correct Sequence:
+                print(
+                "
+                1848
+                 - 
+                Seneca Falls Convention
+                "
+                )
+                
+                Result: print("1848 - Seneca Falls Convention")
+             */
+        }
+
+        // Drag and Drop System
+        let draggedElement = null;
+
+        function initializeDragAndDrop() {
+            const blocks = document.querySelectorAll('.code-block');
+            
+            blocks.forEach(block => {
+                block.addEventListener('dragstart', handleDragStart);
+                block.addEventListener('dragend', handleDragEnd);
+            });
+
+            dropZone.addEventListener('dragover', handleDragOver);
+            dropZone.addEventListener('drop', handleDrop);
+            dropZone.addEventListener('dragleave', handleDragLeave);
+
+            checkSolution.addEventListener('click', checkPuzzleSolution);
+        }
+
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            dropZone.classList.add('valid-drop');
+            return false;
+        }
+
+        function handleDragLeave(e) {
+            dropZone.classList.remove('valid-drop');
+        }
+
+        function handleDrop(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            dropZone.classList.remove('valid-drop');
+            
+            if (draggedElement) {
+                // Clone the block
+                const clonedBlock = draggedElement.cloneNode(true);
+                clonedBlock.classList.add('placed');
+                clonedBlock.draggable = false;
+                
+                // Add click to remove
+                clonedBlock.addEventListener('click', function() {
+                    this.remove();
+                    updateCheckButton();
+                });
+                
+                dropZone.appendChild(clonedBlock);
+                updateCheckButton();
+            }
+            
+            return false;
+        }
+
+        function updateCheckButton() {
+            const placedBlocks = dropZone.querySelectorAll('.code-block');
+            checkSolution.disabled = placedBlocks.length === 0;
+        }
+
+        function checkPuzzleSolution() {
+            const placedBlocks = dropZone.querySelectorAll('.code-block');
+            const playerSequence = Array.from(placedBlocks).map(block => 
+                block.getAttribute('data-command')
+            );
+
+            if (arraysEqual(playerSequence, gameState.correctSequence)) {
+                puzzleSolved();
+            } else {
+                puzzleFailed();
+            }
+        }
+
+        function arraysEqual(a, b) {
+            return a.length === b.length && a.every((val, index) => val === b[index]);
+        }
+
+        // keep a single timeout handle so repeated failures don't stack
+        let puzzleFailTimeout = null;
+
+        function puzzleFailed() {
+            // clear previous pending reset
+            if (puzzleFailTimeout) {
+                clearTimeout(puzzleFailTimeout);
+                puzzleFailTimeout = null;
+            }
+
+            // immediate error feedback
+            engineDisplay.textContent = "ERROR: INCORRECT SEQUENCE";
+            engineDisplay.classList.add('error');
+
+            // prevent repeated submits while showing the error
+            if (checkSolution) checkSolution.disabled = true;
+
+            // shorter delay so the UI feels snappier
+            puzzleFailTimeout = setTimeout(() => {
+                engineDisplay.textContent = "AWAITING INPUT...";
+                engineDisplay.classList.remove('error');
+                if (checkSolution) checkSolution.disabled = false;
+                puzzleFailTimeout = null;
+            }, 900);
+        }
+
+        function puzzleSolved() {
+            gameState.puzzleComplete = true;
+            
+            // Animate gears
+            const gears = [
+                document.getElementById('gear1'),
+                document.getElementById('gear2'),
+                document.getElementById('gear3')
+            ];
+            
+            gears[0].classList.add('spinning');
+            gears[1].classList.add('spinning-reverse');
+            gears[2].classList.add('spinning');
+
+            // Update display
+            engineDisplay.textContent = "RUNNING CODE...";
+            engineDisplay.style.color = "#ffd700";
+
+            setTimeout(() => {
+                engineDisplay.textContent = "OUTPUT: 1848 - Seneca Falls Convention";
+                
+                // Flash effect
+                successFlash.classList.add('active');
+                setTimeout(() => {
+                    successFlash.classList.remove('active');
+                }, 1000);
+
+                setTimeout(() => {
+                    puzzleContainer.classList.remove('active');
+                    showTypingChallenge();
+                }, 2000);
+            }, 2000);
+        }
+
+        function showTypingChallenge() {
+            showDialogue(
+                "Excellent work! You understand how the blocks fit together. Now let's try typing it yourself. This will help you remember how to write a print statement from scratch!",
+                [
+                    { text: "I'm ready!", action: startTypingChallenge }
+                ]
+            );
+        }
+
+        function startTypingChallenge() {
+            hideDialogue();
+            typingContainer.classList.add('active');
+            codeInput.focus();
+            
+            // Add event listener for Enter key
+            codeInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkTypedCode();
+                }
+            });
+            
+            submitCode.addEventListener('click', checkTypedCode);
+        }
+
+        async function checkTypedCode() {
+            const userCode = codeInput.value.trim();
+            const correctCode = 'print("1848 - Seneca Falls Convention")';
+            
+            // Case-insensitive comparison
+            if (userCode.toLowerCase() === correctCode.toLowerCase()) {
+                typingFeedback.textContent = "Perfect! Code executed successfully!";
+                typingFeedback.className = "typing-feedback success";
+                
+                // Animate engine display
+                engineDisplay.textContent = "OUTPUT: 1848 - Seneca Falls Convention";
+                engineDisplay.style.color = "#00ff00";
+                
+                // Flash effect
+                successFlash.classList.add('active');
+                setTimeout(() => {
+                    successFlash.classList.remove('active');
+                }, 1000);
+
+                // Repair time machine piece
+                document.getElementById('piece1').classList.add('active');
+                
+                // ✅ UPDATE PROGRESS IMMEDIATELY when code is correct
+                try {
+                    const user = getUserFromLocalStorage();
+                    if (user && user.id) {
+                        await updateUserProgress(user.id, 1, 100, true);
+                        console.log('✅ Progress saved: 12.5%');
+                    }
+                } catch (error) {
+                    console.error('Error updating progress:', error);
+                    // Continue anyway - don't block the game flow
+                }
+                
+                setTimeout(() => {
+                    typingContainer.classList.remove('active');
+                    completeScene();
+                }, 2000);
+            } else {
+                typingFeedback.textContent = "Not quite right. Check your syntax!";
+                typingFeedback.className = "typing-feedback";
+                codeInput.style.borderColor = "#ff0000";
+                
+                setTimeout(() => {
+                    codeInput.style.borderColor = "#d4af37";
+                }, 1000);
+            }
+        }
+
+        function completeScene() {
+            showDialogue(
+                "Perfect! The machine now knows it's 1848 and the Seneca Falls Convention is happening! The timeline is stabilizing. I can see a piece of your time machine has been repaired. You must continue your journey through history!",
+                [
+                    { text: "Continue Journey →", action: goToNextScene }
+                ]
+            );
+        }
+
+        function goToNextScene() {
+            // Navigate to Scene 2 (Grace Hopper)
+            // Note: Progress already updated in checkTypedCode()
+            window.location.href = 'SceneTwo.html';
+        }
+
+        // Helper function to get user from localStorage
+        function getUserFromLocalStorage() {
+            try {
+                const userStr = localStorage.getItem('user');
+                return userStr ? JSON.parse(userStr) : null;
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                return null;
+            }
+        }
+
+        // Helper function to update user progress
+        async function updateUserProgress(userId, levelId, score, completed) {
+            const API_BASE_URL = 'http://localhost:3001';
+            const token = localStorage.getItem('token');
+            
+            const response = await fetch(`${API_BASE_URL}/api/progress/${userId}/level/${levelId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ score, completed })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update progress');
+            }
+
+            return response.json();
+        }
+
+        // Dialogue system
+        function showDialogue(text, buttons, speaker = 'Ada Lovelace', portraitColor = '#8b4789') {
+            const dialogueName = document.getElementById('dialogueName');
+            const dialoguePortrait = document.querySelector('.dialogue-portrait');
+            
+            dialogueName.textContent = speaker;
+            dialoguePortrait.style.background = portraitColor;
+            dialogueText.textContent = text;
+            dialogueButtons.innerHTML = '';
+            
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = 'dialogue-btn';
+                button.textContent = btn.text;
+                button.onclick = btn.action;
+                dialogueButtons.appendChild(button);
+            });
+            
+            dialogueBox.classList.add('active');
+        }
+
+        function hideDialogue() {
+            dialogueBox.classList.remove('active');
+        }
+
+        // dialog motion API removed — dialogues anchor at bottom and keep a small, fixed transition
+    </script>
+</body>
+</html>

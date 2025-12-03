@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHE<Codes/> - Digital Time Machine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-20px) translateX(10px); }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            animation: fadeIn 1.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .title-wrapper {
+            margin-bottom: 60px;
+        }
+
+        .game-title {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
+                         0 0 40px rgba(102, 126, 234, 0.8);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 0 40px rgba(102, 126, 234, 0.8); }
+            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(118, 75, 162, 1); }
+        }
+
+        .game-title .brackets {
+            color: #ffd700;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #e0e0e0;
+            font-style: italic;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .tagline {
+            font-size: 1rem;
+            color: #c0c0c0;
+            margin-top: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .game-button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            color: white;
+            padding: 18px 60px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .game-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .game-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-button:active {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .credits-button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        /* Code-like decoration */
+        .code-decoration {
+            position: absolute;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.2);
+            font-family: 'Courier New', monospace;
+            animation: scrollCode 20s linear infinite;
+        }
+
+        @keyframes scrollCode {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100vw); }
+        }
+
+        /* Modal for Credits */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 5% auto;
+            padding: 40px;
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            color: white;
+            position: relative;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #ffd700;
+            float: right;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #ffffff;
+        }
+
+        .modal-content h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .credits-section {
+            margin: 20px 0;
+        }
+
+        .credits-section h3 {
+            color: #f093fb;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .credits-section p {
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .pioneer-list {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .pioneer-list li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .pioneer-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #ffd700;
+        }
+
+        /* Login Modal Styles */
+        .login-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .login-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 5% auto;
+            padding: 40px;
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            color: white;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-content h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #e0e0e0;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ffd700;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Courier New', monospace;
+            box-sizing: border-box;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .login-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .login-btn, .signup-btn, .close-login {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .signup-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .signup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        .close-login {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffd700;
+            border: 2px solid #ffd700;
+        }
+
+        .close-login:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #51cf66;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ffd700;
+            background: transparent;
+            color: #e0e0e0;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: #ffd700;
+            color: #667eea;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background particles -->
+    <div class="particle" style="width: 80px; height: 80px; top: 10%; left: 15%; animation-delay: 0s;"></div>
+    <div class="particle" style="width: 60px; height: 60px; top: 70%; left: 80%; animation-delay: 1s;"></div>
+    <div class="particle" style="width: 100px; height: 100px; top: 40%; left: 5%; animation-delay: 2s;"></div>
+    <div class="particle" style="width: 70px; height: 70px; top: 80%; left: 30%; animation-delay: 1.5s;"></div>
+
+    <!-- Code decoration -->
+    <div class="code-decoration" style="top: 20%;">def inspire_future(): return "code_with_purpose()"</div>
+    <div class="code-decoration" style="top: 60%; animation-delay: 10s;">for pioneer in history: legacy.append(pioneer.contribution)</div>
+
+    <!-- Login Modal (signup removed) -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-content">
+            <span class="close" onclick="closeLoginModal()" style="color: #ffd700; cursor: pointer;">&times;</span>
+            
+            <h2>🎮 Join the Journey</h2>
+            
+            <div class="tabs">
+                <button class="tab-btn active">Login</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="form-section active">
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" id="loginUsername" placeholder="Your wizard name">
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password">
+                </div>
+                <div class="error-message" id="loginError"></div>
+                <div class="success-message" id="loginSuccess"></div>
+                <button class="login-btn" onclick="handleLogin()" style="width: 100%; margin-top: 10px;">
+                    <span> Login</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="title-wrapper">
+            <h1 class="game-title">SHE<span class="brackets">&lt;</span>Codes<span class="brackets">/&gt;</span></h1>
+            <p class="subtitle">The Digital Time Machine</p>
+            <p class="tagline">Journey through computing history. Learn from the pioneers.</p>
+        </div>
+
+        <div class="button-container">
+            <div id="userGreeting" style="color: #e0e0e0; margin-bottom: 1rem; font-size: 1.1rem;"></div>
+            <button class="game-button start-button" id="loginBtn" onclick="openLoginPage()">
+                <span>▶ Continue Journey</span>
+            </button>
+            <button class="game-button start-button" id="startBtn" onclick="startGame()">
+                <span>▶ Start Journey</span>
+            </button>
+            <button class="game-button start-button" id="continueBtn" style="display:none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" onclick="continueJourney()">
+                <span> Continue Journey</span>
+            </button>
+            <button class="game-button credits-button" onclick="openCredits()">
+                <span>★ Credits</span>
+            </button>
+            <button class="game-button credits-button" id="logoutBtn" style="display:none;" onclick="logout()">
+                <span> Logout</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3001';
+
+        // Tab switching
+        function switchTab(tab) {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const tabs = document.querySelectorAll('.tab-btn');
+
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tab === 'login') {
+                loginForm.classList.add('active');
+                signupForm.classList.remove('active');
+            } else {
+                loginForm.classList.remove('active');
+                signupForm.classList.add('active');
+            }
+        }
+
+        // Open Login Modal
+        // Navigate to full-page login screen
+        function openLoginPage() {
+            // Login.html is in the same folder (src/scenes)
+            window.location.href = 'Login.html';
+        }
+
+        // Close Login Modal
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            clearFormMessages();
+        }
+
+        // Clear error and success messages
+        function clearFormMessages() {
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('loginSuccess').style.display = 'none';
+            document.getElementById('signupError').style.display = 'none';
+            document.getElementById('signupSuccess').style.display = 'none';
+        }
+
+        // Handle Login
+        async function handleLogin() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('loginError');
+            const successDiv = document.getElementById('loginSuccess');
+
+            clearFormMessages();
+
+            if (!username || !password) {
+                errorDiv.textContent = 'Please fill in all fields';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/users/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    errorDiv.textContent = data.error || 'Login failed';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                // Save token and user
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                successDiv.textContent = ' Login successful! Redirecting...';
+                successDiv.style.display = 'block';
+
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } catch (error) {
+                errorDiv.textContent = 'Connection error: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // Handle Signup
+        async function handleSignup() {
+            const username = document.getElementById('signupUsername').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const errorDiv = document.getElementById('signupError');
+            const successDiv = document.getElementById('signupSuccess');
+
+            clearFormMessages();
+
+            if (!username || !email || !password) {
+                errorDiv.textContent = 'Please fill in all fields';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            if (password.length < 6) {
+                errorDiv.textContent = 'Password must be at least 6 characters';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/users/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    errorDiv.textContent = data.error || 'Signup failed';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                // Save token and user
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                successDiv.textContent = ' Account created! Redirecting...';
+                successDiv.style.display = 'block';
+
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } catch (error) {
+                errorDiv.textContent = 'Connection error: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // Check if user is logged in and load their progress
+        async function initializePlayer() {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            const loginBtn = document.getElementById('loginBtn');
+
+            if (token && user) {
+                const userData = JSON.parse(user);
+                const userGreeting = document.getElementById('userGreeting');
+                const startBtn = document.getElementById('startBtn');
+                const continueBtn = document.getElementById('continueBtn');
+                const logoutBtn = document.getElementById('logoutBtn');
+
+                // Show user greeting
+                userGreeting.textContent = `Welcome back, ${userData.username}! 🎮`;
+
+                // Hide login and start buttons
+                loginBtn.style.display = 'none';
+                startBtn.style.display = 'none';
+                
+                // Show continue and logout buttons
+                continueBtn.style.display = 'inline-block';
+                logoutBtn.style.display = 'inline-block';
+
+                // Fetch user's last level
+                try {
+                    const response = await fetch(`${API_URL}/api/progress/${userData.id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const progress = await response.json();
+                    
+                    // Store last accessed level
+                    if (progress && progress.length > 0) {
+                        const lastLevel = progress[progress.length - 1];
+                        sessionStorage.setItem('lastLevel', JSON.stringify(lastLevel));
+                    }
+                } catch (error) {
+                    console.error('Error fetching progress:', error);
+                }
+            }
+        }
+
+        // Start Game Function (for new players)
+        function startGame() {
+            console.log('Starting new game...');
+            // Navigate to signup page instead of directly to game
+            window.location.href = 'Signup.html';
+        }
+
+        // Continue Journey (for returning players)
+        async function continueJourney() {
+            console.log('Continuing journey...');
+            
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            
+            if (!token || !user) {
+                // If not logged in, redirect to login
+                window.location.href = 'Login.html';
+                return;
+            }
+
+            const userData = JSON.parse(user);
+            
+            try {
+                // Fetch user data to get progress percentage
+                const response = await fetch(`${API_URL}/api/users/${userData.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    // If user not found, start from the beginning
+                    window.location.href = 'IntroScene.html';
+                    return;
+                }
+
+                const userDataFromDB = await response.json();
+                const progress = userDataFromDB.progress || 0;
+                
+                // Determine the next scene based on progress percentage
+                const nextScene = determineNextSceneByProgress(progress);
+                window.location.href = nextScene;
+
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                // Default to IntroScene if there's an error
+                window.location.href = 'IntroScene.html';
+            }
+        }
+
+        // Determine which scene to load based on progress percentage
+        function determineNextSceneByProgress(progress) {
+            // Map progress percentages to scenes
+            // 0% = IntroScene
+            // >0-12.5% (in progress Scene 1) = SceneOne
+            // >12.5-25% (completed Scene 1) = SceneTwo
+            // >25-37.5% (completed Scene 2) = SceneThree
+            // >37.5-50% (completed Scene 3) = SceneFour
+            // >50-62.5% (completed Scene 4) = SceneFive
+            // >62.5-75% (completed Scene 5) = SceneSix
+            // >75-87.5% (completed Scene 6) = SceneSeven
+            // >87.5-100% (completed Scene 7) = SceneEight
+            
+            if (progress === 0) {
+                return 'IntroScene.html';
+            } else if (progress > 0 && progress <= 12.5) {
+                return 'levels/SceneOne.html';
+            } else if (progress > 12.5 && progress <= 25) {
+                return 'levels/SceneTwo.html';
+            } else if (progress > 25 && progress <= 37.5) {
+                return 'levels/SceneThree.html';
+            } else if (progress > 37.5 && progress <= 50) {
+                return 'levels/SceneFour.html';
+            } else if (progress > 50 && progress <= 62.5) {
+                return 'levels/SceneFive.html';
+            } else if (progress > 62.5 && progress <= 75) {
+                return 'levels/SceneSix.html';
+            } else if (progress > 75 && progress <= 87.5) {
+                return 'levels/SceneSeven.html';
+            } else {
+                // 100% or close to it
+                return 'levels/SceneEight.html'; // Or 'CreditsScreen.html'
+            }
+        }
+
+        // Logout Function
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            sessionStorage.removeItem('lastLevel');
+            location.reload();
+        }
+
+        // Open Credits 
+        function openCredits() {
+            window.location.href = 'CreditsScreen.html';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const loginModal = document.getElementById('loginModal');
+            if (event.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', initializePlayer);
+    </script>
+</body>
+</html>
