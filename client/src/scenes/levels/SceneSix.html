@@ -210,9 +210,16 @@
             top: 45%;
             left: 18%;
             transform: translateY(-50%);
-            width: 90px;
-            height: 170px;
+            width: 230px;
+            height: auto; /* for image sizing */
             z-index: 5;
+        }
+
+        .margaret-character img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25));
         }
 
         .margaret-outfit {
@@ -272,13 +279,11 @@
             position: absolute;
             bottom: 30%;
             right: 24%;
-            width: 50px;
-            height: 80px;
-            background: linear-gradient(to bottom, #667eea 0%, #4a5aa8 100%);
-            border-radius: 25px 25px 10px 10px;
-            z-index: 100;
-            opacity: 0;
-            animation: playerAppear 1s ease-out 3s forwards;
+            width: 80px; /* 50% bigger from 24px */
+            height: auto;
+            z-index: 200; /* ensure above nearby UI */
+            opacity: 1; /* visible immediately */
+            animation: none; /* remove delay/fade */
         }
 
         @keyframes playerAppear {
@@ -287,17 +292,13 @@
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        .player::before {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 30px;
-            background: #c4d7ff;
-            border-radius: 50%;
-            border: 2px solid #4a5aa8;
+        .player::before { content: none; }
+
+        .player img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
         }
 
         /* Dialogue Box */
@@ -797,21 +798,15 @@
             </div>
         </div>
 
-        <!-- Margaret Hamilton Character -->
+        <!-- Margaret Hamilton Character (replaced with image) -->
         <div class="margaret-character">
-            <div class="margaret-outfit">
-                <div class="margaret-head">
-                    <div class="margaret-hair"></div>
-                    <div class="margaret-face-detail">
-                        <div class="margaret-eyes">• •</div>
-                        <div class="margaret-smile">◡</div>
-                    </div>
-                </div>
-            </div>
+            <img src="../../assets/Characterpurple.png" alt="Left Character" />
         </div>
 
         <!-- Player Character -->
-        <div class="player"></div>
+        <div class="player">
+            <img src="../../assets/Characterpurple.png" alt="Player Character" />
+        </div>
 
         <!-- Dialogue Box -->
         <div class="dialogue-box" id="dialogueBox">

@@ -386,6 +386,33 @@
             font-size: 1.1rem;
             line-height: 1.8;
             margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
+
+        .dialogue-text code {
+            display: block;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+
+        .dialogue-text .code-keyword {
+            color: #569cd6;
+            font-weight: bold;
+        }
+
+        .dialogue-text .code-number {
+            color: #b5cea8;
+        }
+
+        .dialogue-text .code-operator {
+            color: #d4d4d4;
         }
 
         .dialogue-buttons {
@@ -477,6 +504,162 @@
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
+        }
+
+        .loop-construction {
+            background: #1a1a1a;
+            border: 2px solid #3a3a3a;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .loop-line {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            min-height: 60px;
+        }
+
+        .loop-line.indented {
+            padding-left: 40px;
+        }
+
+        .code-label {
+            color: #569cd6;
+            font-size: 1.1rem;
+            font-weight: bold;
+            min-width: 80px;
+        }
+
+        .code-slot {
+            flex: 1;
+        }
+
+        .drop-zone {
+            min-width: 250px;
+            min-height: 50px;
+            background: #2a2a2a;
+            border: 2px dashed #4a4a6a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.filled {
+            border-style: solid;
+            border-color: #51cf66;
+            background: rgba(81, 207, 102, 0.1);
+        }
+
+        .drop-zone.valid-drop {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.2);
+        }
+
+        .code-block {
+            background: linear-gradient(135deg, #8b0000 0%, #5a0000 100%);
+            border: 3px solid #ffd700;
+            border-radius: 8px;
+            padding: 12px 20px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            cursor: move;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .code-block:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .code-block.dragging {
+            opacity: 0.5;
+        }
+
+        .code-block.used {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .year-display {
+            background: #1a1a1a;
+            border: 3px solid #4a4a6a;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .year-counter {
+            font-size: 1.5rem;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .year-counter span {
+            font-size: 2rem;
+            color: #51cf66;
+        }
+
+        .test-btn {
+            display: block;
+            margin: 10px auto;
+            background: linear-gradient(135deg, #4a4a6a 0%, #2a2a4a 100%);
+            border: 3px solid #ffd700;
+            color: #ffffff;
+            padding: 12px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .test-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .test-btn:disabled {
+            background: #333;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .execute-btn {
+            display: block;
+            margin: 10px auto 0;
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            border: 3px solid #8b7355;
+            color: #1a1a1a;
+            padding: 15px 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+        }
+
+        .execute-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+        }
+
+        .execute-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.5;
+            border-color: #333;
         }
 
         .builder-title {
@@ -837,92 +1020,58 @@
     <!-- Frequency Puzzle Interface -->
     <div class="frequency-puzzle" id="frequencyPuzzle">
         <div class="puzzle-panel">
-            <h2 class="puzzle-title">FREQUENCY-HOPPING SPREAD SPECTRUM</h2>
+            <h2 class="puzzle-title">TIME MACHINE YEAR CALIBRATION</h2>
             <p class="puzzle-instruction">
-                Create an unpredictable frequency-hopping pattern for secure torpedo guidance.<br>
-                The signal must change frequencies rapidly to avoid enemy jamming.
+                Build a while loop to fix the time machine's year counter.<br>
+                Current year: <span style="color: #ff6b6b;">1956</span> → Target year: <span style="color: #51cf66;">1963</span>
             </p>
 
             <div class="pattern-requirement">
-                <strong>Requirements:</strong> Use 8 frequencies | No consecutive duplicates | Pattern must be unpredictable
+                <strong>Goal:</strong> Add 1 year repeatedly while year < 1963
             </div>
 
             <div class="frequency-builder">
-                <div class="builder-title">Signal Hopping Sequence</div>
-                <div class="sequence-slots" id="sequenceSlots">
-                    <div class="frequency-slot" data-position="1"></div>
-                    <div class="frequency-slot" data-position="2"></div>
-                    <div class="frequency-slot" data-position="3"></div>
-                    <div class="frequency-slot" data-position="4"></div>
-                    <div class="frequency-slot" data-position="5"></div>
-                    <div class="frequency-slot" data-position="6"></div>
-                    <div class="frequency-slot" data-position="7"></div>
-                    <div class="frequency-slot" data-position="8"></div>
+                <div class="builder-title">Build Your Loop</div>
+                <div class="loop-construction">
+                    <div class="loop-line">
+                        <span class="code-label">Start:</span>
+                        <div class="code-slot" data-slot="init">
+                            <div class="drop-zone" data-type="init"></div>
+                        </div>
+                    </div>
+                    <div class="loop-line">
+                        <span class="code-label">While:</span>
+                        <div class="code-slot" data-slot="condition">
+                            <div class="drop-zone" data-type="condition"></div>
+                        </div>
+                    </div>
+                    <div class="loop-line indented">
+                        <span class="code-label">Do:</span>
+                        <div class="code-slot" data-slot="action">
+                            <div class="drop-zone" data-type="action"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="builder-title">Available Frequencies (MHz)</div>
+            <div class="builder-title">Available Code Blocks</div>
             <div class="available-frequencies" id="availableFrequencies">
-                <div class="frequency-block" draggable="true" data-freq="88.5">
-                    <div class="frequency-value">88.5</div>
-                    <div class="frequency-label">MHz</div>
-                </div>
-                <div class="frequency-block" draggable="true" data-freq="92.3">
-                    <div class="frequency-value">92.3</div>
-                    <div class="frequency-label">MHz</div>
-                </div>
-                <div class="frequency-block" draggable="true" data-freq="96.7">
-                    <div class="frequency-value">96.7</div>
-                    <div class="frequency-label">MHz</div>
-                </div>
-                <div class="frequency-block" draggable="true" data-freq="101.1">
-                    <div class="frequency-value">101.1</div>
-                    <div class="frequency-label">MHz</div>
-                </div>
-                <div class="frequency-block" draggable="true" data-freq="105.9">
-                    <div class="frequency-value">105.9</div>
-                    <div class="frequency-label">MHz</div>
-                </div>
-                <div class="frequency-block" draggable="true" data-freq="88.5">
-                    <div class="frequency-value">88.5</div>
-                    <div class="frequency-label">MHz</div>
-                </div>
-                <div class="frequency-block" draggable="true" data-freq="92.3">
-                    <div class="frequency-value">92.3</div>
-                    <div class="frequency-label">MHz</div>
-                </div>
-                <div class="frequency-block" draggable="true" data-freq="96.7">
-                    <div class="frequency-value">96.7</div>
-                    <div class="frequency-label">MHz</div>
-                </div>
-                <div class="frequency-block" draggable="true" data-freq="101.1">
-                    <div class="frequency-value">101.1</div>
-                    <div class="frequency-label">MHz</div>
-                </div>
-                <div class="frequency-block" draggable="true" data-freq="105.9">
-                    <div class="frequency-value">105.9</div>
-                    <div class="frequency-label">MHz</div>
-                </div>
+                <div class="frequency-block code-block" draggable="true" data-command="year = 1956" data-type="init">year = 1956</div>
+                <div class="frequency-block code-block" draggable="true" data-command="year < 1963" data-type="condition">year &lt; 1963</div>
+                <div class="frequency-block code-block" draggable="true" data-command="year = year + 1" data-type="action">year = year + 1</div>
+                
+                <!-- Incorrect options -->
+                <div class="frequency-block code-block" draggable="true" data-command="year = 1963" data-type="init">year = 1963</div>
+                <div class="frequency-block code-block" draggable="true" data-command="year > 1963" data-type="condition">year &gt; 1963</div>
+                <div class="frequency-block code-block" draggable="true" data-command="year = year - 1" data-type="action">year = year - 1</div>
             </div>
 
-            <button class="test-signal-btn" id="testSignalBtn" disabled>Test Signal Pattern</button>
-
-            <div class="pattern-analysis" id="patternAnalysis">
-                <div class="analysis-item">
-                    <span class="analysis-label">Pattern Length:</span>
-                    <span class="analysis-value" id="patternLength">0/8</span>
-                </div>
-                <div class="analysis-item">
-                    <span class="analysis-label">Consecutive Duplicates:</span>
-                    <span class="analysis-value" id="consecutiveDupes">Checking...</span>
-                </div>
-                <div class="analysis-item">
-                    <span class="analysis-label">Pattern Predictability:</span>
-                    <span class="analysis-value" id="predictability">Calculating...</span>
-                </div>
+            <div class="year-display" id="yearDisplay">
+                <div class="year-counter">Current Year: <span id="currentYear">1956</span></div>
             </div>
 
-            <button class="transmit-btn" id="transmitBtn" disabled>Transmit Signal</button>
+            <button class="test-btn" id="testBtn" disabled>Test Loop</button>
+            <button class="execute-btn" id="executeBtn" disabled>Run Time Machine</button>
         </div>
     </div>
 
@@ -936,8 +1085,16 @@
             metHedy: false,
             puzzleActive: false,
             puzzleSolved: false,
-            frequencySequence: [],
-            testPassed: false
+            loopParts: {
+                init: null,
+                condition: null,
+                action: null
+            },
+            correctSolution: {
+                init: 'year = 1956',
+                condition: 'year < 1963',
+                action: 'year = year + 1'
+            }
         };
 
         // DOM elements
@@ -945,12 +1102,8 @@
         const dialogueText = document.getElementById('dialogueText');
         const dialogueButtons = document.getElementById('dialogueButtons');
         const frequencyPuzzle = document.getElementById('frequencyPuzzle');
-        const radioScreen = document.getElementById('radioScreen');
-        const signalWave = document.getElementById('signalWave');
-        const hoppingIndicator = document.getElementById('hoppingIndicator');
-        const testSignalBtn = document.getElementById('testSignalBtn');
-        const transmitBtn = document.getElementById('transmitBtn');
-        const patternAnalysis = document.getElementById('patternAnalysis');
+        const testBtn = document.getElementById('testBtn');
+        const executeBtn = document.getElementById('executeBtn');
         const successFlash = document.getElementById('successFlash');
         const levelTransition = document.getElementById('levelTransition');
 
@@ -1002,15 +1155,30 @@
                     // Calculate how many levels completed based on progress (12.5% per level)
                     const completedLevels = Math.floor(progress / 12.5);
                     
-                    // Activate repair boxes for completed levels
-                    for (let i = 1; i <= completedLevels; i++) {
+                    // Since we're on Scene 4, ensure at least boxes 1-3 are filled
+                    const currentScene = 4;
+                    const boxesToActivate = Math.max(completedLevels, currentScene - 1);
+                    
+                    console.log(`📊 User progress: ${progress}%`);
+                    console.log(`📦 Boxes to activate: ${boxesToActivate}`);
+                    
+                    // Activate repair boxes for all completed levels
+                    // This allows players to click and revisit any completed level
+                    for (let i = 1; i <= boxesToActivate; i++) {
                         const piece = document.getElementById(`piece${i}`);
-                        if (piece && !piece.classList.contains('active')) {
-                            piece.classList.add('active');
+                        if (piece) {
+                            if (!piece.classList.contains('active')) {
+                                piece.classList.add('active');
+                                console.log(`✅ Activated box ${i}`);
+                            } else {
+                                console.log(`ℹ️ Box ${i} already active`);
+                            }
+                        } else {
+                            console.error(`❌ Box ${i} element not found`);
                         }
                     }
                     
-                    console.log(`✅ Loaded progress: ${progress}% - ${completedLevels} levels completed`);
+                    console.log(`✅ Loaded progress: ${progress}% - ${boxesToActivate} boxes activated`);
                 }
             } catch (error) {
                 console.error('Error loading user progress:', error);
@@ -1023,17 +1191,44 @@
         function introduceHedy() {
             gameState.arrivedInStudio = true;
             setTimeout(() => {
-                showDialogue(
-                    "Welcome! I'm glad you're here. I'm working on something revolutionary - a frequency-hopping system for torpedo guidance. The enemy can't jam a signal if it keeps changing frequencies unpredictably. Will you help me perfect this invention?",
-                    [{ text: "Tell me more!", action: explainInvention }]
-                );
+                const part1 = "Oh no — the time machine dropped us in the wrong year! It was supposed to bring us to 1963, the year the Equal Pay Act was signed.";
+                
+                const part2 = "The Equal Pay Act (1963) made it illegal to pay women less than men for the same work. It became one of the first big steps toward workplace equality.";
+                
+                const part3 = "But the machine thinks it's still 1954… and the timeline will stay broken unless we fix it. To reach 1963, we need to make the machine add years over and over until it gets to the correct one.";
+                
+                const showPart2 = () => {
+                    showDialogue(part2, [{ text: "Next", action: showPart3 }]);
+                };
+                
+                const showPart3 = () => {
+                    showDialogue(part3, [{ text: "Let's fix the timeline!", action: explainInvention }]);
+                };
+                
+                showDialogue(part1, [{ text: "Next", action: showPart2 }]);
             }, 500);
         }
 
         function explainInvention() {
+            const loopExplanation = `The machine can't move forward one year at a time — that would take forever.
+
+Instead, we'll use a loop.
+
+A loop lets us repeat an action automatically:
+
+"While the year is less than 1963, add 1 year."
+
+This way, the machine will keep adding years until it reaches the correct date all by itself.
+
+Before you try it, here's a simple example:`;
+
+            const codeExample = `<code><span class="code-keyword">year</span> <span class="code-operator">=</span> <span class="code-number">1</span>
+<span class="code-keyword">while</span> <span class="code-keyword">year</span> <span class="code-operator">&lt;</span> <span class="code-number">5</span><span class="code-operator">:</span>
+    <span class="code-keyword">year</span> <span class="code-operator">=</span> <span class="code-keyword">year</span> <span class="code-operator">+</span> <span class="code-number">1</span></code>`;
+
             showDialogue(
-                "The concept is elegant: instead of transmitting on one frequency, we rapidly hop between multiple frequencies in a pattern. Like a pianist playing different keys - the melody is secure because the pattern is unpredictable. We need to create a sequence of 8 frequency changes with no consecutive duplicates.",
-                [{ text: "I'll help create the pattern!", action: startPuzzle }]
+                loopExplanation + codeExample,
+                [{ text: "Let's fix the year!", action: startPuzzle }]
             );
         }
 
@@ -1048,22 +1243,22 @@
         let draggedElement = null;
 
         function initializeDragAndDrop() {
-            const blocks = document.querySelectorAll('.frequency-block');
-            const slots = document.querySelectorAll('.frequency-slot');
+            const blocks = document.querySelectorAll('.code-block');
+            const dropZones = document.querySelectorAll('.drop-zone');
             
             blocks.forEach(block => {
                 block.addEventListener('dragstart', handleDragStart);
                 block.addEventListener('dragend', handleDragEnd);
             });
 
-            slots.forEach(slot => {
-                slot.addEventListener('dragover', handleDragOver);
-                slot.addEventListener('drop', handleDrop);
-                slot.addEventListener('dragleave', handleDragLeave);
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', handleDragOver);
+                zone.addEventListener('drop', handleDrop);
+                zone.addEventListener('dragleave', handleDragLeave);
             });
 
-            testSignalBtn.addEventListener('click', testSignalPattern);
-            transmitBtn.addEventListener('click', transmitSignal);
+            testBtn.addEventListener('click', testLoop);
+            executeBtn.addEventListener('click', runTimeMachine);
         }
 
         function handleDragStart(e) {
@@ -1078,9 +1273,16 @@
         }
 
         function handleDragOver(e) {
+            if (!draggedElement) return;
+            
             e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            this.classList.add('valid-drop');
+            const dropType = this.getAttribute('data-type');
+            const blockType = draggedElement.getAttribute('data-type');
+            
+            if (dropType === blockType) {
+                this.classList.add('valid-drop');
+                e.dataTransfer.dropEffect = 'move';
+            }
             return false;
         }
 
@@ -1096,14 +1298,15 @@
             
             if (!draggedElement) return;
             
-            const position = parseInt(this.getAttribute('data-position'));
-            const frequency = draggedElement.getAttribute('data-freq');
+            const dropType = this.getAttribute('data-type');
+            const blockType = draggedElement.getAttribute('data-type');
+            const command = draggedElement.getAttribute('data-command');
             
-            // Check if slot is already filled
+            // Validate drop type matches
+            if (dropType !== blockType) return;
+            
+            // Clear existing content
             if (this.classList.contains('filled')) {
-                // Remove old block
-                const oldFreq = this.getAttribute('data-freq');
-                gameState.frequencySequence[position - 1] = null;
                 this.innerHTML = '';
             }
             
@@ -1112,197 +1315,154 @@
             clonedBlock.draggable = false;
             clonedBlock.style.cursor = 'pointer';
             clonedBlock.style.margin = '0';
-            clonedBlock.style.transform = 'scale(0.9)';
             
             // Add click to remove
             clonedBlock.addEventListener('click', function() {
                 this.parentElement.innerHTML = '';
                 this.parentElement.classList.remove('filled');
-                this.parentElement.removeAttribute('data-freq');
-                gameState.frequencySequence[position - 1] = null;
+                gameState.loopParts[dropType] = null;
                 updateUI();
             });
             
             this.innerHTML = '';
             this.appendChild(clonedBlock);
             this.classList.add('filled');
-            this.setAttribute('data-freq', frequency);
             
-            // Update sequence
-            gameState.frequencySequence[position - 1] = frequency;
+            // Update game state
+            gameState.loopParts[dropType] = command;
+            
+            // Mark original as used
+            draggedElement.classList.add('used');
+            
             updateUI();
-            
-            return false;
-        }
-
+        }            this.appendChild(clonedBlock);
+            this.classList.add('filled');
+            this.setAttribute('data-freq', frequency);
         function updateUI() {
-            const filledCount = gameState.frequencySequence.filter(f => f !== null && f !== undefined).length;
-            document.getElementById('patternLength').textContent = `${filledCount}/8`;
+            const allFilled = gameState.loopParts.init && gameState.loopParts.condition && gameState.loopParts.action;
+            testBtn.disabled = !allFilled;
             
-            if (filledCount === 8) {
-                testSignalBtn.disabled = false;
-            } else {
-                testSignalBtn.disabled = true;
-                transmitBtn.disabled = true;
-                gameState.testPassed = false;
+            if (!allFilled) {
+                executeBtn.disabled = true;
             }
         }
 
-        function testSignalPattern() {
-            patternAnalysis.classList.add('visible');
+        function testLoop() {
+            // Check if the loop is correct
+            const correct = 
+                gameState.loopParts.init === gameState.correctSolution.init &&
+                gameState.loopParts.condition === gameState.correctSolution.condition &&
+                gameState.loopParts.action === gameState.correctSolution.action;
             
-            // Check for consecutive duplicates
-            let hasConsecutiveDupes = false;
-            for (let i = 0; i < gameState.frequencySequence.length - 1; i++) {
-                if (gameState.frequencySequence[i] === gameState.frequencySequence[i + 1]) {
-                    hasConsecutiveDupes = true;
-                    break;
-                }
-            }
-            
-            const dupesElement = document.getElementById('consecutiveDupes');
-            if (hasConsecutiveDupes) {
-                dupesElement.textContent = 'Found ✗';
-                dupesElement.classList.remove('good');
-                dupesElement.classList.add('bad');
+            if (correct) {
+                // Simulate the loop
+                let year = 1956;
+                const yearDisplay = document.getElementById('currentYear');
+                let count = 0;
+                
+                const interval = setInterval(() => {
+                    if (year < 1963) {
+                        year++;
+                        yearDisplay.textContent = year;
+                        count++;
+                    } else {
+                        clearInterval(interval);
+                        executeBtn.disabled = false;
+                        yearDisplay.style.color = '#51cf66';
+                    }
+                }, 300);
             } else {
-                dupesElement.textContent = 'None ✓';
-                dupesElement.classList.remove('bad');
-                dupesElement.classList.add('good');
-            }
-            
-            // Check pattern diversity (simple check - at least 4 different frequencies)
-            const uniqueFreqs = [...new Set(gameState.frequencySequence)].length;
-            const predictElement = document.getElementById('predictability');
-            
-            if (uniqueFreqs >= 4) {
-                predictElement.textContent = 'Low (Secure) ✓';
-                predictElement.classList.remove('bad');
-                predictElement.classList.add('good');
-            } else {
-                predictElement.textContent = 'High (Insecure) ✗';
-                predictElement.classList.remove('good');
-                predictElement.classList.add('bad');
-            }
-            
-            // Animate signal test
-            animateSignalTest();
-            
-            // Enable transmit if pattern is good
-            if (!hasConsecutiveDupes && uniqueFreqs >= 4) {
-                gameState.testPassed = true;
-                setTimeout(() => {
-                    transmitBtn.disabled = false;
-                    radioScreen.textContent = 'PATTERN SECURE ✓';
-                    radioScreen.style.color = '#00ff00';
-                }, 2000);
-            } else {
-                radioScreen.textContent = 'PATTERN INSECURE ✗';
-                radioScreen.style.color = '#ff0000';
-                setTimeout(() => {
-                    radioScreen.textContent = 'AWAITING SIGNAL...';
-                    radioScreen.style.color = '#00ff00';
-                }, 2000);
+                alert('Your loop isn\'t quite right. Make sure you:\n1. Start at year = 1956\n2. Loop while year < 1963\n3. Add 1 to the year each time');
+                // Reset display
+                document.getElementById('currentYear').textContent = '1956';
+                document.getElementById('currentYear').style.color = '#51cf66';
             }
         }
 
-        function animateSignalTest() {
-            const bars = signalWave.querySelectorAll('.signal-bar');
-            hoppingIndicator.classList.add('active');
-            
-            bars.forEach((bar, index) => {
-                setTimeout(() => {
-                    bar.classList.add('active');
-                    setTimeout(() => {
-                        bar.classList.remove('active');
-                    }, 300);
-                }, index * 250);
-            });
-            
-            setTimeout(() => {
-                hoppingIndicator.classList.remove('active');
-            }, 2000);
+        function runTimeMachine() {
+            puzzleSolved();
         }
 
-        function transmitSignal() {
-            if (!gameState.testPassed) return;
-            
+        function puzzleSolved() {
             gameState.puzzleSolved = true;
             
-            // Final animation
-            radioScreen.textContent = 'TRANSMITTING...';
-            radioScreen.style.color = '#ffd700';
-            
-            // Animate frequency hopping
-            hoppingIndicator.classList.add('active');
-            const bars = signalWave.querySelectorAll('.signal-bar');
-            
-            let animationCount = 0;
-            const interval = setInterval(() => {
-                bars.forEach((bar, index) => {
-                    setTimeout(() => {
-                        bar.classList.add('active');
-                        setTimeout(() => {
-                            bar.classList.remove('active');
-                        }, 200);
-                    }, index * 150);
-                });
-                
-                animationCount++;
-                if (animationCount >= 3) {
-                    clearInterval(interval);
-                    signalSuccess();
-                }
-            }, 1500);
-        }
-
-        function signalSuccess() {
             // Flash effect
             successFlash.classList.add('active');
             setTimeout(() => {
                 successFlash.classList.remove('active');
             }, 1500);
             
-            // Update radio
-            radioScreen.textContent = 'SIGNAL LOCKED ✓';
-            radioScreen.style.color = '#00ff00';
-            
-            // Repair time machine
+            // Repair time machine piece
             setTimeout(() => {
                 document.getElementById('piece4').classList.add('active');
-                hoppingIndicator.classList.remove('active');
                 
                 setTimeout(() => {
                     frequencyPuzzle.classList.remove('active');
                     completeScene();
-                }, 1500);
+                }, 2000);
             }, 1000);
         }
 
         function completeScene() {
             showDialogue(
-                "Magnificent! Your frequency-hopping pattern is perfect - unpredictable, secure, and unjammable. This technology will revolutionize secure communications. I can see your time machine's communication module is now fully operational!",
-                [{ text: "What will happen to this invention?", action: hedyReflection }]
+                "Perfect! The time machine is now calibrated to 1963. You've mastered loops — one of the most powerful tools in programming. Loops let you repeat actions efficiently, and you'll use them everywhere in coding!",
+                [{ text: "What's next?", action: showFarewell }]
             );
         }
 
-        function hedyReflection() {
+        function showFarewell() {
             showDialogue(
-                "This frequency-hopping technology will eventually become the foundation for modern WiFi, Bluetooth, and GPS! Never underestimate the power of combining creativity with technical knowledge. Now, your journey continues - more pioneers await you!",
+                "The Equal Pay Act of 1963 was a major milestone. Continue your journey to learn more about the pioneers who fought for equality and built the foundations of computer science!",
                 [{ text: "Continue Journey →", action: goToNextScene }]
             );
         }
 
-        function goToNextScene() {
-            // TODO: Transition to Scene Five smoother and make level simpler
-            alert("Brilliant work!\n\nNext: Scene 5 - Katherine Johnson (1960s)\n\nYou'll help Katherine calculate precise rocket trajectories for the space program!");
-            // In actual implementation:
-            window.location.href = 'SceneFive.html';
+        async function goToNextScene() {
+            // Update progress to 50% (level 4 completed)
+            try {
+                const user = getUserFromLocalStorage();
+                if (user && user.id) {
+                    const response = await fetch(`http://localhost:3001/api/users/${user.id}/progress`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${user.token}`
+                        },
+                        body: JSON.stringify({ progress: 50, completed: true })
+                    });
+                    
+                    if (response.ok) {
+                        console.log('✅ Progress updated to 50% - Level 4 completed');
+                        // Wait a moment to ensure save completes, then navigate
+                        setTimeout(() => {
+                            window.location.href = 'SceneFive.html';
+                        }, 500);
+                    } else {
+                        console.error('❌ Failed to save progress:', response.status);
+                        // Navigate anyway to not block the player
+                        setTimeout(() => {
+                            window.location.href = 'SceneFive.html';
+                        }, 500);
+                    }
+                } else {
+                    console.error('❌ No user found in localStorage');
+                    // Navigate anyway
+                    setTimeout(() => {
+                        window.location.href = 'SceneFive.html';
+                    }, 500);
+                }
+            } catch (error) {
+                console.error('❌ Error updating progress:', error);
+                // Navigate anyway to not block the player
+                setTimeout(() => {
+                    window.location.href = 'SceneFive.html';
+                }, 500);
+            }
         }
 
         // Dialogue system
         function showDialogue(text, buttons) {
-            dialogueText.textContent = text;
+            dialogueText.innerHTML = text;
             dialogueButtons.innerHTML = '';
             
             buttons.forEach(btn => {

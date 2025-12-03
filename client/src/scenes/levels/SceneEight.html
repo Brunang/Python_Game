@@ -297,8 +297,15 @@
             top: 45%;
             left: 18%;
             transform: translateY(-50%);
-            width: 95px;
-            height: 175px;
+            width: 170px; 
+            height: 280px; 
+        }
+
+        .adele-character img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
         }
 
         .adele-outfit {
@@ -357,38 +364,20 @@
             position: absolute;
             bottom: 30%;
             right: 24%;
-            width: 50px;
-            height: 80px;
-            background: linear-gradient(to bottom, #667eea 0%, #4a5aa8 100%);
-            border-radius: 25px 25px 10px 10px;
+            width: 90px; 
+            height: auto;
         }
 
-        .player-final::before {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 30px;
-            background: #c4d7ff;
-            border-radius: 50%;
-            border: 2px solid #4a5aa8;
+        .player-final::before { content: none; }
+
+        .player-final img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
         }
 
-        .guardian-crown {
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2rem;
-            animation: crownGlow 2s ease-in-out infinite;
-        }
-
-        @keyframes crownGlow {
-            0%, 100% { filter: drop-shadow(0 0 10px #ffd700); }
-            50% { filter: drop-shadow(0 0 20px #ffd700); }
-        }
+        /* Crown removed */
 
         /* dialogue motion variables (reused) */
         :root {
@@ -730,6 +719,13 @@
             background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
             animation: piecePulse 1s ease-out;
+            cursor: pointer;
+        }
+
+        .repair-piece.active:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 1);
+            border-color: #ffdd00;
         }
 
         @keyframes piecePulse {
@@ -746,14 +742,14 @@
     <div class="hud" id="hud">
         <div class="hud-title">Time Machine Repair</div>
         <div class="repair-progress">
-            <div class="repair-piece active"></div>
-            <div class="repair-piece active"></div>
-            <div class="repair-piece active"></div>
-            <div class="repair-piece active"></div>
-            <div class="repair-piece active"></div>
-            <div class="repair-piece active"></div>
-            <div class="repair-piece active"></div>
-            <div class="repair-piece" id="piece8"></div>
+            <div class="repair-piece" id="piece1" data-scene="SceneOne.html"></div>
+            <div class="repair-piece" id="piece2" data-scene="SceneTwo.html"></div>
+            <div class="repair-piece" id="piece3" data-scene="SceneThree.html"></div>
+            <div class="repair-piece" id="piece4" data-scene="SceneFour.html"></div>
+            <div class="repair-piece" id="piece5" data-scene="SceneFive.html"></div>
+            <div class="repair-piece" id="piece6" data-scene="SceneSix.html"></div>
+            <div class="repair-piece" id="piece7" data-scene="SceneSeven.html"></div>
+            <div class="repair-piece" id="piece8" data-scene="SceneEight.html"></div>
         </div>
     </div>
 
@@ -780,19 +776,11 @@
             </div>
 
             <div class="adele-character">
-                <div class="adele-outfit">
-                    <div class="adele-head">
-                        <div class="adele-hair"></div>
-                        <div class="character-face">
-                            <div class="character-eyes">• •</div>
-                            <div class="character-smile">◡</div>
-                        </div>
-                    </div>
-                </div>
+                <img src="../../assets/Characterpink.png" alt="Character" />
             </div>
 
             <div class="player-final">
-                <div class="guardian-crown">👑</div>
+                <img src="../../assets/Characterblack.png" alt="Guardian Character" />
             </div>
         </div>
 
@@ -956,6 +944,83 @@
             legacyCodeWritten: false,
             journeyComplete: false
         };
+
+        function initializeRepairBoxes() {
+            const repairPieces = document.querySelectorAll('.repair-piece');
+            repairPieces.forEach(piece => {
+                piece.addEventListener('click', () => {
+                    // Only navigate if the piece is active (completed)
+                    if (piece.classList.contains('active')) {
+                        const scene = piece.getAttribute('data-scene');
+                        if (scene) {
+                            window.location.href = scene;
+                        }
+                    }
+                });
+            });
+        }
+
+        // Initialize click handlers for all repair boxes
+        initializeRepairBoxes();
+
+        // Load user progress and update repair boxes
+        async function loadUserProgress() {
+            try {
+                const user = getUserFromLocalStorage();
+                if (!user || !user.id) {
+                    console.log('No user found in localStorage');
+                    return;
+                }
+
+                // Fetch user profile to get current progress
+                const response = await fetch(`http://localhost:3001/api/users/${user.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    const progress = userData.progress || 0;
+                    
+                    // Calculate how many levels completed based on progress (12.5% per level)
+                    const completedLevels = Math.floor(progress / 12.5);
+                    
+                    // Since we're on Scene 8, ensure at least boxes 1-7 are filled
+                    const currentScene = 8;
+                    const boxesToActivate = Math.max(completedLevels, currentScene - 1);
+                    
+                    // Activate repair boxes for all completed levels
+                    // This allows players to click and revisit any completed level
+                    for (let i = 1; i <= boxesToActivate; i++) {
+                        const piece = document.getElementById(`piece${i}`);
+                        if (piece && !piece.classList.contains('active')) {
+                            piece.classList.add('active');
+                        }
+                    }
+                    
+                    console.log(`✅ Loaded progress: ${progress}% - ${boxesToActivate} boxes activated`);
+                }
+            } catch (error) {
+                console.error('Error loading user progress:', error);
+            }
+        }
+
+        function getUserFromLocalStorage() {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    return JSON.parse(userStr);
+                } catch (e) {
+                    console.error('Error parsing user from localStorage:', e);
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        // Load progress when page loads
+        loadUserProgress();
 
         // SCENE 8: Adele Goldberg - UI Design
         function initScene11() {

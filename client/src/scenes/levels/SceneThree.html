@@ -925,15 +925,20 @@
                     // Calculate how many levels completed based on progress (12.5% per level)
                     const completedLevels = Math.floor(progress / 12.5);
                     
-                    // Activate repair boxes for completed levels
-                    for (let i = 1; i <= completedLevels; i++) {
+                    // Since we're on Scene 3, ensure at least boxes 1-2 are filled
+                    const currentScene = 3;
+                    const boxesToActivate = Math.max(completedLevels, currentScene - 1);
+                    
+                    // Activate repair boxes for all completed levels
+                    // This allows players to click and revisit any completed level
+                    for (let i = 1; i <= boxesToActivate; i++) {
                         const piece = document.getElementById(`piece${i}`);
                         if (piece && !piece.classList.contains('active')) {
                             piece.classList.add('active');
                         }
                     }
                     
-                    console.log(`✅ Loaded progress: ${progress}% - ${completedLevels} levels completed`);
+                    console.log(`✅ Loaded progress: ${progress}% - ${boxesToActivate} boxes activated`);
                 }
             } catch (error) {
                 console.error('Error loading user progress:', error);
