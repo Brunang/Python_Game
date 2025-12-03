@@ -1113,9 +1113,9 @@
             }, 3000);
         }
 
-        function debugSuccess() {
+        async function debugSuccess() {
             gameState.debugComplete = true;
-            
+
             // Update terminal
             terminalScreen.innerHTML = `
                 <div style="color: #00ff00; animation: none;">
@@ -1125,7 +1125,18 @@
                     SYSTEM STABLE
                 </div>
             `;
-            
+
+            // Save progress to backend
+            try {
+                const user = getUserFromLocalStorage();
+                if (user && user.id) {
+                    await updateUserProgress(user.id, 6, 100, true);
+                    console.log('✅ Level 6 Progress Saved');
+                }
+            } catch (error) {
+                console.error('Error saving progress:', error);
+            }
+
             // Activate priority lights sequentially
             const lights = document.querySelectorAll('.priority-light');
             lights.forEach((light, index) => {
@@ -1134,18 +1145,18 @@
                     light.classList.add('active');
                 }, index * 300);
             });
-            
+
             // Flash effect
             setTimeout(() => {
                 successFlash.classList.add('active');
                 setTimeout(() => {
                     successFlash.classList.remove('active');
                 }, 1500);
-                
+
                 // Repair time machine
                 setTimeout(() => {
                     document.getElementById('piece6').classList.add('active');
-                    
+
                     setTimeout(() => {
                         debugInterface.classList.remove('active');
                         completeScene();
@@ -1211,6 +1222,41 @@
             }
         `;
         document.head.appendChild(style);
+
+        // Helper function to get user from localStorage
+        function getUserFromLocalStorage() {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    return JSON.parse(userStr);
+                } catch (e) {
+                    console.error('Error parsing user from localStorage:', e);
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        // Helper function to update user progress
+        async function updateUserProgress(userId, levelId, score, completed) {
+            const API_BASE_URL = 'http://localhost:3001';
+            const token = localStorage.getItem('token');
+
+            const response = await fetch(`${API_BASE_URL}/api/progress/${userId}/level/${levelId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ score, completed })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update progress');
+            }
+
+            return response.json();
+        }
     </script>
 </body>
 </html>
