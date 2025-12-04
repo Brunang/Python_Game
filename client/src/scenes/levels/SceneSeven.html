@@ -602,76 +602,126 @@
             color: #ffd700;
         }
 
-        .code-workspace {
+        /* Terminal Container */
+        .terminal-container {
             background: #0a0a1a;
             border: 3px solid #2a2a3a;
             border-radius: 10px;
-            padding: 25px;
-            font-family: 'Courier New', monospace;
-            font-size: 1rem;
-            line-height: 1.8;
+            overflow: hidden;
             margin-bottom: 20px;
         }
 
-        .code-prompt {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .prompt-number {
-            color: #666;
-            min-width: 30px;
-            text-align: right;
-            user-select: none;
-        }
-
-        .prompt-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .prompt-question {
-            color: #9370db;
-            margin-bottom: 5px;
-        }
-
-        .code-input-line {
+        .terminal-header {
             background: #1a1a2a;
-            border: 2px solid #4a4a6a;
-            border-radius: 5px;
-            padding: 8px 12px;
+            padding: 10px 15px;
+            border-bottom: 2px solid #2a2a3a;
+        }
+
+        .terminal-title {
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .code-textarea {
+            width: 100%;
+            min-height: 300px;
+            background: #0a0a1a;
+            border: none;
+            padding: 20px;
             color: #00ff00;
             font-family: 'Courier New', monospace;
             font-size: 1rem;
-            width: 100%;
+            line-height: 1.6;
+            resize: vertical;
             outline: none;
+        }
+
+        .code-textarea::placeholder {
+            color: #4a4a6a;
+        }
+
+        .terminal-output {
+            background: #1a1a2a;
+            border-top: 2px solid #2a2a3a;
+            padding: 15px;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .output-header {
+            color: #9370db;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .output-content {
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .output-content.success {
+            color: #00ff00;
+        }
+
+        .output-content.error {
+            color: #ff6b6b;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .run-code-btn, .clear-code-btn, .finish-btn {
+            background: linear-gradient(135deg, #9370db 0%, #6a4a8a 100%);
+            border: 3px solid #9370db;
+            color: #ffffff;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
             transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
         }
 
-        .code-input-line:focus {
-            border-color: #9370db;
-            box-shadow: 0 0 10px rgba(147, 112, 219, 0.3);
-        }
-
-        .code-input-line.correct {
+        .run-code-btn {
+            background: linear-gradient(135deg, #00aa00 0%, #007700 100%);
             border-color: #00ff00;
-            background: rgba(0, 255, 0, 0.05);
         }
 
-        .code-input-line.incorrect {
-            border-color: #ff0000;
-            background: rgba(255, 0, 0, 0.05);
-            animation: shake 0.3s;
+        .clear-code-btn {
+            background: linear-gradient(135deg, #666 0%, #444 100%);
+            border-color: #888;
         }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+        .finish-btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            border-color: #ffd700;
+            color: #000000;
+        }
+
+        .run-code-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(0, 255, 0, 0.4);
+        }
+
+        .clear-code-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(136, 136, 136, 0.4);
+        }
+
+        .finish-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
         }
 
         .hint-section {
@@ -692,61 +742,6 @@
             color: #cccccc;
             font-size: 0.9rem;
             line-height: 1.6;
-        }
-
-        .test-code-btn {
-            display: block;
-            margin: 20px auto;
-            background: linear-gradient(135deg, #4a4a6a 0%, #2a2a4a 100%);
-            border: 3px solid #9370db;
-            color: #ffffff;
-            padding: 12px 40px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Courier New', monospace;
-        }
-
-        .test-code-btn:hover {
-            transform: scale(1.03);
-            box-shadow: 0 6px 20px rgba(147, 112, 219, 0.4);
-        }
-
-        .test-code-btn:disabled {
-            background: #333;
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-
-        .execute-class-btn {
-            display: block;
-            margin: 20px auto 0;
-            background: linear-gradient(135deg, #9370db 0%, #6a4a8a 100%);
-            border: 3px solid #ffd700;
-            color: #ffffff;
-            padding: 15px 50px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Courier New', monospace;
-            text-transform: uppercase;
-        }
-
-        .execute-class-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(147, 112, 219, 0.6);
-        }
-
-        .execute-class-btn:disabled {
-            background: #333;
-            border-color: #555;
-            color: #666;
-            cursor: not-allowed;
-            opacity: 0.5;
         }
 
         /* Success Flash */
@@ -832,33 +827,13 @@
         <h1 class="intro-title">⚡ ADVANCED LEVEL ⚡</h1>
         <p class="intro-subtitle">The Final Test of the Guardians</p>
         <p class="intro-message">
-            Welcome, Guardian Initiate. You have mastered the fundamentals and conquered intermediate challenges. 
-            Now comes the true test - writing complete code from scratch. The pioneers await to see if you're 
-            ready to join their ranks and protect the legacy of computing for all time.
+            2015. A year when courage took center stage.<br><br>
+            This was when Caitlyn Jenner came out publicly as a woman — a moment that rippled across the world.<br><br>
+            Her announcement wasn't just about identity… it was about freedom.<br>
+            The freedom to live openly.<br>
+            The freedom to become who you truly are.<br>
+            And the freedom to shape your own future, even when others don't understand.
         </p>
-        <div class="challenge-list">
-            <div class="challenge-item">
-                <span class="challenge-icon">💎</span>
-                <div class="challenge-text">
-                    <strong>Write Real Code:</strong> No more blocks or fill-in-blanks
-                    <div class="challenge-difficulty">DIFFICULTY: MASTER</div>
-                </div>
-            </div>
-            <div class="challenge-item">
-                <span class="challenge-icon">🏗️</span>
-                <div class="challenge-text">
-                    <strong>Build Data Structures:</strong> Create classes and objects from scratch
-                    <div class="challenge-difficulty">DIFFICULTY: MASTER</div>
-                </div>
-            </div>
-            <div class="challenge-item">
-                <span class="challenge-icon">🎨</span>
-                <div class="challenge-text">
-                    <strong>Design Solutions:</strong> Apply software engineering principles
-                    <div class="challenge-difficulty">DIFFICULTY: MASTER</div>
-                </div>
-            </div>
-        </div>
         <p class="ready-message">
             >> Prepare yourself. The Advanced Level begins now... <<
         </p>
@@ -953,116 +928,49 @@
     <!-- Code Editor Interface -->
     <div class="code-interface" id="codeInterface">
         <div class="editor-panel">
-            <h2 class="editor-title">OBJECT-ORIENTED PROGRAMMING: CLASS DESIGN</h2>
+            <h2 class="editor-title">FREE CODING TERMINAL</h2>
             <p class="editor-instruction">
-                Write a complete class definition from scratch. This is real programming - 
-                you'll create a reusable data structure with proper encapsulation and methods.
+                Write any code you want using the skills you've learned. Use print statements, variables, 
+                conditionals, loops, functions, arrays, and error handling. Express yourself through code!
             </p>
 
-            <div class="class-requirements">
-                <div class="requirement-title">Create a "DataNode" Class:</div>
-                <ul class="requirement-list">
-                    <li>Store a value and maintain connections to other nodes</li>
-                    <li>Initialize with a value parameter</li>
-                    <li>Provide a method to add connections</li>
-                    <li>Provide a method to retrieve stored data</li>
-                    <li>Follow proper Python class syntax</li>
-                </ul>
-            </div>
-
-            <div class="code-workspace" id="codeWorkspace">
-                <div class="code-prompt">
-                    <span class="prompt-number">1</span>
-                    <div class="prompt-content">
-                        <div class="prompt-question">Define the class (hint: class ClassName:)</div>
-                        <input type="text" class="code-input-line" id="line1" 
-                               placeholder="class DataNode:" 
-                               data-answer="class DataNode:">
-                    </div>
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <span class="terminal-title">>>> Python Terminal</span>
                 </div>
-
-                <div class="code-prompt">
-                    <span class="prompt-number">2</span>
-                    <div class="prompt-content">
-                        <div class="prompt-question">Define the __init__ method (hint: def __init__(self, value):)</div>
-                        <input type="text" class="code-input-line" id="line2" 
-                               placeholder="def __init__(self, value):" 
-                               data-answer="def __init__(self, value):">
-                    </div>
-                </div>
-
-                <div class="code-prompt">
-                    <span class="prompt-number">3</span>
-                    <div class="prompt-content">
-                        <div class="prompt-question">Store the value (hint: self.value = value)</div>
-                        <input type="text" class="code-input-line" id="line3" 
-                               placeholder="    self.value = value" 
-                               data-answer="self.value = value">
-                    </div>
-                </div>
-
-                <div class="code-prompt">
-                    <span class="prompt-number">4</span>
-                    <div class="prompt-content">
-                        <div class="prompt-question">Initialize an empty list for connections (hint: self.connections = [])</div>
-                        <input type="text" class="code-input-line" id="line4" 
-                               placeholder="    self.connections = []" 
-                               data-answer="self.connections = []">
-                    </div>
-                </div>
-
-                <div class="code-prompt">
-                    <span class="prompt-number">5</span>
-                    <div class="prompt-content">
-                        <div class="prompt-question">Define add_connection method (hint: def add_connection(self, node):)</div>
-                        <input type="text" class="code-input-line" id="line5" 
-                               placeholder="def add_connection(self, node):" 
-                               data-answer="def add_connection(self, node):">
-                    </div>
-                </div>
-
-                <div class="code-prompt">
-                    <span class="prompt-number">6</span>
-                    <div class="prompt-content">
-                        <div class="prompt-question">Add node to connections list (hint: self.connections.append(node))</div>
-                        <input type="text" class="code-input-line" id="line6" 
-                               placeholder="    self.connections.append(node)" 
-                               data-answer="self.connections.append(node)">
-                    </div>
-                </div>
-
-                <div class="code-prompt">
-                    <span class="prompt-number">7</span>
-                    <div class="prompt-content">
-                        <div class="prompt-question">Define get_value method (hint: def get_value(self):)</div>
-                        <input type="text" class="code-input-line" id="line7" 
-                               placeholder="def get_value(self):" 
-                               data-answer="def get_value(self):">
-                    </div>
-                </div>
-
-                <div class="code-prompt">
-                    <span class="prompt-number">8</span>
-                    <div class="prompt-content">
-                        <div class="prompt-question">Return the stored value (hint: return self.value)</div>
-                        <input type="text" class="code-input-line" id="line8" 
-                               placeholder="    return self.value" 
-                               data-answer="return self.value">
-                    </div>
+                <textarea 
+                    class="code-textarea" 
+                    id="codeTextarea" 
+                    placeholder="# Write your Python code here...
+# Examples:
+# print('Hello, World!')
+# name = 'Coder'
+# for i in range(5):
+#     print(i)
+# 
+# Be creative! Use everything you've learned."
+                    spellcheck="false"
+                ></textarea>
+                
+                <div class="terminal-output" id="terminalOutput">
+                    <div class="output-header">Output:</div>
+                    <div class="output-content" id="outputContent">Ready to run your code...</div>
                 </div>
             </div>
 
             <div class="hint-section">
-                <div class="hint-title">💡 Barbara's Guidance:</div>
+                <div class="hint-title">💡 What you can use:</div>
                 <div class="hint-text">
-                    "A class is a blueprint for creating objects. The __init__ method initializes new instances. 
-                    Methods define what the object can do. Remember: 'self' refers to the instance itself. 
-                    Pay attention to indentation - Python uses it for structure!"
+                    Print statements • Variables • Conditionals (if/else) • Loops (for/while) • 
+                    Functions • Arrays/Lists • Error handling (try/except) • Classes & Objects
                 </div>
             </div>
 
-            <button class="test-code-btn" id="testCodeBtn">Test Class Syntax</button>
-            <button class="execute-class-btn" id="executeClassBtn" disabled>Compile & Execute Class</button>
+            <div class="button-group">
+                <button class="run-code-btn" id="runCodeBtn">▶ Run Code</button>
+                <button class="clear-code-btn" id="clearCodeBtn">Clear</button>
+                <button class="finish-btn" id="finishBtn">I'm Done </button>
+            </div>
         </div>
     </div>
 
@@ -1076,18 +984,7 @@
             arrivedAtLab: false,
             metBarbara: false,
             codingStarted: false,
-            classComplete: false,
-            correctAnswers: {
-                line1: 'class DataNode:',
-                line2: 'def __init__(self, value):',
-                line3: 'self.value = value',
-                line4: 'self.connections = []',
-                line5: 'def add_connection(self, node):',
-                line6: 'self.connections.append(node)',
-                line7: 'def get_value(self):',
-                line8: 'return self.value'
-            },
-            userAnswers: {}
+            classComplete: false
         };
 
         // DOM elements
@@ -1095,9 +992,6 @@
         const dialogueText = document.getElementById('dialogueText');
         const dialogueButtons = document.getElementById('dialogueButtons');
         const codeInterface = document.getElementById('codeInterface');
-        const testCodeBtn = document.getElementById('testCodeBtn');
-        const executeClassBtn = document.getElementById('executeClassBtn');
-        const terminalDisplay = document.getElementById('terminalDisplay');
         const successFlash = document.getElementById('successFlash');
         const advancedIntro = document.getElementById('advancedIntro');
         const timeTransition = document.getElementById('timeTransition');
@@ -1194,23 +1088,23 @@
             gameState.arrivedAtLab = true;
             setTimeout(() => {
                 showDialogue(
-                    "Welcome, Guardian Initiate. I've been expecting you. The other pioneers speak highly of your progress. Now we enter the realm of abstraction - the art of creating reusable, maintainable code through object-oriented programming. Are you ready to write real code?",
-                    [{ text: "I'm ready!", action: explainOOP }]
+                    "All throughout history, you've met people who broke barriers — not by following the rules, but by daring to rewrite them.<br><br>Caitlyn's story reminds us that becoming your true self takes bravery… and once you embrace who you are, you gain something precious — freedom.",
+                    [{ text: "Continue", action: explainOOP }]
                 );
             }, 500);
         }
 
         function explainOOP() {
             showDialogue(
-                "Excellent. Object-oriented programming revolutionized how we structure code. Instead of just procedures, we create objects - bundles of data and the methods that operate on that data. You'll design a class - a blueprint for creating these objects. This is how modern software is built.",
-                [{ text: "What will I create?", action: explainChallenge }]
+                "Just like Caitlyn finally got to live openly as herself…<br>you now get to code openly as yourself.<br><br>No more drag-and-drop.<br>No more fill-in-the-blanks.<br>No more training wheels.",
+                [{ text: "I'm ready", action: explainChallenge }]
             );
         }
 
         function explainChallenge() {
             showDialogue(
-                "You'll create a DataNode class - a fundamental data structure that can store values and connect to other nodes. Think of it as building blocks for larger systems. This requires understanding encapsulation, methods, and the 'self' concept. Every line you write must be syntactically correct. No scaffolding this time.",
-                [{ text: "Let's write the class!", action: startCoding }]
+                "From women's rights…<br>to equal pay…<br>to space missions…<br>to brave individuals living freely and authentically —<br>history has shown us that progress comes from courage<br><br>Now it's your turn.<br>Go on — write your code.<br>Your future is yours to build",
+                [{ text: "Let's code!", action: startCoding }]
             );
         }
 
@@ -1222,121 +1116,55 @@
         }
 
         function initializeCodeEditor() {
-            const inputs = document.querySelectorAll('.code-input-line');
+            const codeTextarea = document.getElementById('codeTextarea');
+            const runCodeBtn = document.getElementById('runCodeBtn');
+            const clearCodeBtn = document.getElementById('clearCodeBtn');
+            const finishBtn = document.getElementById('finishBtn');
+            const outputContent = document.getElementById('outputContent');
 
-            inputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    checkLine(this);
-                });
+            // Run Code button
+            runCodeBtn.addEventListener('click', function() {
+                const code = codeTextarea.value.trim();
+                
+                if (!code) {
+                    outputContent.textContent = 'Error: No code to run. Write some Python code first!';
+                    outputContent.className = 'output-content error';
+                    return;
+                }
 
-                input.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        const allInputs = Array.from(inputs);
-                        const currentIndex = allInputs.indexOf(this);
-                        if (currentIndex < allInputs.length - 1) {
-                            allInputs[currentIndex + 1].focus();
-                        }
+                // Simulate code execution (basic interpretation)
+                try {
+                    const result = simulatePythonExecution(code);
+                    outputContent.innerHTML = result;
+                    outputContent.className = 'output-content success';
+                } catch (error) {
+                    outputContent.textContent = `Error: ${error.message}`;
+                    outputContent.className = 'output-content error';
+                }
+            });
+
+            // Clear Code button
+            clearCodeBtn.addEventListener('click', function() {
+                codeTextarea.value = '';
+                outputContent.textContent = 'Ready to run your code...';
+                outputContent.className = 'output-content';
+            });
+
+            // Finish button - go to next level
+            finishBtn.addEventListener('click', async function() {
+                // Save progress
+                try {
+                    const user = getUserFromLocalStorage();
+                    if (user && user.id) {
+                        await updateUserProgress(user.id, 7, 100, true);
+                        console.log('✅ Level 7 Progress Saved');
                     }
-                });
-            });
-
-            testCodeBtn.addEventListener('click', testClassSyntax);
-            executeClassBtn.addEventListener('click', executeClass);
-        }
-
-        function checkLine(input) {
-            const lineId = input.id;
-            const userValue = input.value.trim();
-            const correctValue = gameState.correctAnswers[lineId];
-
-            gameState.userAnswers[lineId] = userValue;
-
-            // Flexible checking - remove extra spaces for comparison
-            const normalizedUser = userValue.replace(/\s+/g, ' ').trim();
-            const normalizedCorrect = correctValue.replace(/\s+/g, ' ').trim();
-
-            if (normalizedUser === normalizedCorrect) {
-                input.classList.remove('incorrect');
-                input.classList.add('correct');
-            } else if (userValue !== '') {
-                input.classList.remove('correct');
-                // Don't mark as incorrect immediately to allow typing
-            } else {
-                input.classList.remove('correct', 'incorrect');
-            }
-        }
-
-        function testClassSyntax() {
-            let allCorrect = true;
-            let incorrectLines = [];
-
-            Object.keys(gameState.correctAnswers).forEach(lineId => {
-                const input = document.getElementById(lineId);
-                const userValue = input.value.trim().replace(/\s+/g, ' ');
-                const correctValue = gameState.correctAnswers[lineId].replace(/\s+/g, ' ');
-
-                if (userValue !== correctValue) {
-                    allCorrect = false;
-                    incorrectLines.push(lineId.replace('line', ''));
-                    input.classList.add('incorrect');
-                    input.classList.remove('correct');
-                } else {
-                    input.classList.add('correct');
-                    input.classList.remove('incorrect');
+                } catch (error) {
+                    console.error('Error saving progress:', error);
                 }
-            });
 
-            if (allCorrect) {
-                terminalDisplay.innerHTML = `
-                    <span class="terminal-prompt">COMPILER:</span> <span style="color: #00ff00;">✓ Syntax Valid</span><br>
-                    <span class="terminal-prompt">COMPILER:</span> <span style="color: #00ff00;">✓ Class structure correct</span><br>
-                    <span class="terminal-prompt">COMPILER:</span> <span style="color: #00ff00;">✓ Methods properly defined</span><br>
-                    <span class="terminal-prompt">SYSTEM:</span> Ready to execute...<br>
-                    <span class="terminal-prompt cursor-blink">_</span>
-                `;
-                executeClassBtn.disabled = false;
-            } else {
-                terminalDisplay.innerHTML = `
-                    <span class="terminal-prompt">COMPILER:</span> <span style="color: #ff0000;">✗ Syntax Error</span><br>
-                    <span class="terminal-prompt">COMPILER:</span> Check line(s): ${incorrectLines.join(', ')}<br>
-                    <span class="terminal-prompt">HINT:</span> Review capitalization, colons, and indentation<br>
-                    <span class="terminal-prompt cursor-blink">_</span>
-                `;
-            }
-        }
-
-        async function executeClass() {
-            gameState.classComplete = true;
-
-            // Save progress to backend
-            try {
-                const user = getUserFromLocalStorage();
-                if (user && user.id) {
-                    await updateUserProgress(user.id, 7, 100, true);
-                    console.log('✅ Level 7 Progress Saved');
-                }
-            } catch (error) {
-                console.error('Error saving progress:', error);
-            }
-
-            // Simulate compilation and execution
-            terminalDisplay.innerHTML = `
-                <span class="terminal-prompt">COMPILER:</span> Compiling class...<br>
-                <span class="terminal-prompt">COMPILER:</span> <span style="color: #00ff00;">✓ Compilation successful</span><br>
-                <span class="terminal-prompt">SYSTEM:</span> Creating test instances...<br>
-            `;
-
-            setTimeout(() => {
-                terminalDisplay.innerHTML += `
-                    <span class="terminal-prompt">TEST:</span> node1 = DataNode(42)<br>
-                    <span class="terminal-prompt">TEST:</span> node2 = DataNode(100)<br>
-                    <span class="terminal-prompt">TEST:</span> node1.add_connection(node2)<br>
-                    <span class="terminal-prompt">TEST:</span> print(node1.get_value())<br>
-                    <span style="color: #ffd700;">>>> 42</span><br>
-                    <span class="terminal-prompt">SYSTEM:</span> <span style="color: #00ff00;">✓ All tests passed!</span><br>
-                    <span class="terminal-prompt cursor-blink">_</span>
-                `;
+                // Activate repair piece
+                document.getElementById('piece7').classList.add('active');
 
                 // Flash effect
                 successFlash.classList.add('active');
@@ -1344,23 +1172,56 @@
                     successFlash.classList.remove('active');
                 }, 1500);
 
-                // Repair time machine
+                // Transition to next level
                 setTimeout(() => {
-                    document.getElementById('piece7').classList.add('active');
-
-                    setTimeout(() => {
-                        codeInterface.classList.remove('active');
-                        completeScene();
-                    }, 1500);
-                }, 1000);
-            }, 2000);
+                    codeInterface.classList.remove('active');
+                    showDialogue(
+                        "Incredible work! You've coded freely, using all the skills you've learned. You've shown true mastery and creative freedom. The final piece of the time machine has been repaired!",
+                        [{ text: "Complete the journey", action: () => { window.location.href = 'SceneEight.html'; } }]
+                    );
+                }, 2000);
+            });
         }
 
-        function completeScene() {
-            showDialogue(
-                "Outstanding! You've created a proper class with encapsulation, initialization, and methods. This is the foundation of modern software architecture. Your DataNode class can now be reused, extended, and maintained - the hallmarks of good software engineering.",
-                [{ text: "Tell me about your work...", action: barbaraWisdom }]
-            );
+        // Simple Python code simulator
+        function simulatePythonExecution(code) {
+            let output = '';
+            const lines = code.split('\n');
+            
+            // Look for print statements
+            const printRegex = /print\s*\(\s*['"](.+?)['"]\s*\)/g;
+            let match;
+            
+            let hasPrint = false;
+            while ((match = printRegex.exec(code)) !== null) {
+                output += match[1] + '\n';
+                hasPrint = true;
+            }
+
+            // Check for other patterns
+            if (code.includes('for ') && code.includes('range(')) {
+                output += '✓ Loop detected\n';
+            }
+            if (code.includes('if ') || code.includes('else:')) {
+                output += '✓ Conditional detected\n';
+            }
+            if (code.includes('def ')) {
+                output += '✓ Function detected\n';
+            }
+            if (code.includes('class ')) {
+                output += '✓ Class detected\n';
+            }
+            if (code.includes('try:') && code.includes('except')) {
+                output += '✓ Error handling detected\n';
+            }
+
+            if (!hasPrint && output === '') {
+                output = '✓ Code executed successfully!\n(Add print statements to see output)';
+            } else if (!hasPrint) {
+                output = '✓ Code structure looks good!\n' + output;
+            }
+
+            return output || '✓ Code executed!';
         }
 
         function barbaraWisdom() {
@@ -1378,7 +1239,7 @@
 
         // Dialogue system
         function showDialogue(text, buttons) {
-            dialogueText.textContent = text;
+            dialogueText.innerHTML = text;
             dialogueButtons.innerHTML = '';
             
             buttons.forEach(btn => {
