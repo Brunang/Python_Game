@@ -205,6 +205,27 @@
             50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
         }
 
+        .logout-btn {
+            margin-top: 10px;
+            width: 100%;
+            padding: 8px;
+            background: linear-gradient(135deg, #8b0000 0%, #ff4444 100%);
+            border: 2px solid #ffd700;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #a00000 0%, #ff5555 100%);
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+            transform: translateY(-2px);
+        }
+
         /* Time Machine Glow Effect */
         .time-machine-glow {
             position: absolute;
@@ -289,6 +310,7 @@
                 <div class="repair-piece" onclick="goToScene(7)" title="Return to Scene 7"></div>
                 <div class="repair-piece" onclick="goToScene(8)" title="Return to Scene 8"></div>
             </div>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
 
         <!-- Time Machine Glow -->
@@ -485,6 +507,17 @@
             console.log('🎉 Journey Complete! 🎉');
             startDialogue();
         });
+
+        // Logout function
+        function handleLogout() {
+            // Clear localStorage
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('username');
+            
+            // Redirect to start screen
+            window.location.href = '../StartScreen.html';
+        }
     </script>
 </body>
 </html>

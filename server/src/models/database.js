@@ -97,12 +97,24 @@ export const initializeDatabase = () => {
 
           database.run(
             'INSERT INTO users (username, password, progress) VALUES (?, ?, ?)',
-            ['testplayer', hashed, 0.0],
+            ['testplayer', hashed, 100.0],
             function(insertErr) {
               if (insertErr) {
                 console.error('Error seeding test user:', insertErr);
               } else {
-                console.log('Seeded default user: testplayer (0% progress)');
+                console.log('Seeded default user: testplayer (100% progress)');
+                
+                // Add all 8 levels as completed for testplayer
+                const userId = this.lastID;
+                for (let levelId = 1; levelId <= 8; levelId++) {
+                  database.run(
+                    'INSERT INTO user_progress (user_id, level_id, completed, score, attempts, completed_at) VALUES (?, ?, 1, 100, 1, datetime("now"))',
+                    [userId, levelId],
+                    (err) => {
+                      if (err) console.error(`Error adding level ${levelId} for testplayer:`, err);
+                    }
+                  );
+                }
               }
             }
           );

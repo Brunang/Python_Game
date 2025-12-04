@@ -637,6 +637,27 @@
             50% { transform: scale(1.2); }
         }
 
+        .logout-btn {
+            margin-top: 10px;
+            width: 100%;
+            padding: 8px;
+            background: linear-gradient(135deg, #8b0000 0%, #ff4444 100%);
+            border: 2px solid #0088ff;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #a00000 0%, #ff5555 100%);
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+            transform: translateY(-2px);
+        }
+
         /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
 
         /* Spacecraft visualization */
@@ -714,20 +735,21 @@
         <div class="blackboard-section">
             <div class="blackboard">
                 <div class="blackboard-content chalk-text">
-                    <div class="equation-title">Trajectory Correction Formula</div>
+                    <div class="equation-title">Loop Structure for Calculations</div>
                     <div class="equation-display">
                         <strong>Given:</strong><br>
-                        • Current velocity: v = 7800 m/s<br>
-                        • Target angle: θ = 45°<br>
-                        • Time step: Δt = 1 second<br>
-                        • Iterations: n = 10<br><br>
-                        <strong>Calculate:</strong><br>
-                        x = v × cos(θ) × t<br>
-                        y = v × sin(θ) × t - 0.5 gt²<br>
+                        • Start position: x = 0<br>
+                        • Steps needed: n = 10<br>
+                        • Distance per step: d = 500 km<br>
+                        • Loop variable: i (changes each time)<br><br>
+                        <strong>Pattern:</strong><br>
+                        for i in range(n):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;position = i × d<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print("Step", i, "Position:", position)<br>
                     </div>
                     <div class="hint-box">
                         💡 <strong>Katherine's Note:</strong><br>
-                        "Precision matters! We must loop through each time step and calculate the position. Use the loop variable 'i', multiply velocity by time, and call the print function to output results."
+                        "Loops repeat calculations automatically! Each time through the loop, 'i' increases by 1. We use it to calculate the next position and print the result. This is how we track the spacecraft's journey step by step."
                     </div>
                 </div>
             </div>
@@ -762,6 +784,7 @@
                 <div class="repair-piece" id="piece7" data-scene="SceneSeven.html"></div>
                 <div class="repair-piece" id="piece8" data-scene="SceneEight.html"></div>
             </div>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
     </div>
 
@@ -1236,6 +1259,17 @@
             }
 
             return response.json();
+        }
+
+        // Logout function
+        function handleLogout() {
+            // Clear localStorage
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('username');
+            
+            // Redirect to start screen
+            window.location.href = '../StartScreen.html';
         }
     </script>
 </body>

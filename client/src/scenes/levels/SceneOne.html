@@ -564,6 +564,27 @@ now <!DOCTYPE html>
             50% { transform: scale(1.2); }
         }
 
+        .logout-btn {
+            margin-top: 10px;
+            width: 100%;
+            padding: 8px;
+            background: linear-gradient(135deg, #8b0000 0%, #ff4444 100%);
+            border: 2px solid #d4af37;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #a00000 0%, #ff5555 100%);
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+            transform: translateY(-2px);
+        }
+
         /* Typing Challenge Interface */
         .typing-container {
             position: fixed;
@@ -743,6 +764,7 @@ now <!DOCTYPE html>
                 <div class="repair-piece" id="piece7" data-scene="SceneSeven.html"></div>
                 <div class="repair-piece" id="piece8" data-scene="SceneEight.html"></div>
             </div>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
     </div>
 
@@ -1265,6 +1287,17 @@ tells the computer to display the words Hello, world!`,
 
         function hideDialogue() {
             dialogueBox.classList.remove('active');
+        }
+
+        // Logout function
+        function handleLogout() {
+            // Clear localStorage
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('username');
+            
+            // Redirect to start screen
+            window.location.href = '../StartScreen.html';
         }
 
         // dialog motion API removed — dialogues anchor at bottom and keep a small, fixed transition

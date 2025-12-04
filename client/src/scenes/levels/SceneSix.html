@@ -752,6 +752,27 @@
             50% { transform: scale(1.2); }
         }
 
+        .logout-btn {
+            margin-top: 10px;
+            width: 100%;
+            padding: 8px;
+            background: linear-gradient(135deg, #8b0000 0%, #ff4444 100%);
+            border: 2px solid #ffd700;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #a00000 0%, #ff5555 100%);
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+            transform: translateY(-2px);
+        }
+
         /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
     </style>
 </head>
@@ -822,15 +843,16 @@
         <div class="hud">
             <div class="hud-title">Time Machine Repair</div>
             <div class="repair-progress">
-                <div class="repair-piece active"></div>
-                <div class="repair-piece active"></div>
-                <div class="repair-piece active"></div>
-                <div class="repair-piece active"></div>
-                <div class="repair-piece active"></div>
-                <div class="repair-piece active"></div>
-                <div class="repair-piece"></div>
-                <div class="repair-piece"></div>
-            </div>
+    <a href="SceneOne.html"><div class="repair-piece active"></div></a>
+    <a href="SceneTwo.html"><div class="repair-piece active"></div></a>
+    <a href="SceneThree.html"><div class="repair-piece active"></div></a>
+    <a href="SceneFour.html"><div class="repair-piece active"></div></a>
+    <a href="SceneFive.html"><div class="repair-piece active"></div></a>
+    <a href="SceneSix.html"><div class="repair-piece active"></div></a>
+    <div class="repair-piece"></div>
+    <div class="repair-piece"></div>
+</div>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
     </div>
 
@@ -1259,6 +1281,17 @@
             }
 
             return response.json();
+        }
+
+        // Logout function
+        function handleLogout() {
+            // Clear localStorage
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('username');
+            
+            // Redirect to start screen
+            window.location.href = '../StartScreen.html';
         }
     </script>
 </body>
