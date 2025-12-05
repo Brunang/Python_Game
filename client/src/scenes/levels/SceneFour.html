@@ -1159,56 +1159,54 @@
             try {
                 const user = getUserFromLocalStorage();
                 if (!user || !user.id) {
-                    console.log('No user found in localStorage');
+                    console.warn('⚠️ No user found in localStorage - skipping progress load');
                     return;
                 }
 
-                // Fetch user profile to get current progress
-                const response = await fetch(`http://localhost:3001/api/users/${user.id}`, {
+                console.log('📊 Loading progress for user:', user.id);
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:3001/api/progress/${user.id}`, {
                     headers: {
-                        'Authorization': `Bearer ${user.token}`
+                        'Authorization': `Bearer ${token}`
                     }
                 });
 
                 if (response.ok) {
-                    const userData = await response.json();
-                    const progress = userData.progress || 0;
-                    
-                    // Calculate how many levels completed based on progress (12.5% per level)
-                    const completedLevels = Math.floor(progress / 12.5);
-                    
-                    // Since we're on Scene 4, ensure at least boxes 1-3 are filled
-                    const currentScene = 4;
-                    const boxesToActivate = Math.max(completedLevels, currentScene - 1);
-                    
-                    console.log(`📊 User progress: ${progress}%`);
-                    console.log(`📦 Boxes to activate: ${boxesToActivate}`);
-                    
-                    // Activate repair boxes for all completed levels
-                    // This allows players to click and revisit any completed level
-                    for (let i = 1; i <= boxesToActivate; i++) {
-                        const piece = document.getElementById(`piece${i}`);
-                        if (piece) {
-                            if (!piece.classList.contains('active')) {
-                                piece.classList.add('active');
-                                console.log(`✅ Activated box ${i}`);
+                    const progressData = await response.json();
+                    console.log('📦 Progress data received:', progressData);
+
+                    let activatedCount = 0;
+                    progressData.forEach(level => {
+                        if (level.completed) {
+                            const piece = document.getElementById(`piece${level.level_id}`);
+                            if (piece) {
+                                if (!piece.classList.contains('active')) {
+                                    piece.classList.add('active');
+                                    activatedCount++;
+                                    console.log(`✅ Activated piece ${level.level_id}`);
+                                } else {
+                                    console.log(`ℹ️ Piece ${level.level_id} already active`);
+                                }
                             } else {
-                                console.log(`ℹ️ Box ${i} already active`);
+                                console.error(`❌ Piece element not found: piece${level.level_id}`);
                             }
-                        } else {
-                            console.error(`❌ Box ${i} element not found`);
                         }
-                    }
-                    
-                    console.log(`✅ Loaded progress: ${progress}% - ${boxesToActivate} boxes activated`);
+                    });
+                    console.log(`✅ Progress loaded: ${progressData.length} levels completed, ${activatedCount} pieces activated`);
+                } else {
+                    console.error('❌ Failed to load progress:', response.status, response.statusText);
                 }
             } catch (error) {
-                console.error('Error loading user progress:', error);
+                console.error('❌ Error loading user progress:', error);
             }
         }
 
-        // Load progress when page loads
-        loadUserProgress();
+        // Ensure DOM is loaded before initializing progress
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadUserProgress);
+        } else {
+            loadUserProgress();
+        }
 
         function introduceHedy() {
             gameState.arrivedInStudio = true;

@@ -13,7 +13,7 @@ import codeRoutes from './src/routes/codeRoutes.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 
 // __dirname shim for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -46,6 +46,10 @@ app.get('/api/health', (req, res) => {
     },
   });
 });
+
+// Serve static files from client directory
+const clientPath = path.resolve(__dirname, '..', 'client');
+app.use(express.static(clientPath));
 
 // Root endpoint: serve the client StartScreen if available, otherwise return JSON info
 app.get('/', (req, res) => {
@@ -83,9 +87,14 @@ app.get('/', (req, res) => {
   }
 });
 
-// 404 handler
+// 404 handler for API routes only (comes after static file serving)
 app.use((req, res) => {
-  res.status(404).json({ error: 'Endpoint not found' });
+  // If the request path starts with /api, return JSON error
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ error: 'Endpoint not found' });
+  }
+  // Otherwise, send 404 HTML or redirect to home
+  res.status(404).send('<h1>Page Not Found</h1><a href="/">Go Home</a>');
 });
 
 // Error handling middleware

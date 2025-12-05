@@ -6,11 +6,10 @@ export const progressService = {
     return new Promise((resolve, reject) => {
       const db = getDatabase();
       db.all(
-        `SELECT up.*, l.title, l.level_number, l.difficulty, l.theme, l.character_name
+        `SELECT up.*
          FROM user_progress up
-         JOIN levels l ON up.level_id = l.id
          WHERE up.user_id = ?
-         ORDER BY l.level_number ASC`,
+         ORDER BY up.level_id ASC`,
         [userId],
         (err, rows) => {
           if (err) reject(err);

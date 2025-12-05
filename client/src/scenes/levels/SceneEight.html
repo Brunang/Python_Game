@@ -188,14 +188,18 @@
             height: 30px;
             border: 2px solid #2a2a3a;
             border-radius: 5px;
-            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
-            animation: glow 2s ease-in-out infinite;
-            cursor: pointer;
-            transition: transform 0.2s ease;
+            background: #0a0a1a;
+            transition: all 0.5s ease;
         }
 
-        .repair-piece:hover {
+        .repair-piece.active {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            animation: glow 2s ease-in-out infinite, piecePulse 1s ease-out;
+            cursor: pointer;
+        }
+
+        .repair-piece.active:hover {
             transform: scale(1.15);
             box-shadow: 0 0 25px rgba(255, 215, 0, 1);
         }
@@ -203,6 +207,11 @@
         @keyframes glow {
             0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
             50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+        }
+
+        @keyframes piecePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
         }
 
         .logout-btn {
@@ -301,14 +310,14 @@
         <div class="repair-container">
             <div class="repair-title">TIME MACHINE REPAIR</div>
             <div class="repair-progress">
-                <div class="repair-piece" onclick="goToScene(1)" title="Return to Scene 1"></div>
-                <div class="repair-piece" onclick="goToScene(2)" title="Return to Scene 2"></div>
-                <div class="repair-piece" onclick="goToScene(3)" title="Return to Scene 3"></div>
-                <div class="repair-piece" onclick="goToScene(4)" title="Return to Scene 4"></div>
-                <div class="repair-piece" onclick="goToScene(5)" title="Return to Scene 5"></div>
-                <div class="repair-piece" onclick="goToScene(6)" title="Return to Scene 6"></div>
-                <div class="repair-piece" onclick="goToScene(7)" title="Return to Scene 7"></div>
-                <div class="repair-piece" onclick="goToScene(8)" title="Return to Scene 8"></div>
+                <div class="repair-piece" id="piece1" data-scene="SceneOne.html"></div>
+                <div class="repair-piece" id="piece2" data-scene="SceneTwo.html"></div>
+                <div class="repair-piece" id="piece3" data-scene="SceneThree.html"></div>
+                <div class="repair-piece" id="piece4" data-scene="SceneFour.html"></div>
+                <div class="repair-piece" id="piece5" data-scene="SceneFive.html"></div>
+                <div class="repair-piece" id="piece6" data-scene="SceneSix.html"></div>
+                <div class="repair-piece" id="piece7" data-scene="SceneSeven.html"></div>
+                <div class="repair-piece" id="piece8" data-scene="SceneEight.html"></div>
             </div>
             <button class="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
@@ -352,22 +361,66 @@
         const dialogueName = document.getElementById('dialogueName');
         const dialoguePortrait = document.getElementById('dialoguePortrait');
 
-        // Navigate to specific scene
-        function goToScene(sceneNumber) {
-            const sceneMap = {
-                1: 'SceneOne.html',
-                2: 'SceneTwo.html',
-                3: 'SceneThree.html',
-                4: 'SceneFour.html',
-                5: 'SceneFive.html',
-                6: 'SceneSix.html',
-                7: 'SceneSeven.html',
-                8: 'SceneEight.html'
-            };
-            
-            if (sceneMap[sceneNumber]) {
-                window.location.href = sceneMap[sceneNumber];
+        // Load user progress and update repair boxes
+        async function loadUserProgress() {
+            try {
+                const user = getUserFromLocalStorage();
+                if (!user || !user.id) {
+                    console.warn('⚠️ No user found in localStorage - skipping progress load');
+                    return;
+                }
+
+                console.log('📊 Loading progress for user:', user.id);
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:3001/api/progress/${user.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const progressData = await response.json();
+                    console.log('📦 Progress data received:', progressData);
+
+                    let activatedCount = 0;
+                    progressData.forEach(level => {
+                        if (level.completed) {
+                            const piece = document.getElementById(`piece${level.level_id}`);
+                            if (piece) {
+                                if (!piece.classList.contains('active')) {
+                                    piece.classList.add('active');
+                                    activatedCount++;
+                                    console.log(`✅ Activated piece ${level.level_id}`);
+                                } else {
+                                    console.log(`ℹ️ Piece ${level.level_id} already active`);
+                                }
+                            } else {
+                                console.error(`❌ Piece element not found: piece${level.level_id}`);
+                            }
+                        }
+                    });
+                    console.log(`✅ Progress loaded: ${progressData.length} levels completed, ${activatedCount} pieces activated`);
+                } else {
+                    console.error('❌ Failed to load progress:', response.status, response.statusText);
+                }
+            } catch (error) {
+                console.error('❌ Error loading user progress:', error);
             }
+        }
+
+        // Initialize repair box click handlers
+        function initializeRepairBoxes() {
+            const repairPieces = document.querySelectorAll('.repair-piece');
+            repairPieces.forEach(piece => {
+                piece.addEventListener('click', () => {
+                    if (piece.classList.contains('active')) {
+                        const scene = piece.getAttribute('data-scene');
+                        if (scene) {
+                            window.location.href = scene;
+                        }
+                    }
+                });
+            });
         }
 
         // Dialogue sequence
@@ -505,7 +558,18 @@
         // Start the dialogue sequence when page loads
         window.addEventListener('load', () => {
             console.log('🎉 Journey Complete! 🎉');
-            startDialogue();
+            // Ensure DOM is loaded before initializing progress
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    loadUserProgress();
+                    initializeRepairBoxes();
+                    startDialogue();
+                });
+            } else {
+                loadUserProgress();
+                initializeRepairBoxes();
+                startDialogue();
+            }
         });
 
         // Logout function
