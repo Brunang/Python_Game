@@ -752,6 +752,27 @@
             50% { transform: scale(1.2); }
         }
 
+        .logout-btn {
+            margin-top: 10px;
+            width: 100%;
+            padding: 8px;
+            background: linear-gradient(135deg, #8b0000 0%, #ff4444 100%);
+            border: 2px solid #ffd700;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #a00000 0%, #ff5555 100%);
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+            transform: translateY(-2px);
+        }
+
         /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
     </style>
 </head>
@@ -822,20 +843,23 @@
         <div class="hud">
             <div class="hud-title">Time Machine Repair</div>
             <div class="repair-progress">
-                <div class="repair-piece active"></div>
-                <div class="repair-piece active"></div>
-                <div class="repair-piece active"></div>
-                <div class="repair-piece active"></div>
-                <div class="repair-piece active"></div>
-                <div class="repair-piece" id="piece6"></div>
+                <div class="repair-piece" id="piece1" data-scene="SceneOne.html"></div>
+                <div class="repair-piece" id="piece2" data-scene="SceneTwo.html"></div>
+                <div class="repair-piece" id="piece3" data-scene="SceneThree.html"></div>
+                <div class="repair-piece" id="piece4" data-scene="SceneFour.html"></div>
+                <div class="repair-piece" id="piece5" data-scene="SceneFive.html"></div>
+                <div class="repair-piece" id="piece6" data-scene="SceneSix.html"></div>
+                <div class="repair-piece" id="piece7" data-scene="SceneSeven.html"></div>
+                <div class="repair-piece" id="piece8" data-scene="SceneEight.html"></div>
             </div>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
     </div>
 
     <!-- Debug Interface -->
     <div class="debug-interface" id="debugInterface">
         <div class="debug-panel">
-            <h2 class="debug-title">APOLLO GUIDANCE SYSTEM DEBUG</h2>
+            <h2 class="debug-title">ELECTION SYSTEM DEBUG</h2>
             <p class="debug-instruction">
                 Build the error handling flow by dragging conditional and exception blocks into the correct sequence.<br>
                 The system must prioritize essential tasks and handle errors gracefully.
@@ -894,10 +918,7 @@
         <div class="guardians-content">
             <h1 class="guardians-title">✦ THE GUARDIANS OF CODE ✦</h1>
             <p class="guardians-message">
-                You have proven yourself worthy. Each pioneer you've learned from is part of an ancient order - 
-                the Guardians of Code. They protect the history of computing and ensure that the knowledge 
-                of those who came before is never forgotten. Your time machine was built by them, and your 
-                journey has been a test of your skills, determination, and heart.
+                You did it, traveler. Through every jump in history, you've learned from the brilliant women who shaped the world of computing — and you've proven that you can solve problems the same way they did: with logic, creativity, and resilience. From writing your first print statements with Ada, to using IF/THEN decisions on the factory floor, to building loops that pushed the time machine forward, to debugging systems and protecting fairness, every skill you learned brought you one step closer to repairing the time stream. Each woman you met — pioneers, leaders, and problem-solvers — trusted you with a piece of their legacy. Now, those lessons live in you.
             </p>
             <div class="pioneer-icons">
                 <div class="pioneer-icon" title="Ada Lovelace">👩‍💻</div>
@@ -908,9 +929,7 @@
                 <div class="pioneer-icon" title="Margaret Hamilton">🛡️</div>
             </div>
             <p class="guardians-message">
-                You have completed the Intermediate Level and mastered essential programming concepts. 
-                The time machine is nearly fully operational. One more level awaits - the Advanced challenges 
-                where you will write your own code from scratch and become a true Guardian yourself.
+                Your time machine is nearly restored. Only one final challenge remains: a series of advanced missions where you'll write your own code from scratch, think like a real programmer, and step fully into your role as a Guardian of Code — someone who protects the past, shapes the future, and uses technology to make the world better. Are you ready for the final level?
             </p>
             <button class="continue-final-btn" onclick="completeIntermediateLevel()">
                 Accept the Challenge →
@@ -953,7 +972,7 @@
             gameState.arrivedAtApollo = true;
             setTimeout(() => {
                 showDialogue(
-                    "Welcome to the Apollo program. We're facing a critical system error - the guidance computer is experiencing priority overflow. During the moon landing, we had seconds to prevent a crash. The software must handle errors gracefully and prioritize what's truly essential. Can you help debug the system?",
+                    "Oh no – the time machine overshot and landed in 1992.\n\nIn the U.S., people are calling this 'The Year of the Woman.'\n\nA record number of women are running for Congress, and millions of votes are being counted on big, clunky computers.\n\nIf those systems crash or get overloaded, some races might not be called on time – and people could lose trust in the results.\n\nWe've been pulled into the election tech room. A vote-counting system is throwing error messages, and they need your help to debug the logic so every important result gets handled first.",
                     [{ text: "What needs to be done?", action: explainProblem }]
                 );
             }, 500);
@@ -961,8 +980,15 @@
 
         function explainProblem() {
             showDialogue(
-                "The system is trying to do too many things at once. We need conditional logic to check priorities and error handling to catch problems before they crash the entire system. Think of it like triage - what must happen immediately, what can wait, and what do we do if something goes wrong?",
-                [{ text: "I'll help debug it!", action: startDebug }]
+                "We're processing results from all over the country, and the system is overloaded.\n\nThe computer is trying to update too many races at once. Critical results – like the new women running for Congress – must be handled first, or the dashboard freezes and crashes.\n\nWe need to build clear rules for what to do when things get busy: what to run right away, what can wait, and what to do if the system runs out of memory.\n\nCan you help us fix the error-handling logic so the 'Year of the Woman' doesn't glitch?",
+                [{ text: "How does the code work?", action: explainFlowchart }]
+            );
+        }
+
+        function explainFlowchart() {
+            showDialogue(
+                "The code works like a decision flowchart. We're going to drag blocks into place to describe what the program should do:\n\n• IF something important is true → do this now\n• ELSE → do something different\n• TRY → attempt to run the main task\n• EXCEPT → if something goes wrong, fix it instead of crashing\n\nThink of it like managing election night:\n\n• If a race is CRITICAL, we announce it immediately.\n• If memory is full, we clear low‑priority tasks so the counting can continue.\n• Regular updates can be queued for later once the system is stable.\n\nYou'll build that order by dropping the blocks into the 5 steps. Ready?",
+                [{ text: "I'm ready — let's build it", action: startDebug }]
             );
         }
 
@@ -1167,14 +1193,14 @@
 
         function completeScene() {
             showDialogue(
-                "Excellent work! The error handling is perfect. In that critical moment during Apollo 11, our software's ability to prioritize and handle errors saved the mission. You understand now - good code isn't just about when things work, it's about gracefully handling when they don't.",
+                "Amazing work! The priority system is running smoothly now. In 1992, a record number of women were elected to the U.S. Congress — a moment so historic it became known as 'The Year of the Woman.' Just like Congress must decide which issues to prioritize, your code did the same: it handled urgent tasks first, protected the system from overload, and kept everything running fairly.",
                 [{ text: "Tell me more...", action: margaretWisdom }]
             );
         }
 
         function margaretWisdom() {
             showDialogue(
-                "They said software engineering wasn't a real discipline. That it didn't deserve the same rigor as other engineering fields. But I knew that lives depended on our code being perfect. Every line mattered. Every error case had to be handled. You've proven you understand this too.",
+                "Today, you showed that same strength. You organized the tasks, handled the chaos, and made sure the system stayed fair. You didn't just fix the program… you showed exactly why every voice deserves a seat at the table.",
                 [{ text: "What happens now?", action: revealGuardians }]
             );
         }
@@ -1188,7 +1214,6 @@
         }
 
         function completeIntermediateLevel() {
-            alert("🎉 INTERMEDIATE LEVEL COMPLETE! 🎉\n\nYou have mastered:\n• Arrays and Patterns (Hedy Lamarr)\n• Functions and Loops (Katherine Johnson)\n• Error Handling and Conditionals (Margaret Hamilton)\n\nYour journey continues to the Advanced Level where you will write complete programs from scratch!");
             window.location.href = 'SceneSeven.html';
         }
 
@@ -1256,6 +1281,90 @@
             }
 
             return response.json();
+        }
+
+        // Load user progress and update repair boxes
+        async function loadUserProgress() {
+            try {
+                const user = getUserFromLocalStorage();
+                if (!user || !user.id) {
+                    console.warn('⚠️ No user found in localStorage - skipping progress load');
+                    return;
+                }
+
+                console.log('📊 Loading progress for user:', user.id);
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:3001/api/progress/${user.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const progressData = await response.json();
+                    console.log('📦 Progress data received:', progressData);
+
+                    let activatedCount = 0;
+                    progressData.forEach(level => {
+                        if (level.completed) {
+                            const piece = document.getElementById(`piece${level.level_id}`);
+                            if (piece) {
+                                if (!piece.classList.contains('active')) {
+                                    piece.classList.add('active');
+                                    activatedCount++;
+                                    console.log(`✅ Activated piece ${level.level_id}`);
+                                } else {
+                                    console.log(`ℹ️ Piece ${level.level_id} already active`);
+                                }
+                            } else {
+                                console.error(`❌ Piece element not found: piece${level.level_id}`);
+                            }
+                        }
+                    });
+                    console.log(`✅ Progress loaded: ${progressData.length} levels completed, ${activatedCount} pieces activated`);
+                } else {
+                    console.error('❌ Failed to load progress:', response.status, response.statusText);
+                }
+            } catch (error) {
+                console.error('❌ Error loading user progress:', error);
+            }
+        }
+
+        // Initialize repair box click handlers
+        function initializeRepairBoxes() {
+            const repairPieces = document.querySelectorAll('.repair-piece');
+            repairPieces.forEach(piece => {
+                piece.addEventListener('click', () => {
+                    if (piece.classList.contains('active')) {
+                        const scene = piece.getAttribute('data-scene');
+                        if (scene) {
+                            window.location.href = scene;
+                        }
+                    }
+                });
+            });
+        }
+
+        // Ensure DOM is loaded before initializing progress
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                loadUserProgress();
+                initializeRepairBoxes();
+            });
+        } else {
+            loadUserProgress();
+            initializeRepairBoxes();
+        }
+
+        // Logout function
+        function handleLogout() {
+            // Clear localStorage
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('username');
+            
+            // Redirect to start screen
+            window.location.href = '../StartScreen.html';
         }
     </script>
 </body>

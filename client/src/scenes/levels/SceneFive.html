@@ -637,6 +637,27 @@
             50% { transform: scale(1.2); }
         }
 
+        .logout-btn {
+            margin-top: 10px;
+            width: 100%;
+            padding: 8px;
+            background: linear-gradient(135deg, #8b0000 0%, #ff4444 100%);
+            border: 2px solid #0088ff;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #a00000 0%, #ff5555 100%);
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+            transform: translateY(-2px);
+        }
+
         /* slideUp keyframes removed — dialog now uses transform+opacity transitions */
 
         /* Spacecraft visualization */
@@ -701,12 +722,12 @@
                 <div class="spacecraft-viz">
                     <span class="spacecraft-icon" id="spacecraftIcon">🚀</span>
                 </div>
-                TRAJECTORY STATUS:<br>
-                <span id="trajectoryStatus" style="color: #ff0000;">OFF COURSE</span><br>
+                COUNTDOWN STATUS:<br>
+                <span id="trajectoryStatus" style="color: #ff0000;">SYSTEM ERROR</span><br>
                 <div class="trajectory-line" id="trajectoryLine"></div>
                 <br>
-                CORRECTION REQUIRED<br>
-                AWAITING CALCULATIONS...
+                CODE FIX REQUIRED<br>
+                AWAITING PROGRAM...
             </div>
         </div>
 
@@ -714,20 +735,21 @@
         <div class="blackboard-section">
             <div class="blackboard">
                 <div class="blackboard-content chalk-text">
-                    <div class="equation-title">Trajectory Correction Formula</div>
+                    <div class="equation-title">Loop Structure for Calculations</div>
                     <div class="equation-display">
                         <strong>Given:</strong><br>
-                        • Current velocity: v = 7800 m/s<br>
-                        • Target angle: θ = 45°<br>
-                        • Time step: Δt = 1 second<br>
-                        • Iterations: n = 10<br><br>
-                        <strong>Calculate:</strong><br>
-                        x = v × cos(θ) × t<br>
-                        y = v × sin(θ) × t - 0.5 gt²<br>
+                        • Start position: x = 0<br>
+                        • Steps needed: n = 10<br>
+                        • Distance per step: d = 500 km<br>
+                        • Loop variable: i (changes each time)<br><br>
+                        <strong>Pattern:</strong><br>
+                        for i in range(n):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;position = i × d<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print("Step", i, "Position:", position)<br>
                     </div>
                     <div class="hint-box">
                         💡 <strong>Katherine's Note:</strong><br>
-                        "Precision matters! We must loop through each time step and calculate the position. Use the loop variable 'i', multiply velocity by time, and call the print function to output results."
+                        "Loops repeat calculations automatically! Each time through the loop, 'i' increases by 1. We use it to calculate the next position and print the result. This is how we track the spacecraft's journey step by step."
                     </div>
                 </div>
             </div>
@@ -762,79 +784,50 @@
                 <div class="repair-piece" id="piece7" data-scene="SceneSeven.html"></div>
                 <div class="repair-piece" id="piece8" data-scene="SceneEight.html"></div>
             </div>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
     </div>
 
     <!-- Coding Interface -->
     <div class="coding-interface" id="codingInterface">
         <div class="code-panel">
-            <h2 class="code-title">TRAJECTORY CALCULATION CODE</h2>
-            <p class="code-instruction">
-                Complete the missing parts of the code to calculate the spacecraft's corrected trajectory.<br>
-                Fill in the blanks with the correct variable names, loop conditions, and function calls.
-            </p>
-
-            <div class="available-options">
-                <div class="options-title">Available Options (click to use):</div>
-                <div class="options-list">
-                    <div class="option-chip" data-value="velocity">velocity</div>
-                    <div class="option-chip" data-value="angle">angle</div>
-                    <div class="option-chip" data-value="i">i</div>
-                    <div class="option-chip" data-value="range">range</div>
-                    <div class="option-chip" data-value="10">10</div>
+            <span class="code-title" style="color:#27d7ff;font-size:1.3rem;font-weight:bold;display:block;margin-top:10px;text-align:center;">🧩 Code Skeleton (with blanks)</span>
+            <div style="color:#b3e6ff;font-size:1rem;margin-bottom:8px;text-align:center;">What the player sees (with <span style="color:#ffd700;">???</span> as drop-zones):<br><em style="color:#7fd7ff;font-size:0.95rem;">You can use an option more than once!</em></div>
+            <div class="available-options" style="margin-bottom:12px;">
+                <div class="options-title" style="color:#27d7ff;font-size:1rem;margin-bottom:4px;">◆ Available Options:</div>
+                <div class="options-list" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
                     <div class="option-chip" data-value="print">print</div>
-                    <div class="option-chip" data-value="calculate_trajectory">calculate_trajectory</div>
+                    <div class="option-chip" data-value="if">if</div>
+                    <div class="option-chip" data-value="for">for</div>
+                    <div class="option-chip" data-value="in">in</div>
+                    <div class="option-chip" data-value="range(1, 6)">range(1, 6)</div>
+                    <div class="option-chip" data-value="second">second</div>
+                    <div class="option-chip" data-value="5">5</div>
+                    <div class="option-chip" data-value="while">while</div>
+                    <div class="option-chip" data-value="range(5)">range(5)</div>
+                    <div class="option-chip" data-value="time">time</div>
+                    <div class="option-chip" data-value="1">1</div>
+                    <div class="option-chip" data-value="else">else</div>
                 </div>
             </div>
-
-            <div class="code-editor" id="codeEditor">
-                <div class="code-line">
-                    <span class="line-number">1</span>
-                    <span class="code-text"><span class="keyword">def</span> <span class="function-name">calculate_trajectory</span>(<input class="code-input" id="input1" data-answer="velocity" placeholder="???">, <input class="code-input" id="input2" data-answer="angle" placeholder="???">):</span>
+            <div class="code-editor" id="codeEditor" style="background:#181c2f;border-radius:12px;padding:18px 24px;margin-top:8px;">
+                <div class="code-line" style="color:#888;font-size:1rem;margin-bottom:2px;">
+                    <span class="comment"># Valentina's launch countdown</span>
                 </div>
-                <div class="code-line">
-                    <span class="line-number">2</span>
-                    <span class="code-text">    <span class="comment"># Calculate trajectory over time</span></span>
+                <div class="code-line" style="font-size:1.1rem;">
+                    <span style="color:#4c8bff;font-weight:bold;">for</span> <input class="code-input" id="input1" data-answer="second" style="width:90px;" placeholder="???"> <span style="color:#4c8bff;font-weight:bold;">in</span> <input class="code-input" id="input2" data-answer="range(1, 6)" style="width:120px;" placeholder="???">:
                 </div>
-                <div class="code-line">
-                    <span class="line-number">3</span>
-                    <span class="code-text">    <span class="keyword">for</span> <input class="code-input" id="input3" data-answer="i" style="width: 60px;" placeholder="?"> <span class="keyword">in</span> <input class="code-input" id="input4" data-answer="range" placeholder="???">(</span><input class="code-input" id="input5" data-answer="10" style="width: 60px;" placeholder="?"><span class="code-text">):</span>
+                <div class="code-line" style="font-size:1.1rem;">
+                    <input class="code-input" id="input3" data-answer="print" style="width:80px;" placeholder="???">(<span style="color:#27d7ff">"T-minus"</span>, <input class="code-input" id="input4" data-answer="second" style="width:90px;" placeholder="???">)
                 </div>
-                <div class="code-line">
-                    <span class="line-number">4</span>
-                    <span class="code-text">        <span class="variable">t</span> = <input class="code-input" id="input6" data-answer="i" style="width: 60px;" placeholder="?"> * <span class="variable">delta_t</span></span>
+                <div class="code-line" style="font-size:1.1rem;">
+                    <span style="color:#4c8bff;font-weight:bold;">if</span> <input class="code-input" id="input5" data-answer="second" style="width:90px;" placeholder="???"> == <input class="code-input" id="input6" data-answer="5" style="width:60px;" placeholder="???">:
                 </div>
-                <div class="code-line">
-                    <span class="line-number">5</span>
-                    <span class="code-text">        <span class="variable">x</span> = <input class="code-input" id="input7" data-answer="velocity" placeholder="???"> * <span class="function-name">cos</span>(<input class="code-input" id="input8" data-answer="angle" placeholder="???">) * <span class="variable">t</span></span>
-                </div>
-                <div class="code-line">
-                    <span class="line-number">6</span>
-                    <span class="code-text">        <span class="variable">y</span> = <span class="variable">velocity</span> * <span class="function-name">sin</span>(<span class="variable">angle</span>) * <span class="variable">t</span></span>
-                </div>
-                <div class="code-line">
-                    <span class="line-number">7</span>
-                    <span class="code-text">        <input class="code-input" id="input9" data-answer="print" placeholder="???">(f<span class="variable">"Time: {t}s, Position: ({x}, {y})"</span>)</span>
-                </div>
-                <div class="code-line">
-                    <span class="line-number">8</span>
-                    <span class="code-text">    <span class="keyword">return</span> <span class="variable">True</span></span>
-                </div>
-                <div class="code-line">
-                    <span class="line-number">9</span>
-                    <span class="code-text"></span>
-                </div>
-                <div class="code-line">
-                    <span class="line-number">10</span>
-                    <span class="code-text"><span class="comment"># Execute trajectory correction</span></span>
-                </div>
-                <div class="code-line">
-                    <span class="line-number">11</span>
-                    <span class="code-text"><input class="code-input" id="input10" data-answer="calculate_trajectory" placeholder="???">(velocity=7800, angle=45)</span>
+                <div class="code-line" style="font-size:1.1rem;">
+                    <span style="color:#ffb347;font-weight:bold;">print</span>(<span style="color:#39ff14">"LIFTOFF, VALENTINA!"</span>)
                 </div>
             </div>
-
-            <button class="execute-code-btn" id="executeCodeBtn">Run Calculation</button>
+            <button class="execute-code-btn" id="executeCodeBtn" style="margin-top:18px;background:linear-gradient(90deg,#39ff14,#00ffea);color:#181c2f;font-weight:bold;font-size:1.2rem;padding:12px 48px;border-radius:32px;box-shadow:0 0 16px #39ff14;">RUN CODE</button>
         </div>
     </div>
 
@@ -845,21 +838,16 @@
         // Game state
         let gameState = {
             arrivedAtNASA: false,
-            metKatherine: false,
             codingStarted: false,
             codeComplete: false,
             selectedInput: null,
             correctAnswers: {
-                input1: 'velocity',
-                input2: 'angle',
-                input3: 'i',
-                input4: 'range',
-                input5: '10',
-                input6: 'i',
-                input7: 'velocity',
-                input8: 'angle',
-                input9: 'print',
-                input10: 'calculate_trajectory'
+                input1: 'second',
+                input2: 'range(1, 6)',
+                input3: 'print',
+                input4: 'second',
+                input5: 'second',
+                input6: '5'
             },
             userAnswers: {}
         };
@@ -923,57 +911,54 @@
             try {
                 const user = getUserFromLocalStorage();
                 if (!user || !user.id) {
-                    console.log('No user found in localStorage');
+                    console.warn('⚠️ No user found in localStorage - skipping progress load');
                     return;
                 }
 
-                // Fetch user profile to get current progress
-                const response = await fetch(`http://localhost:3001/api/users/${user.id}`, {
+                console.log('📊 Loading progress for user:', user.id);
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:3001/api/progress/${user.id}`, {
                     headers: {
-                        'Authorization': `Bearer ${user.token}`
+                        'Authorization': `Bearer ${token}`
                     }
                 });
 
                 if (response.ok) {
-                    const userData = await response.json();
-                    const progress = userData.progress || 0;
-                    
-                    // Calculate how many levels completed based on progress (12.5% per level)
-                    const completedLevels = Math.floor(progress / 12.5);
-                    
-                    // Since we're on Scene 5, we know the player must have passed scenes 1-4
-                    // Show whichever is higher: saved progress or current scene - 1
-                    const currentScene = 5;
-                    const boxesToActivate = Math.max(completedLevels, currentScene - 1);
-                    
-                    console.log(`📊 Scene 5 - User progress: ${progress}%`);
-                    console.log(`📦 Boxes to activate: ${boxesToActivate} (progress: ${completedLevels}, minimum for scene 5: ${currentScene - 1})`);
-                    
-                    // Activate repair boxes for all completed levels
-                    // This allows players to click and revisit any completed level
-                    for (let i = 1; i <= boxesToActivate; i++) {
-                        const piece = document.getElementById(`piece${i}`);
-                        if (piece) {
-                            if (!piece.classList.contains('active')) {
-                                piece.classList.add('active');
-                                console.log(`✅ Activated box ${i}`);
+                    const progressData = await response.json();
+                    console.log('📦 Progress data received:', progressData);
+
+                    let activatedCount = 0;
+                    progressData.forEach(level => {
+                        if (level.completed) {
+                            const piece = document.getElementById(`piece${level.level_id}`);
+                            if (piece) {
+                                if (!piece.classList.contains('active')) {
+                                    piece.classList.add('active');
+                                    activatedCount++;
+                                    console.log(`✅ Activated piece ${level.level_id}`);
+                                } else {
+                                    console.log(`ℹ️ Piece ${level.level_id} already active`);
+                                }
                             } else {
-                                console.log(`ℹ️ Box ${i} already active`);
+                                console.error(`❌ Piece element not found: piece${level.level_id}`);
                             }
-                        } else {
-                            console.error(`❌ Box ${i} element not found`);
                         }
-                    }
-                    
-                    console.log(`✅ Loaded progress: ${progress}% - ${boxesToActivate} boxes activated`);
+                    });
+                    console.log(`✅ Progress loaded: ${progressData.length} levels completed, ${activatedCount} pieces activated`);
+                } else {
+                    console.error('❌ Failed to load progress:', response.status, response.statusText);
                 }
             } catch (error) {
-                console.error('Error loading user progress:', error);
+                console.error('❌ Error loading user progress:', error);
             }
         }
 
-        // Load progress when page loads
-        loadUserProgress();
+        // Ensure DOM is loaded before initializing progress
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadUserProgress);
+        } else {
+            loadUserProgress();
+        }
 
         // Initialize
         setTimeout(() => {
@@ -993,14 +978,14 @@
 
         function explainMission() {
             showDialogue(
-                "Excellent! We'll keep the code small and clear.\n\nWe'll use three ideas you already know:\n\n• print to show the countdown on the screen\n• a for loop to repeat the countdown steps\n• an if statement to decide when to shout LIFTOFF!",
+                "Excellent! We'll keep the code small and clear.\n\nWe'll use three ideas you already know:\n\n print to show the countdown on the screen\n\n a for loop to repeat the countdown steps\n\n an if statement to decide when to shout LIFTOFF!",
                 [{ text: "What's the plan?", action: startCoding }]
             );
         }
 
         function startCoding() {
             showDialogue(
-                "Our plan:\n\n• Count from 1 to 5\n• Print each step as: T-minus <number>\n• When we reach 5, also print \"LIFTOFF, VALENTINA!\"\n\nFill in the missing pieces of the code to make the countdown work.",
+                "Our plan:\n\n Count from 1 to 5\n\n Print each step as: T-minus <number>\n\n When we reach 5, also print \"LIFTOFF, VALENTINA!\"\n\nFill in the missing pieces of the code to make the countdown work.",
                 [{ text: "Let's write the code!", action: openCodingInterface }]
             );
         }
@@ -1168,11 +1153,8 @@
                     console.error('Error saving progress:', error);
                 }
 
-                // Show success message
+                // Repair time machine and continue
                 setTimeout(() => {
-                    alert('CODE EXECUTED SUCCESSFULLY!\n\nTrajectory corrected!\nSpacecraft is now on the optimal path!');
-
-                    // Repair time machine
                     document.getElementById('piece5').classList.add('active');
 
                     setTimeout(() => {
@@ -1185,22 +1167,35 @@
 
         function completeScene() {
             showDialogue(
-                "Perfect! Your calculations were flawless. The spacecraft is back on course thanks to your precise coding. You understand something crucial - in programming, just like in space navigation, every variable matters, every loop must be exact, and every function must be called correctly.",
+                "Perfect! Your code works beautifully. The countdown computer is fixed and Valentina's rocket is ready for launch. You've mastered the basics - loops to repeat actions, print to show output, and conditionals to make decisions. That's all you need to make powerful programs!",
                 [{ text: "Thank you for teaching me!", action: katherineWisdom }]
             );
         }
 
         function katherineWisdom() {
             showDialogue(
-                "Remember - people said a woman couldn't do this kind of work, that calculations this complex were impossible for anyone but a machine. But I knew that with determination, precision, and understanding the mathematics, anything is possible. Your time machine's navigation system is now repaired. Continue your journey with confidence!",
+                "Remember - behind every successful space mission is thousands of lines of code, written by people who understand these simple building blocks. With loops, conditionals, and functions, you can build anything. Your time machine's countdown system is now repaired. Continue your journey with confidence!",
                 [{ text: "Continue Journey →", action: goToNextScene }]
             );
         }
 
         function goToNextScene() {
-            
-            alert("Outstanding work!\n\nNext: Scene 6 - Margaret Hamilton (1960s-70s)\n\nYou'll help Margaret debug the Apollo mission software with conditional statements and error handling!");
-            // In actual implementation:
+            // Save progress as 5/8 (63%) before navigating
+            try {
+                const completedLevels = 5;
+                const totalLevels = 8;
+                const percent = Math.round((completedLevels / totalLevels) * 100);
+                localStorage.setItem('gameProgressPercent', String(percent));
+                localStorage.setItem('gameProgressLabel', `${completedLevels}/${totalLevels}`);
+            } catch (e) {
+                // ignore storage errors
+            }
+
+            // Mark HUD box active for level 5
+            const piece5El = document.getElementById('piece5');
+            if (piece5El) piece5El.classList.add('active');
+
+            // Navigate to next scene
             window.location.href = 'SceneSix.html';
         }
 
@@ -1261,6 +1256,17 @@
             }
 
             return response.json();
+        }
+
+        // Logout function
+        function handleLogout() {
+            // Clear localStorage
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('username');
+            
+            // Redirect to start screen
+            window.location.href = '../StartScreen.html';
         }
     </script>
 </body>
